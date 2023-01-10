@@ -20,6 +20,7 @@ Widget priBtn(
     required bool isLoading,
     required void Function()? function}) {
   return Container(
+    width: 200,
     height: 70,
     padding: const EdgeInsets.symmetric(vertical: 10),
     alignment: Alignment.center,
@@ -43,7 +44,7 @@ Widget priBtn(
                   color: txtColour,
                   fontFamily: 'Nunito',
                   fontSize: 15,
-                  fontWeight: FontWeight.w500)),
+                  fontWeight: FontWeight.w700)),
     ),
   );
 }
@@ -177,14 +178,18 @@ Widget textSpan(
             textAlign: TextAlign.center,
             text: TextSpan(
               text: mainLabel,
-              style: kBlackTxt,
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black),
               children: <TextSpan>[
                 TextSpan(
                     text: childLabel,
                     style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 16,
                         fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         color: kDarkGreen)),
               ],
             ),
