@@ -4,13 +4,14 @@ const kDarkGreen = Color(0xFF054D3B);
 const kNeonGreen = Color(0xFF2AB514);
 const kLightGreen = Color(0xFF8FBD4F);
 const kGrey = Color(0xFFF5F5F5);
+const kPrimaryRed = Color(0xFFEE4444);
 
 const kPageTitle = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 18,
     fontWeight: FontWeight.w700,
     color: Colors.white);
-    
+
 const kTitle = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 16,
