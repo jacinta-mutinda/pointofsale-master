@@ -74,12 +74,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   # assets:
   assets:
-    - lib/assets/images/E-Wallet-bro.svg
-    - lib/assets/images/Farmers market-bro.svg
-    - lib/assets/images/Metrics-bro.svg
+    - lib/assets/images/E-Wallet-bro.png
+    - lib/assets/images/Farmers market-bro.png
+    - lib/assets/images/Metrics-bro.png
     - lib/assets/images/nawiri-label-logo.png
     - lib/assets/images/nawiri-logo.png
-    - lib/assets/images/Thrift shop-bro.svg
+    - lib/assets/images/thrift-shop.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
