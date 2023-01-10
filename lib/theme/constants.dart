@@ -14,14 +14,14 @@ const kPageTitle = TextStyle(
 
 const kTitle = TextStyle(
     fontFamily: 'Nunito',
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
     color: kDarkGreen);
 
 const kSubTitle = TextStyle(
     fontFamily: 'Nunito',
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
     color: kDarkGreen);
 
 const kHighlight = TextStyle(
