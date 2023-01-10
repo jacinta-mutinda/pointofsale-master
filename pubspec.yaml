@@ -48,6 +48,8 @@ dependencies:
   path: ^1.8.1
   fl_chart: ^0.55.1
   flutter_screen_lock: ^7.0.4 
+  local_auth: ^2.1.2
+  font_awesome_flutter: ^10.1.0
 
 dev_dependencies:
   flutter_test:
@@ -74,12 +76,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   # assets:
   assets:
-    - lib/assets/images/E-Wallet-bro.png
-    - lib/assets/images/Farmers market-bro.png
-    - lib/assets/images/Metrics-bro.png
-    - lib/assets/images/nawiri-label-logo.png
-    - lib/assets/images/nawiri-logo.png
-    - lib/assets/images/thrift-shop.png
+    - assets/images/E-Wallet-bro.png
+    - assets/images/Farmers market-bro.png
+    - assets/images/Metrics-bro.png
+    - assets/images/nawiri-label-logo.png
+    - assets/images/nawiri-logo.png
+    - assets/images/thrift-shop.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
