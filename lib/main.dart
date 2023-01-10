@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/app/auth/login.dart';
+import 'package:nawiri/app/auth/auth_ctrl.dart';
+import 'package:nawiri/app/auth/login/login.dart';
+import 'package:nawiri/app/auth/login/login_controller.dart';
+import 'package:nawiri/app/auth/register/company_det.dart';
 import 'package:nawiri/app/navigator.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +28,7 @@ void main() async {
 class InitialBinding implements Bindings {
   @override
   void dependencies() {
-    // Get.lazyPut(() => LocalAuthApi(), fenix: true);
+    Get.lazyPut(() => LoginCtrl(), fenix: true);
   }
 }
 
@@ -44,13 +46,15 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  bool authCheck = false;
-  // final auth = Auth();
-  // final lockCtrl = LocalAuthApi();
+  // bool authCheck = false;
+  bool authCheck = true;
+  final auth = Auth();
+  final lockCtrl = LoginCtrl();
   Future<bool> startApp() async {
     // var loggedIn = await auth.getStorageToken();
     // bool foundToken = false;
     bool foundToken = true;
+    await lockCtrl.getPasscode();
     // if (loggedIn) {
     //   auth.doGetProfile();
     //   authCheck = true;
@@ -80,66 +84,14 @@ class _MyAppState extends State<MyApp> {
                       debugPrint('$snapshot.error');
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      return NavigatorHandler(0);
-                      // if (authCheck) {
-                      //   debugPrint("... logged in");
-
-                      //   return ScreenLock(
-                      //       correctString: lockCtrl.passcode.toString(),
-                      //       customizedButtonTap: lockCtrl.bioAuth,
-                      //       didOpened: lockCtrl.bioAuth,
-                      //       didUnlocked: () {
-                      //         Get.offAll(() => NavigatorHandler(0));
-                      //       },
-                      //       maxRetries: 3,
-                      //       retryDelay: const Duration(seconds: 30),
-                      //       delayBuilder: (context, delay) => Text(
-                      //             'Try again in ${(delay.inMilliseconds / 1000).ceil()} seconds.',
-                      //             style: kCardTitle,
-                      //           ),
-                      //       title: Column(
-                      //           crossAxisAlignment: CrossAxisAlignment.center,
-                      //           children: [
-                      //             Padding(
-                      //                 padding:
-                      //                     const EdgeInsets.only(bottom: 20),
-                      //                 child: Image.asset(
-                      //                     'assets/images/walletlogo2.png',
-                      //                     width: 60,
-                      //                     height: 60,
-                      //                     fit: BoxFit.fill)),
-                      //             const Text(
-                      //               'Enter your Wavvy Wallet Passcode',
-                      //               style: kCardTitle,
-                      //             ),
-                      //           ]),
-                      //       customizedButtonChild: const Icon(
-                      //         Icons.fingerprint,
-                      //         size: 30,
-                      //       ),
-                      //       deleteButton:
-                      //           const Icon(FontAwesomeIcons.deleteLeft),
-                      //       screenLockConfig: const ScreenLockConfig(
-                      //         backgroundColor: kDarkTheme,
-                      //       ),
-                      //       secretsConfig: const SecretsConfig(
-                      //           spacing: 15,
-                      //           padding: EdgeInsets.all(40),
-                      //           secretConfig:
-                      //               SecretConfig(height: 30, width: 30)),
-                      //       keyPadConfig: KeyPadConfig(
-                      //           buttonConfig: StyledInputConfig(
-                      //         textStyle: kPageTitle,
-                      //         buttonStyle: OutlinedButton.styleFrom(
-                      //           shape: RoundedRectangleBorder(
-                      //               borderRadius: BorderRadius.circular(50)),
-                      //           backgroundColor: kPrimaryPurple,
-                      //         ),
-                      //       )));
-                      // } else {
-                      //   debugPrint("not logged in ");
-                      //   return const Login();
-                      // }
+                      if (authCheck) {
+                        debugPrint("... logged in");
+                        // return NavigatorHandler(0);
+                        return const Login();
+                      } else {
+                        debugPrint("not logged in ");
+                        return const Login();
+                      }
                     }
                 }
               },
@@ -149,6 +101,14 @@ class _MyAppState extends State<MyApp> {
             name: NavigatorHandler.routeName, page: () => NavigatorHandler(0)),
         GetPage(
           name: Login.routeName,
+          page: () => const Login(),
+        ),
+        GetPage(
+          name: CompanyDetails.routeName,
+          page: () => const CompanyDetails(),
+        ),
+        GetPage(
+          name: CompanyDetails.routeName,
           page: () => const Login(),
         )
       ],
