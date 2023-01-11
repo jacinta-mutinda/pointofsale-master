@@ -1,39 +1,37 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/app/auth/auth_ctrl.dart';
-import 'package:nawiri/app/auth/login/login.dart';
+import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
-class CompanyDetails extends StatefulWidget {
-  static const routeName = "/companydetails";
+class PersonalDetails extends StatefulWidget {
+  static const routeName = "/personalDetails";
 
-  const CompanyDetails({Key? key}) : super(key: key);
+  final List userData;
+
+  const PersonalDetails({Key? key, required this.userData}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _CompanyDetailsState createState() => _CompanyDetailsState();
+  _PersonalDetailsState createState() => _PersonalDetailsState(userData);
 }
 
-class _CompanyDetailsState extends State<CompanyDetails> {
-  TextEditingController firstnamectrl = TextEditingController();
-  TextEditingController lastnamectrl = TextEditingController();
+class _PersonalDetailsState extends State<PersonalDetails> {
+  late List userData;
+  TextEditingController usernamectrl = TextEditingController();
   TextEditingController emailctrl = TextEditingController();
   TextEditingController phonectrl = TextEditingController();
   TextEditingController passctrl = TextEditingController();
   TextEditingController confirmpassctrl = TextEditingController();
+  final RegExp phoneNo = RegExp(r"^\+?0[0-9]{10}$");
   final auth = Auth();
   final _formKey = GlobalKey<FormState>();
   final _isHidden = false.obs;
   bool _isLoading = false;
 
-  final RegExp safcomNo = RegExp(
-      r'^(?:254|\+254|0)?(7(?:(?:[12][0-9])|(?:0[0-8])|(9[0-2]))[0-9]{6})$');
-
-  bool isValidPhone(String s) {
-    if (s.length > 16 || s.length < 9) return false;
-    return safcomNo.hasMatch(s);
-  }
+  _PersonalDetailsState(this.userData);
 
   @override
   void initState() {
@@ -42,8 +40,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
   @override
   void dispose() {
-    firstnamectrl.dispose();
-    lastnamectrl.dispose();
+    usernamectrl.dispose();
     emailctrl.dispose();
     phonectrl.dispose();
     passctrl.dispose();
@@ -51,14 +48,21 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     super.dispose();
   }
 
-  void authCompanyDetails() {
-    List userData = [
-      firstnamectrl.text,
-      lastnamectrl.text,
+  bool isValidPhone(String s) {
+    if (s.length > 16 || s.length < 9) return false;
+    return phoneNo.hasMatch(s);
+  }
+
+  void authPersonalDetails() {
+    List persData = [
+      usernamectrl.text,
       emailctrl.text,
       phonectrl.text,
       passctrl.text,
     ];
+    for (String item in persData) {
+      userData.add(item);
+    }
     auth.signUp(userData);
   }
 
@@ -67,9 +71,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: kDarkGreen,
+        backgroundColor: Colors.white,
         elevation: 0,
-        automaticallyImplyLeading: false,
+        title: const Text('Create an Account', style: kPageTitle),
       ),
       body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
@@ -77,22 +81,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Image.asset('assets/images/walletlogo2.png',
-                      width: 60, height: 60, fit: BoxFit.fill),
-                ),
                 const Padding(
                     padding: EdgeInsets.only(top: 22),
-                    child: Text(
-                      'Wavvy Wallet',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    )),
+                    child: Text('Personal Details', style: kTitle)),
                 Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 10),
                   child: Form(
@@ -101,24 +92,13 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                       child: Column(
                         children: <Widget>[
                           formField(
-                              label: 'First Name',
+                              label: 'Username',
                               require: true,
-                              controller: firstnamectrl,
+                              controller: usernamectrl,
                               type: TextInputType.name,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your  first name';
-                                }
-                                return null;
-                              }),
-                          formField(
-                              label: 'Last Name',
-                              require: true,
-                              controller: lastnamectrl,
-                              type: TextInputType.name,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your  last name';
+                                  return 'Please enter your username';
                                 }
                                 return null;
                               }),
@@ -148,30 +128,30 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                             isHidden: _isHidden,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your Password';
+                                return 'Please enter your 4-digit Pin';
                               }
-                              if (value.length < 6) {
-                                return 'Password must be 6 characters or more';
+                              if (value.length != 4) {
+                                return 'Your pin must be 4 characters';
                               }
                               return null;
                             },
                             controller: passctrl,
-                            label: 'Password',
+                            label: 'Pin',
                           ),
                           passwordField(
                             isHidden: _isHidden,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please confirm your Password';
+                                return 'Please confirm your Pin';
                               }
                               if (value != passctrl.text) {
-                                return 'Passwords do not Match!';
+                                return 'Pins do not Match!';
                               }
 
                               return null;
                             },
                             controller: confirmpassctrl,
-                            label: 'Confirm Password',
+                            label: 'Confirm Pin',
                           ),
                         ],
                       )),
@@ -179,29 +159,20 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                 priBtn(
                   bgColour: kDarkGreen,
                   txtColour: Colors.white,
-                  label: 'Next',
+                  label: 'Create Account',
                   isLoading: _isLoading,
                   function: () async {
                     setState(() {
                       _isLoading = true;
                     });
                     if (_formKey.currentState!.validate()) {
-                      authCompanyDetails();
+                      authPersonalDetails();
                     }
                     await Future.delayed(const Duration(seconds: 2));
                     setState(() {
                       _isLoading = false;
                     });
                   },
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: textSpan(
-                      mainLabel: "Already have an account? ",
-                      childLabel: 'Log In',
-                      function: () {
-                        Get.off(Login.routeName);
-                      }),
                 )
               ])),
     );

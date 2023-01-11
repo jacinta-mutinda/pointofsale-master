@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/app/auth/auth_ctrl.dart';
-import 'package:nawiri/app/auth/login/login.dart';
-import 'package:nawiri/app/auth/login/login_controller.dart';
-import 'package:nawiri/app/auth/register/company_det.dart';
-import 'package:nawiri/app/navigator.dart';
+import 'package:nawiri/auth/auth_ctrl.dart';
+import 'package:nawiri/auth/screens/company_det.dart';
+import 'package:nawiri/auth/screens/login.dart';
+import 'package:nawiri/auth/screens/onboarding.dart';
+import 'package:nawiri/auth/screens/personal_det.dart';
+import 'package:nawiri/layout/navigator.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'app/onboarding.dart';
 
 const mpesaFilter = r"^[A-Z]{2}[\dA-Z]{8}\sConfirmed";
 
@@ -28,7 +27,7 @@ void main() async {
 class InitialBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => LoginCtrl(), fenix: true);
+    // Get.lazyPut(() => LoginCtrl(), fenix: true);
   }
 }
 
@@ -49,12 +48,11 @@ class _MyAppState extends State<MyApp> {
   // bool authCheck = false;
   bool authCheck = true;
   final auth = Auth();
-  final lockCtrl = LoginCtrl();
   Future<bool> startApp() async {
     // var loggedIn = await auth.getStorageToken();
     // bool foundToken = false;
     bool foundToken = true;
-    await lockCtrl.getPasscode();
+    await auth.getPasscode();
     // if (loggedIn) {
     //   auth.doGetProfile();
     //   authCheck = true;
@@ -108,8 +106,10 @@ class _MyAppState extends State<MyApp> {
           page: () => const CompanyDetails(),
         ),
         GetPage(
-          name: CompanyDetails.routeName,
-          page: () => const Login(),
+          name: PersonalDetails.routeName,
+          page: () => const PersonalDetails(
+            userData: [],
+          ),
         )
       ],
       theme: ThemeData(

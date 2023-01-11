@@ -195,3 +195,34 @@ Widget textSpan(
             ),
           )));
 }
+
+Widget otpField({required controller, required context}) {
+  return SizedBox(
+    height: 50,
+    width: 40,
+    child: TextFormField(
+      textAlign: TextAlign.center,
+      keyboardType: TextInputType.number,
+      controller: controller,
+      maxLength: 1,
+      cursorColor: kDarkGreen,
+      onChanged: (value) {
+        if (value.length == 1) {
+          FocusScope.of(context).nextFocus();
+        }
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '_';
+        }
+        return null;
+      },
+      decoration: const InputDecoration(
+        errorBorder:
+            OutlineInputBorder(borderSide: BorderSide(color: kPrimaryRed)),
+        border: OutlineInputBorder(borderSide: BorderSide(color: kLightGreen)),
+        counterText: '',
+      ),
+    ),
+  );
+}
