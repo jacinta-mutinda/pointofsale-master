@@ -8,7 +8,7 @@ void showSnackbar({required String title, required String subtitle, path}) {
     subtitle,
     backgroundColor: kDarkGreen,
     colorText: Colors.white,
-    icon: Icon(path, size: 28, color: Colors.white),
+    icon: Icon(path, size: 28, color: kNeonGreen),
     snackPosition: SnackPosition.BOTTOM,
   );
 }
@@ -106,6 +106,7 @@ Widget passwordField(
     {required label,
     required = true,
     required RxBool isHidden,
+    type,
     required controller,
     required final String? Function(String?) validator}) {
   return Obx(() => Padding(
@@ -134,6 +135,7 @@ Widget passwordField(
         SizedBox(
           height: 50,
           child: TextFormField(
+            keyboardType: type,
             cursorColor: kDarkGreen,
             style: const TextStyle(
                 fontSize: 16,

@@ -51,7 +51,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
       locctrl.text,
       phonectrl.text,
       tillnoctrl.text,
-      taglinectrl
+      taglinectrl.text
     ];
     Get.to(PersonalDetails(userData: userData));
   }
@@ -78,7 +78,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Form(
                 key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

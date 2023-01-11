@@ -60,7 +60,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
       phonectrl.text,
       passctrl.text,
     ];
-    for (String item in persData) {
+    for (final item in persData) {
       userData.add(item);
     }
     auth.signUp(userData);
@@ -69,28 +69,33 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text('Create an Account', style: kPageTitle),
-      ),
-      body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Padding(
-                    padding: EdgeInsets.only(top: 22),
-                    child: Text('Personal Details', style: kTitle)),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Form(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          toolbarHeight: 80,
+          iconTheme: const IconThemeData(color: kDarkGreen, size: 28),
+          title: const Text('Create an Account',
+              style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 26,
+                  fontWeight: FontWeight.w700,
+                  color: kDarkGreen)),
+        ),
+        body: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Form(
                       key: _formKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          const Padding(
+                              padding: EdgeInsets.only(bottom: 15),
+                              child:
+                                  Text('Personal Details', style: kSubTitle)),
                           formField(
                               label: 'Username',
                               require: true,
@@ -117,15 +122,19 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                               label: 'Phone Number',
                               require: true,
                               controller: phonectrl,
-                              type: TextInputType.phone,
+                              type: TextInputType.number,
                               validator: (value) {
-                                if (!isValidPhone(value!)) {
-                                  return 'Please enter a valid phone Number';
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your Phone Number';
+                                }
+                                if (value.length != 10) {
+                                  return 'Please enter your 10-digit phone number';
                                 }
                                 return null;
                               }),
                           passwordField(
                             isHidden: _isHidden,
+                            type: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your 4-digit Pin';
@@ -140,6 +149,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                           ),
                           passwordField(
                             isHidden: _isHidden,
+                            type: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please confirm your Pin';
@@ -155,26 +165,24 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                           ),
                         ],
                       )),
-                ),
-                priBtn(
-                  bgColour: kDarkGreen,
-                  txtColour: Colors.white,
-                  label: 'Create Account',
-                  isLoading: _isLoading,
-                  function: () async {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    if (_formKey.currentState!.validate()) {
-                      authPersonalDetails();
-                    }
-                    await Future.delayed(const Duration(seconds: 2));
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
-                )
-              ])),
-    );
+                  priBtn(
+                    bgColour: kDarkGreen,
+                    txtColour: Colors.white,
+                    label: 'Create Account',
+                    isLoading: _isLoading,
+                    function: () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      if (_formKey.currentState!.validate()) {
+                        authPersonalDetails();
+                      }
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    },
+                  )
+                ])));
   }
 }

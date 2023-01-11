@@ -148,9 +148,9 @@ class Auth with ChangeNotifier {
     // notifyListeners();
   }
 
-  Future<void> storePasscode(int passCode) async {
+  Future<void> storePasscode(String passCode) async {
     var prefs = await SharedPreferences.getInstance();
-    var fullPin = '01$passcode';
+    var fullPin = '01$passCode';
     await prefs.setInt("passcode", int.parse(fullPin));
   }
 
