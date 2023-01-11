@@ -75,12 +75,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
           elevation: 0,
           toolbarHeight: 80,
           iconTheme: const IconThemeData(color: kDarkGreen, size: 28),
-          title: const Text('Create an Account',
-              style: TextStyle(
-                  fontFamily: 'Nunito',
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: kDarkGreen)),
+          title: const Text('Create an Account', style: kPageTitle),
         ),
         body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),

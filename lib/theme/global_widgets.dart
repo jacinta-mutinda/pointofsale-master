@@ -20,7 +20,7 @@ Widget priBtn(
     required bool isLoading,
     required void Function()? function}) {
   return Container(
-    width: 200,
+    width: 250,
     height: 70,
     padding: const EdgeInsets.symmetric(vertical: 10),
     alignment: Alignment.center,

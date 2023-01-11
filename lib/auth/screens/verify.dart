@@ -19,6 +19,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
   bool _isLoading = false;
   bool _isEmailLoading = false;
   bool _isSmsLoading = false;
+  bool _isChangeLoading = false;
   final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
   final TextEditingController _fieldOne = TextEditingController();
   final TextEditingController _fieldTwo = TextEditingController();
@@ -56,10 +57,6 @@ class _VerifyAccountState extends State<VerifyAccount> {
   }
 
   void verifyAccount() {
-    final isValid = otpFormKey.currentState!.validate();
-    if (!isValid) {
-      return;
-    }
     otpFormKey.currentState!.save();
     otp = int.parse(
         _fieldOne.text + _fieldTwo.text + _fieldThree.text + _fieldFour.text);
@@ -71,73 +68,28 @@ class _VerifyAccountState extends State<VerifyAccount> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        body: Padding(
-            padding:
-                const EdgeInsets.only(top: 30, bottom: 10, left: 25, right: 25),
+        body: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.only(top: 80, bottom: 10),
                       child: Image.asset('assets/images/nawiri-logo.png',
-                          width: 100, height: 100, fit: BoxFit.fill)),
+                          width: 150, height: 150, fit: BoxFit.fill)),
                   Obx(() => mthdSelected.value
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                              const Text(
-                                "Verify Account",
-                                style: kPageTitle,
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  child: Text(
-                                    "How would you like to receive your verification code?",
-                                    style: kBlackTxt,
-                                  )),
-                              priBtn(
-                                  label: 'Send me an email',
-                                  txtColour: Colors.white,
-                                  bgColour: kDarkGreen,
-                                  isLoading: _isEmailLoading,
-                                  function: () async {
-                                    setState(() {
-                                      _isEmailLoading = true;
-                                    });
-                                    verifyMthd('email');
-                                    await Future.delayed(
-                                        const Duration(seconds: 2));
-                                    setState(() {
-                                      _isEmailLoading = false;
-                                    });
-                                  }),
-                              priBtn(
-                                  label: 'Send me an sms',
-                                  txtColour: Colors.white,
-                                  bgColour: kDarkGreen,
-                                  isLoading: _isSmsLoading,
-                                  function: () async {
-                                    setState(() {
-                                      _isSmsLoading = true;
-                                    });
-                                    verifyMthd('sms');
-                                    await Future.delayed(
-                                        const Duration(seconds: 2));
-                                    setState(() {
-                                      _isSmsLoading = false;
-                                    });
-                                  })
-                            ])
-                      : Form(
+                      ? Form(
                           key: otpFormKey,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Text(
-                                "Enter the otp code sent to your inbox",
-                                style: kSubTitle,
+                                "Enter the OTP code sent to your inbox",
+                                style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
                               ),
                               Padding(
                                   padding:
@@ -175,7 +127,9 @@ class _VerifyAccountState extends State<VerifyAccount> {
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                  verifyAccount();
+                                  if (otpFormKey.currentState!.validate()) {
+                                    verifyAccount();
+                                  }
                                   await Future.delayed(
                                       const Duration(seconds: 2));
                                   setState(() {
@@ -183,8 +137,78 @@ class _VerifyAccountState extends State<VerifyAccount> {
                                   });
                                 },
                               ),
+                              priBtn(
+                                bgColour: kDarkGreen,
+                                txtColour: Colors.white,
+                                label: 'Change Verification Method',
+                                isLoading: _isChangeLoading,
+                                function: () async {
+                                  setState(() {
+                                    _isChangeLoading = true;
+                                  });
+                                  otpFormKey.currentState!.reset();
+                                  mthdSelected.value = false;
+                                  await Future.delayed(
+                                      const Duration(seconds: 2));
+                                  setState(() {
+                                    _isChangeLoading = false;
+                                  });
+                                },
+                              ),
                             ],
-                          )))
+                          ))
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                              const Text(
+                                "Verify Account",
+                                style: kPageTitle,
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  child: Text(
+                                    "How would you like to receive your verification code?",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  )),
+                              priBtn(
+                                  label: 'Send me an email',
+                                  txtColour: Colors.white,
+                                  bgColour: kDarkGreen,
+                                  isLoading: _isEmailLoading,
+                                  function: () async {
+                                    setState(() {
+                                      _isEmailLoading = true;
+                                    });
+                                    verifyMthd('email');
+                                    await Future.delayed(
+                                        const Duration(seconds: 2));
+                                    setState(() {
+                                      _isEmailLoading = false;
+                                    });
+                                  }),
+                              priBtn(
+                                  label: 'Send me an sms',
+                                  txtColour: Colors.white,
+                                  bgColour: kDarkGreen,
+                                  isLoading: _isSmsLoading,
+                                  function: () async {
+                                    setState(() {
+                                      _isSmsLoading = true;
+                                    });
+                                    verifyMthd('sms');
+                                    await Future.delayed(
+                                        const Duration(seconds: 2));
+                                    setState(() {
+                                      _isSmsLoading = false;
+                                    });
+                                  })
+                            ]))
                 ])));
   }
 }

@@ -8,6 +8,12 @@ const kPrimaryRed = Color(0xFFEE4444);
 
 const kPageTitle = TextStyle(
     fontFamily: 'Nunito',
+    fontSize: 26,
+    fontWeight: FontWeight.w700,
+    color: kDarkGreen);
+
+const kAppBarTitle = TextStyle(
+    fontFamily: 'Nunito',
     fontSize: 18,
     fontWeight: FontWeight.w700,
     color: Colors.white);
