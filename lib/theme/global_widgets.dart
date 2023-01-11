@@ -70,7 +70,7 @@ Widget formField(
                       fontSize: 12,
                       fontFamily: 'Nunito',
                       fontWeight: FontWeight.w500,
-                      color: Colors.white)),
+                      color: kDarkGreen)),
               TextSpan(
                 text: require ? ' *' : '',
                 style: const TextStyle(
@@ -93,8 +93,6 @@ Widget formField(
                 fontWeight: FontWeight.w400,
                 color: Colors.black),
             decoration: const InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
               ),
