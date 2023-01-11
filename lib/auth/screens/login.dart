@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/auth/screens/company_det.dart';
-import 'package:nawiri/layout/navigator.dart';
+import 'package:nawiri/navigator.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 

@@ -12,6 +12,12 @@ const kPageTitle = TextStyle(
     fontWeight: FontWeight.w700,
     color: kDarkGreen);
 
+const kDrawerTxt = TextStyle(
+    color: kDarkGreen,
+    fontWeight: FontWeight.w700,
+    fontSize: 22,
+    fontFamily: 'Nunito');
+
 const kAppBarTitle = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 18,
