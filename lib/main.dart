@@ -5,9 +5,7 @@ import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/auth/screens/company_det.dart';
 import 'package:nawiri/auth/screens/login.dart';
 import 'package:nawiri/auth/screens/onboarding.dart';
-import 'package:nawiri/auth/screens/personal_det.dart';
-import 'package:nawiri/auth/screens/verify.dart';
-import 'package:nawiri/bottomnav.dart';
+import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +26,7 @@ void main() async {
 class InitialBinding implements Bindings {
   @override
   void dependencies() {
-    // Get.lazyPut(() => LoginCtrl(), fenix: true);
+    Get.lazyPut(() => InventoryCtrl(), fenix: true);
   }
 }
 
