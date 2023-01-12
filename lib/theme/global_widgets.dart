@@ -66,7 +66,7 @@ PreferredSizeWidget mainAppBar({required String pageTitle}) {
             padding: const EdgeInsets.only(right: 20),
             child: GestureDetector(
               onTap: () {
-                Get.to(() => const BillingsPage());
+                Get.to(const BillingsPage());
               },
               child: const Icon(
                 Icons.wallet,
@@ -141,7 +141,7 @@ Widget mainDrawer() {
                 tileColor: kGrey,
                 textColor: kDarkGreen,
                 onTap: () {
-                  Get.to(() => const ProfilePage());
+                  Get.to(const ProfilePage());
                 }),
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
@@ -220,7 +220,7 @@ Widget navItem({required iconPath, required label, required dynamic goTo}) {
           textColor: Colors.white,
           selectedTileColor: kNeonGreen,
           onTap: () {
-            Get.to(() => goTo);
+            Get.to(goTo);
           }));
 }
 
