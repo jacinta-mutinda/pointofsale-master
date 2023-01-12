@@ -60,13 +60,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          toolbarHeight: 80,
-          iconTheme: const IconThemeData(color: kDarkGreen, size: 28),
-          title: const Text('Create an Account', style: kPageTitle),
-        ),
+        appBar: secAppBar(pageTitle: 'Create Account'),
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
           child:

@@ -19,8 +19,7 @@ class _BillingsPageState extends State<BillingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Nawiri'),
-      drawer: mainDrawer(),
+      appBar: secAppBar(pageTitle: 'Billings and Payments'),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(

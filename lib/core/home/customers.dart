@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
-class ProfilePage extends StatefulWidget {
-  static const routeName = "/market";
-  const ProfilePage({Key? key}) : super(key: key);
+class CustomersPage extends StatefulWidget {
+  static const routeName = "/customers";
+  const CustomersPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _ProfilePageState createState() => _ProfilePageState();
+  _CustomersPageState createState() => _CustomersPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _CustomersPageState extends State<CustomersPage> {
   @override
   void initState() {
     super.initState();
@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: secAppBar(pageTitle: 'Profile'),
+      appBar: mainAppBar(pageTitle: 'Customers'),
       drawer: mainDrawer(),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),

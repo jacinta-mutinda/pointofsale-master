@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:local_auth/local_auth.dart';
 import 'package:nawiri/auth/screens/login.dart';
 import 'package:nawiri/auth/screens/verify.dart';
-import 'package:nawiri/navigator.dart';
+import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -322,7 +322,7 @@ class Auth with ChangeNotifier {
     await clearStorage();
     notifyListeners();
     await Future.delayed(const Duration(seconds: 2));
-    Get.offAllNamed(Login.routeName);
+    Get.offAll(const Login());
     return true;
   }
 

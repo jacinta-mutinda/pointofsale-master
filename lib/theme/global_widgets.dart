@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/auth/screens/profile.dart';
-import 'package:nawiri/core/home/billings.dart';
+import 'package:nawiri/core/home/billings/billings.dart';
 import 'package:nawiri/theme/constants.dart';
 
 final auth = Auth();
