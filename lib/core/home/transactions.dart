@@ -19,8 +19,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Transactions'),
-      drawer: mainDrawer(),
+      appBar: backAppBar(pageTitle: 'Transactions', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(

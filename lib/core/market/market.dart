@@ -29,20 +29,18 @@ class _MarketPageState extends State<MarketPage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 80, bottom: 30),
-                  child: Lottie.asset('assets/images/market.json', width: 300),
-                ),
-                const Text(
-                  'Coming Soon',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Nunito',
-                    color: kDarkGreen,
-                  ),
-                ),
+                const Padding(
+                    padding: EdgeInsets.only(top: 80),
+                    child: Text(
+                      'Coming Soon',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Nunito',
+                        color: kDarkGreen,
+                      ),
+                    )),
                 const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
@@ -53,7 +51,9 @@ class _MarketPageState extends State<MarketPage> {
                         fontFamily: 'Nunito',
                         color: Colors.black,
                       ),
-                    ))
+                    )),
+                Lottie.asset('assets/images/market.json',
+                    width: 300, repeat: false),
               ]))),
     );
   }

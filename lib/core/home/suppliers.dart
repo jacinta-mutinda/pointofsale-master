@@ -19,8 +19,7 @@ class _SuppliersPageState extends State<SuppliersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Suppliers'),
-      drawer: mainDrawer(),
+      appBar: backAppBar(pageTitle: 'Suppliers', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(

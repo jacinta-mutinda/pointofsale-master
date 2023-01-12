@@ -19,8 +19,7 @@ class _BankingPageState extends State<BankingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Banking'),
-      drawer: mainDrawer(),
+      appBar: backAppBar(pageTitle: 'Banking', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(

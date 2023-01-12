@@ -77,6 +77,17 @@ PreferredSizeWidget mainAppBar({required String pageTitle}) {
       ]);
 }
 
+PreferredSizeWidget backAppBar({required String pageTitle, required actions}) {
+  return AppBar(
+      backgroundColor: kDarkGreen,
+      elevation: 4,
+      toolbarHeight: 80,
+      automaticallyImplyLeading: true,
+      title: Text(pageTitle, style: kAppBarTitle),
+      centerTitle: true,
+      actions: actions);
+}
+
 PreferredSizeWidget secAppBar({required String pageTitle}) {
   return AppBar(
     backgroundColor: Colors.white,

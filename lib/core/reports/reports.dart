@@ -19,7 +19,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Nawiri'),
+      appBar: mainAppBar(pageTitle: 'Reports'),
       drawer: mainDrawer(),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),

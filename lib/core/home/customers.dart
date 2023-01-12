@@ -19,8 +19,7 @@ class _CustomersPageState extends State<CustomersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Customers'),
-      drawer: mainDrawer(),
+      appBar: backAppBar(pageTitle: 'Customers', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(

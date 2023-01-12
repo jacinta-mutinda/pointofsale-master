@@ -19,7 +19,7 @@ class _WorkPeriodPageState extends State<WorkPeriodPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Nawiri'),
+      appBar: mainAppBar(pageTitle: 'Work Period'),
       drawer: mainDrawer(),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),

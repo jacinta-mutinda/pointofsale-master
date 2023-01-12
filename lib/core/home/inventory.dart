@@ -19,8 +19,7 @@ class _InventoryPageState extends State<InventoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Inventory'),
-      drawer: mainDrawer(),
+      appBar: backAppBar(pageTitle: 'Inventory', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(

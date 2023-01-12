@@ -19,8 +19,7 @@ class _PoSPageState extends State<PoSPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(pageTitle: 'Point of Sale'),
-      drawer: mainDrawer(),
+      appBar: backAppBar(pageTitle: 'Point of Sale', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(
