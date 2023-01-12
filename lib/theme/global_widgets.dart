@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nawiri/auth/auth_ctrl.dart';
+import 'package:nawiri/auth/screens/profile.dart';
+import 'package:nawiri/core/home/billings/billings.dart';
 import 'package:nawiri/theme/constants.dart';
+
+final auth = Auth();
 
 void showSnackbar({required String title, required String subtitle, path}) {
   Get.snackbar(
@@ -45,6 +50,77 @@ Widget priBtn(
                   fontFamily: 'Nunito',
                   fontSize: 15,
                   fontWeight: FontWeight.w700)),
+    ),
+  );
+}
+
+PreferredSizeWidget mainAppBar({required String pageTitle}) {
+  return AppBar(
+      backgroundColor: kDarkGreen,
+      elevation: 4,
+      toolbarHeight: 80,
+      title: Text(pageTitle, style: kAppBarTitle),
+      centerTitle: true,
+      actions: [
+        GestureDetector(
+          onTap: () {
+            Get.to(const BillingsPage());
+          },
+          child: const Icon(
+            Icons.wallet,
+            color: Colors.white,
+            size: 24,
+          ),
+        )
+      ]);
+}
+
+Widget mainDrawer() {
+  return Drawer(
+    child: ListView(
+      children: <Widget>[
+        SizedBox(child: DrawerHeader(child: Container())),
+        SizedBox(
+          child: Column(children: <Widget>[
+            ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Profile', style: kDrawerTxt),
+                selectedTileColor: kDarkGreen,
+                selectedColor: Colors.white,
+                onTap: () {
+                  Get.to(const ProfilePage());
+                }),
+            ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign Out', style: kDrawerTxt),
+                selectedTileColor: kDarkGreen,
+                selectedColor: Colors.white,
+                onTap: () {
+                  auth.logout();
+                }),
+          ]),
+        ),
+        Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Image.asset('assets/images/nawiri-logo.png',
+                        width: 40, height: 40)),
+                const Text(
+                  'Softbyte © 2023',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14),
+                ),
+              ],
+            ))
+      ],
     ),
   );
 }

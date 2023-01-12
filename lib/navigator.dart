@@ -54,38 +54,18 @@ class _NavigatorHandlerState extends State<NavigatorHandler> {
                 animationDuration: const Duration(seconds: 1),
                 destinations: const [
                   NavigationDestination(
-                      selectedIcon: Icon(
-                        Icons.home_filled,
-                        size: 30,
-                        color: Colors.white,
-                      ),
                       icon: Icon(Icons.home_outlined,
                           size: 30, color: Colors.white),
                       label: 'Home'),
                   NavigationDestination(
-                      selectedIcon: Icon(
-                        Icons.store,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                      icon: Icon(Icons.track_changes_outlined,
-                          size: 30, color: Colors.white),
-                      label: 'Market'),
-                  NavigationDestination(
-                      selectedIcon: Icon(
-                        Icons.lock_clock,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                      icon: Icon(Icons.person_outline,
+                      icon: Icon(Icons.lock_clock,
                           size: 30, color: Colors.white),
                       label: 'Work Period'),
                   NavigationDestination(
-                      selectedIcon: Icon(
-                        Icons.bar_chart_rounded,
-                        size: 30,
-                        color: Colors.white,
-                      ),
+                      icon: Icon(Icons.store,
+                          size: 30, color: Colors.white),
+                      label: 'Market'),
+                  NavigationDestination(
                       icon: Icon(Icons.bar_chart_outlined,
                           size: 30, color: Colors.white),
                       label: 'Reports'),

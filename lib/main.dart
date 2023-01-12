@@ -6,7 +6,8 @@ import 'package:nawiri/auth/screens/company_det.dart';
 import 'package:nawiri/auth/screens/login.dart';
 import 'package:nawiri/auth/screens/onboarding.dart';
 import 'package:nawiri/auth/screens/personal_det.dart';
-import 'package:nawiri/layout/navigator.dart';
+import 'package:nawiri/auth/screens/verify.dart';
+import 'package:nawiri/navigator.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -94,24 +95,6 @@ class _MyAppState extends State<MyApp> {
                 }
               },
             ),
-      getPages: [
-        GetPage(
-            name: NavigatorHandler.routeName, page: () => NavigatorHandler(0)),
-        GetPage(
-          name: Login.routeName,
-          page: () => const Login(),
-        ),
-        GetPage(
-          name: CompanyDetails.routeName,
-          page: () => const CompanyDetails(),
-        ),
-        GetPage(
-          name: PersonalDetails.routeName,
-          page: () => const PersonalDetails(
-            userData: [],
-          ),
-        )
-      ],
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         backgroundColor: Colors.white,
