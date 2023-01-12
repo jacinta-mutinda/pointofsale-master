@@ -62,16 +62,18 @@ PreferredSizeWidget mainAppBar({required String pageTitle}) {
       title: Text(pageTitle, style: kAppBarTitle),
       centerTitle: true,
       actions: [
-        GestureDetector(
-          onTap: () {
-            Get.to(const BillingsPage());
-          },
-          child: const Icon(
-            Icons.wallet,
-            color: Colors.white,
-            size: 24,
-          ),
-        )
+        Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: GestureDetector(
+              onTap: () {
+                Get.to(const BillingsPage());
+              },
+              child: const Icon(
+                Icons.wallet,
+                color: Colors.white,
+                size: 24,
+              ),
+            ))
       ]);
 }
 

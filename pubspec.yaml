@@ -77,7 +77,7 @@ flutter:
   # assets:
   assets:
     - assets/images/E-Wallet-bro.png
-    - assets/images/Farmers market-bro.png
+    - assets/images/market.json
     - assets/images/Metrics-bro.png
     - assets/images/nawiri-label-logo.png
     - assets/images/nawiri-logo.png

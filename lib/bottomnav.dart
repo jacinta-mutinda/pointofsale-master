@@ -24,8 +24,8 @@ class _NavigatorHandlerState extends State<NavigatorHandler> {
 
   final screens = [
     const HomePage(),
-    const MarketPage(),
     const WorkPeriodPage(),
+    const MarketPage(),
     const ReportPage()
   ];
 
@@ -58,12 +58,11 @@ class _NavigatorHandlerState extends State<NavigatorHandler> {
                           size: 30, color: Colors.white),
                       label: 'Home'),
                   NavigationDestination(
-                      icon: Icon(Icons.lock_clock,
-                          size: 30, color: Colors.white),
+                      icon:
+                          Icon(Icons.lock_clock, size: 30, color: Colors.white),
                       label: 'Work Period'),
                   NavigationDestination(
-                      icon: Icon(Icons.store,
-                          size: 30, color: Colors.white),
+                      icon: Icon(Icons.store, size: 30, color: Colors.white),
                       label: 'Market'),
                   NavigationDestination(
                       icon: Icon(Icons.bar_chart_outlined,
