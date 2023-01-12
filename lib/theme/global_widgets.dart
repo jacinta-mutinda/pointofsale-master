@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/auth/screens/profile.dart';
-import 'package:nawiri/core/home/billings/billings.dart';
+import 'package:nawiri/core/home/billings.dart';
 import 'package:nawiri/theme/constants.dart';
 
 final auth = Auth();
@@ -75,54 +75,140 @@ PreferredSizeWidget mainAppBar({required String pageTitle}) {
       ]);
 }
 
+PreferredSizeWidget secAppBar({required String pageTitle}) {
+  return AppBar(
+    backgroundColor: Colors.white,
+    elevation: 0,
+    toolbarHeight: 80,
+    iconTheme: const IconThemeData(color: kDarkGreen, size: 28),
+    title: Text(pageTitle, style: kPageTitle),
+  );
+}
+
 Widget mainDrawer() {
   return Drawer(
-    child: ListView(
-      children: <Widget>[
-        SizedBox(child: DrawerHeader(child: Container())),
+      child: Column(
+    children: [
+      Expanded(
+          child: ListView(children: <Widget>[
         SizedBox(
+            child: DrawerHeader(
+                child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: const [
+            Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Text(
+                  'nawiri',
+                  style: TextStyle(
+                      color: kDarkGreen,
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 48),
+                )),
+            Text(
+              'Growing with you',
+              style: TextStyle(
+                  color: kNeonGreen,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18),
+            ),
+          ],
+        ))),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: <Widget>[
             ListTile(
-                leading: const Icon(Icons.person),
+                leading: const Icon(Icons.person, color: kDarkGreen, size: 26),
                 title: const Text('Profile', style: kDrawerTxt),
                 selectedTileColor: kDarkGreen,
                 selectedColor: Colors.white,
+                tileColor: const Color(0xFFD5D5D5),
+                textColor: kDarkGreen,
                 onTap: () {
                   Get.to(const ProfilePage());
                 }),
-            ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Sign Out', style: kDrawerTxt),
-                selectedTileColor: kDarkGreen,
-                selectedColor: Colors.white,
-                onTap: () {
-                  auth.logout();
-                }),
+            Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: ListTile(
+                    leading:
+                        const Icon(Icons.logout, color: kDarkGreen, size: 26),
+                    title: const Text('Sign Out', style: kDrawerTxt),
+                    selectedTileColor: kDarkGreen,
+                    selectedColor: Colors.white,
+                    tileColor: const Color(0xFFD5D5D5),
+                    textColor: kDarkGreen,
+                    onTap: () {
+                      auth.logout();
+                    })),
           ]),
         ),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Image.asset('assets/images/nawiri-logo.png',
-                        width: 40, height: 40)),
-                const Text(
-                  'Softbyte © 2023',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
-                ),
-              ],
-            ))
-      ],
-    ),
+      ])),
+      SizedBox(
+          child: Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Image.asset('assets/images/nawiri-logo.png',
+                          width: 40, height: 40)),
+                  const Text(
+                    'Softbyte © 2023',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Nunito',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14),
+                  ),
+                ],
+              )))
+    ],
+  ));
+}
+
+Widget navMenu({required navItems}) {
+  return ListView(
+    children: <Widget>[
+      const Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Text('Select an option:',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500))),
+      SizedBox(
+        child: Column(children: navItems),
+      ),
+    ],
   );
+}
+
+Widget navItem({required iconPath, required label, required dynamic goTo}) {
+  return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: ListTile(
+          leading: Icon(iconPath, color: Colors.white, size: 22),
+          trailing: const Icon(
+            Icons.keyboard_arrow_right,
+            color: Colors.white,
+            size: 22,
+          ),
+          title: Text(label,
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Nunito')),
+          tileColor: kDarkGreen,
+          textColor: Colors.white,
+          selectedTileColor: kNeonGreen,
+          onTap: () {
+            Get.to(goTo);
+          }));
 }
 
 // ---------------- Auth Widgets
