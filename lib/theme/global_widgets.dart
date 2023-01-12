@@ -66,7 +66,7 @@ PreferredSizeWidget mainAppBar({required String pageTitle}) {
             padding: const EdgeInsets.only(right: 20),
             child: GestureDetector(
               onTap: () {
-                Get.to(const BillingsPage());
+                Get.to(() => const BillingsPage());
               },
               child: const Icon(
                 Icons.wallet,
@@ -138,10 +138,10 @@ Widget mainDrawer() {
                 title: const Text('Profile', style: kDrawerTxt),
                 selectedTileColor: kDarkGreen,
                 selectedColor: Colors.white,
-                tileColor: const Color(0xFFD5D5D5),
+                tileColor: kGrey,
                 textColor: kDarkGreen,
                 onTap: () {
-                  Get.to(const ProfilePage());
+                  Get.to(() => const ProfilePage());
                 }),
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
@@ -151,7 +151,7 @@ Widget mainDrawer() {
                     title: const Text('Sign Out', style: kDrawerTxt),
                     selectedTileColor: kDarkGreen,
                     selectedColor: Colors.white,
-                    tileColor: const Color(0xFFD5D5D5),
+                    tileColor: kGrey,
                     textColor: kDarkGreen,
                     onTap: () {
                       auth.logout();
@@ -220,7 +220,7 @@ Widget navItem({required iconPath, required label, required dynamic goTo}) {
           textColor: Colors.white,
           selectedTileColor: kNeonGreen,
           onTap: () {
-            Get.to(goTo);
+            Get.to(() => goTo);
           }));
 }
 
@@ -339,6 +339,43 @@ Widget passwordField(
           ),
         )
       ])));
+}
+
+Widget descFormField({required label, required controller}) {
+  return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: RichText(
+                text: TextSpan(children: [
+              TextSpan(
+                  text: label,
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w500,
+                      color: kDarkGreen)),
+            ]))),
+        SizedBox(
+          child: TextField(
+            cursorColor: kDarkGreen,
+            controller: controller,
+            keyboardType: TextInputType.multiline,
+            maxLines: 5,
+            style: const TextStyle(
+                fontSize: 16,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w400,
+                color: Colors.black),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+              ),
+            ),
+          ),
+        )
+      ]));
 }
 
 Widget textSpan(

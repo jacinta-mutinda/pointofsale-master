@@ -53,7 +53,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
       tillnoctrl.text,
       taglinectrl.text
     ];
-    Get.to(PersonalDetails(userData: userData));
+    Get.to(() => PersonalDetails(userData: userData));
   }
 
   @override

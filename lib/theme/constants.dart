@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const kDarkGreen = Color(0xFF054D3B);
 const kNeonGreen = Color(0xFF2AB514);
 const kLightGreen = Color(0xFF8FBD4F);
-const kGrey = Color(0xFFF5F5F5);
+const kGrey = Color(0xFFD5D5D5);
 const kPrimaryRed = Color(0xFFEE4444);
 
 const kPageTitle = TextStyle(
@@ -41,6 +41,12 @@ const kHighlight = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: kNeonGreen);
+
+const kCardTitle = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: kDarkGreen);
 
 const kBlackTxt = TextStyle(
     fontFamily: 'Nunito',
