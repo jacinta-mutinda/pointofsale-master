@@ -1,13 +1,16 @@
 class Category {
   int id;
   String name;
-  String desc;
+  int retailMg;
+  int wholesaleMg;
+  bool showInPos;
 
-  Category({
-    required this.id,
-    required this.name,
-    required this.desc,
-  });
+  Category(
+      {required this.id,
+      required this.name,
+      required this.retailMg,
+      required this.wholesaleMg,
+      required this.showInPos});
 }
 
 class Product {

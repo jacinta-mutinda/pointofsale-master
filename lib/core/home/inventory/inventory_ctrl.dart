@@ -34,19 +34,22 @@ class InventoryCtrl extends GetxController {
     categories.value = [
       Category(
           name: 'Category 01',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna.',
-          id: 1),
+          id: 1,
+          retailMg: 300,
+          wholesaleMg: 150,
+          showInPos: true),
       Category(
           name: 'Category 02',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna.',
-          id: 2),
+          id: 2,
+          retailMg: 500,
+          wholesaleMg: 250,
+          showInPos: true),
       Category(
           name: 'Category 03',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna.',
-          id: 3),
+          id: 3,
+          retailMg: 1000,
+          wholesaleMg: 750,
+          showInPos: false),
     ];
   }
 
@@ -107,7 +110,9 @@ class InventoryCtrl extends GetxController {
   addCategory(Category catData) async {
     var body = jsonEncode({
       'name': catData.name,
-      'desc': catData.desc,
+      'retailMg': catData.retailMg,
+      'wholesaleMg': catData.wholesaleMg,
+      'showInPos': catData.showInPos,
     });
     debugPrint(body);
     // try {
@@ -205,7 +210,9 @@ class InventoryCtrl extends GetxController {
   editCategory(Category catData) async {
     var body = jsonEncode({
       'name': catData.name,
-      'desc': catData.desc,
+      'retailMg': catData.retailMg,
+      'wholesaleMg': catData.wholesaleMg,
+      'showInPos': catData.showInPos,
     });
     debugPrint(body);
     // try {
