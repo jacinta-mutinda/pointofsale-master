@@ -19,10 +19,9 @@ class UomForm extends StatefulWidget {
 
 class _UomFormState extends State<UomForm> {
   String pageTitle = '';
-  UoM uomData = UoM(id: 1, name: '', desc: '');
+  UoM uomData = UoM(id: 1, name: '');
   final invtCtrl = Get.put(InventoryCtrl());
   TextEditingController namectrl = TextEditingController();
-  TextEditingController descctrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -37,7 +36,6 @@ class _UomFormState extends State<UomForm> {
   @override
   void dispose() {
     namectrl.dispose();
-    descctrl.dispose();
     super.dispose();
   }
 
@@ -48,14 +46,9 @@ class _UomFormState extends State<UomForm> {
           .where((element) => element.id == (invtCtrl.uoMToEdit.value))
           .first
           .name;
-      descctrl.text = invtCtrl.uoms
-          .where((element) => element.id == (invtCtrl.uoMToEdit.value))
-          .first
-          .desc;
     } else {
       pageTitle = 'Add Unit';
       namectrl.clear();
-      descctrl.clear();
     }
   }
 
@@ -84,11 +77,7 @@ class _UomFormState extends State<UomForm> {
                                   return 'Please enter the Unit of Measurement name';
                                 }
                                 return null;
-                              }),
-                          descFormField(
-                            label: 'Description',
-                            controller: descctrl,
-                          )
+                              })
                         ],
                       )),
                   priBtn(
@@ -102,7 +91,6 @@ class _UomFormState extends State<UomForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         uomData.name = namectrl.text;
-                        uomData.desc = descctrl.text;
 
                         if (invtCtrl.isUoMEdit.value) {
                           invtCtrl.editUOM(uomData);

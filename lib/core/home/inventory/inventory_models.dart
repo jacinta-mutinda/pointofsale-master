@@ -35,11 +35,9 @@ class Product {
 class UoM {
   int id;
   String name;
-  String desc;
 
   UoM({
     required this.id,
     required this.name,
-    required this.desc,
   });
 }

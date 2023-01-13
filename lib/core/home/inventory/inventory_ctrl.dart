@@ -87,21 +87,9 @@ class InventoryCtrl extends GetxController {
 
   getUoMs() {
     uoms.value = [
-      UoM(
-          name: 'UoM 01',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna.',
-          id: 1),
-      UoM(
-          name: 'UoM 02',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna.',
-          id: 2),
-      UoM(
-          name: 'UoM 03',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna.',
-          id: 3),
+      UoM(name: 'UoM 01', id: 1),
+      UoM(name: 'UoM 02', id: 2),
+      UoM(name: 'UoM 03', id: 3),
     ];
   }
 
@@ -176,7 +164,6 @@ class InventoryCtrl extends GetxController {
   addUoM(UoM uomData) async {
     var body = jsonEncode({
       'name': uomData.name,
-      'desc': uomData.desc,
     });
     debugPrint(body);
     // try {
@@ -274,10 +261,7 @@ class InventoryCtrl extends GetxController {
   }
 
   editUOM(UoM uomData) async {
-    var body = jsonEncode({
-      'name': uomData.name,
-      'desc': uomData.desc,
-    });
+    var body = jsonEncode({'name': uomData.name});
     debugPrint(body);
     // try {
     //   var res =
