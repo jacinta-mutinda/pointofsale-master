@@ -9,12 +9,16 @@ import 'package:nawiri/core/home/inventory/uoms/uom_main.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
 class InventoryCtrl extends GetxController {
+  RxString catDropdown = ''.obs;
+  RxString uomDropdown = ''.obs;
   RxBool isCatEdit = false.obs;
   RxBool isProdEdit = false.obs;
   RxBool isUoMEdit = false.obs;
   RxInt catToEdit = 1.obs;
   RxInt prodToEdit = 1.obs;
   RxInt uoMToEdit = 1.obs;
+  List<String> catStrs = [];
+  List<String> uomStr = [];
 
   RxList<Category> categories = RxList<Category>();
   RxList<Product> products = RxList<Product>();
@@ -51,6 +55,10 @@ class InventoryCtrl extends GetxController {
           wholesaleMg: 750,
           showInPos: false),
     ];
+    catStrs.add('');
+    for (final cat in categories) {
+      catStrs.add(cat.name);
+    }
   }
 
   getProducts() {
@@ -61,6 +69,10 @@ class InventoryCtrl extends GetxController {
               'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
           retailMg: 700,
           wholesaleMg: 500,
+          code: 1234,
+          buyingPrice: 300,
+          blockingneg: true,
+          active: true,
           id: 1,
           categoryid: 1,
           uomId: 1),
@@ -70,6 +82,10 @@ class InventoryCtrl extends GetxController {
               'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
           retailMg: 850,
           wholesaleMg: 600,
+          code: 9656,
+          buyingPrice: 300,
+          blockingneg: true,
+          active: true,
           id: 2,
           categoryid: 3,
           uomId: 2),
@@ -79,6 +95,10 @@ class InventoryCtrl extends GetxController {
               'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
           retailMg: 1000,
           wholesaleMg: 750,
+          code: 0977,
+          buyingPrice: 300,
+          blockingneg: true,
+          active: true,
           id: 3,
           categoryid: 3,
           uomId: 2),
@@ -91,6 +111,10 @@ class InventoryCtrl extends GetxController {
       UoM(name: 'UoM 02', id: 2),
       UoM(name: 'UoM 03', id: 3),
     ];
+    uomStr.add('');
+    for (final uom in uoms) {
+      uomStr.add(uom.name);
+    }
   }
 
   // ---------- Add Functions -----------------
@@ -133,6 +157,10 @@ class InventoryCtrl extends GetxController {
       'desc': prodData.desc,
       'retailMg': prodData.retailMg,
       'wholesaleMg': prodData.wholesaleMg,
+      'code': prodData.code,
+      'buyingPrice': prodData.buyingPrice,
+      'blockingneg': prodData.blockingneg,
+      'active': prodData.active,
       'categoryId': prodData.categoryid,
       'uomId': prodData.uomId
     });
@@ -232,6 +260,10 @@ class InventoryCtrl extends GetxController {
       'desc': prodData.desc,
       'retailMg': prodData.retailMg,
       'wholesaleMg': prodData.wholesaleMg,
+      'code': prodData.code,
+      'buyingPrice': prodData.buyingPrice,
+      'blockingneg': prodData.blockingneg,
+      'active': prodData.active,
       'categoryId': prodData.categoryid,
       'uomId': prodData.uomId
     });

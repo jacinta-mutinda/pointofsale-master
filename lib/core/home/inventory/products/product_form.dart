@@ -18,6 +18,8 @@ class ProductForm extends StatefulWidget {
 }
 
 class _ProductFormState extends State<ProductForm> {
+  bool blockingnegValue = false;
+  bool activeValue = false;
   String pageTitle = '';
   Product prodData = Product(
       id: 1,
@@ -25,11 +27,19 @@ class _ProductFormState extends State<ProductForm> {
       desc: '',
       categoryid: 1,
       uomId: 1,
+      code: 1,
+      buyingPrice: 1,
+      blockingneg: true,
+      active: true,
       retailMg: 100,
       wholesaleMg: 50);
   final invtCtrl = Get.put(InventoryCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController descctrl = TextEditingController();
+  TextEditingController retailMgctrl = TextEditingController();
+  TextEditingController wholesaleMgctrl = TextEditingController();
+  TextEditingController buyingPricectrl = TextEditingController();
+  TextEditingController codectrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -45,6 +55,10 @@ class _ProductFormState extends State<ProductForm> {
   void dispose() {
     namectrl.dispose();
     descctrl.dispose();
+    retailMgctrl.dispose();
+    wholesaleMgctrl.dispose();
+    buyingPricectrl.dispose();
+    codectrl.dispose();
     super.dispose();
   }
 
@@ -59,6 +73,53 @@ class _ProductFormState extends State<ProductForm> {
           .where((element) => element.id == (invtCtrl.prodToEdit.value))
           .first
           .desc;
+      retailMgctrl.text = invtCtrl.products
+          .where((element) => element.id == (invtCtrl.prodToEdit.value))
+          .first
+          .retailMg
+          .toString();
+
+      wholesaleMgctrl.text = invtCtrl.products
+          .where((element) => element.id == (invtCtrl.prodToEdit.value))
+          .first
+          .wholesaleMg
+          .toString();
+      codectrl.text = invtCtrl.products
+          .where((element) => element.id == (invtCtrl.prodToEdit.value))
+          .first
+          .code
+          .toString();
+      buyingPricectrl.text = invtCtrl.products
+          .where((element) => element.id == (invtCtrl.prodToEdit.value))
+          .first
+          .buyingPrice
+          .toString();
+      invtCtrl.catDropdown.value = invtCtrl.categories
+          .where((element) =>
+              element.id ==
+              (invtCtrl.products
+                  .where((element) => element.id == (invtCtrl.prodToEdit.value))
+                  .first
+                  .categoryid))
+          .first
+          .name;
+      invtCtrl.uomDropdown.value = invtCtrl.uoms
+          .where((element) =>
+              element.id ==
+              (invtCtrl.products
+                  .where((element) => element.id == (invtCtrl.prodToEdit.value))
+                  .first
+                  .uomId))
+          .first
+          .name;
+      blockingnegValue = invtCtrl.products
+          .where((element) => element.id == (invtCtrl.prodToEdit.value))
+          .first
+          .blockingneg;
+      activeValue = invtCtrl.products
+          .where((element) => element.id == (invtCtrl.prodToEdit.value))
+          .first
+          .active;
     } else {
       pageTitle = 'Add Product';
       namectrl.clear();
@@ -79,39 +140,120 @@ class _ProductFormState extends State<ProductForm> {
                   Form(
                       key: _formKey,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          formField(
-                              label: 'Name',
-                              require: true,
-                              controller: namectrl,
-                              type: TextInputType.name,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the Product name';
-                                }
-                                return null;
-                              }),
-                          descFormField(
-                            label: 'Description',
-                            controller: descctrl,
-                          ),
-                          // formField(
-                          // label: 'Retail Margin',
-                          // require: true,
-                          // controller: phonectrl,
-                          // type: TextInputType.number,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter your Phone Number';
-                          //   }
-                          //   if (value.length != 10) {
-                          //     return 'Please enter your 10-digit phone number';
-                          //   }
-                          //   return null;
-                          // }),
-                        ],
-                      )),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            formField(
+                                label: 'Name',
+                                require: true,
+                                controller: namectrl,
+                                type: TextInputType.name,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the Product name';
+                                  }
+                                  return null;
+                                }),
+                            descFormField(
+                              label: 'Description',
+                              controller: descctrl,
+                            ),
+                            formDropDownField(
+                                label: 'Category',
+                                dropdownValue: invtCtrl.catDropdown.value,
+                                dropItems: invtCtrl.catStrs,
+                                bgcolor: kGrey,
+                                function: (String? newValue) {
+                                  setState(() {
+                                    invtCtrl.catDropdown.value = newValue!;
+                                  });
+                                }),
+                            formDropDownField(
+                                label: 'Unit of Measurement',
+                                dropdownValue: invtCtrl.uomDropdown.value,
+                                dropItems: invtCtrl.uomStr,
+                                bgcolor: kGrey,
+                                function: (String? newValue) {
+                                  setState(() {
+                                    invtCtrl.uomDropdown.value = newValue!;
+                                  });
+                                }),
+                            formField(
+                                label: 'Product Code',
+                                require: true,
+                                controller: codectrl,
+                                type: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the product code';
+                                  }
+                                  return null;
+                                }),
+                            formField(
+                                label: 'Retail Margin (in Kes)',
+                                require: true,
+                                controller: retailMgctrl,
+                                type: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the retail margin';
+                                  }
+                                  return null;
+                                }),
+                            formField(
+                                label: 'Wholesale Margin (in Kes)',
+                                require: true,
+                                controller: wholesaleMgctrl,
+                                type: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the wholesale margin';
+                                  }
+                                  return null;
+                                }),
+                            formField(
+                                label: 'Buying Price (in Kes)',
+                                require: true,
+                                controller: buyingPricectrl,
+                                type: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the buying prce';
+                                  }
+                                  return null;
+                                }),
+                            CheckboxListTile(
+                              title: const Text('Block Negative',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Nunito',
+                                      fontWeight: FontWeight.w500,
+                                      color: kDarkGreen)),
+                              checkColor: kDarkGreen,
+                              activeColor: kLightGreen,
+                              value: blockingnegValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  blockingnegValue = value!;
+                                });
+                              },
+                            ),
+                            CheckboxListTile(
+                              title: const Text('Activate Product',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Nunito',
+                                      fontWeight: FontWeight.w500,
+                                      color: kDarkGreen)),
+                              checkColor: kDarkGreen,
+                              activeColor: kLightGreen,
+                              value: activeValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  activeValue = value!;
+                                });
+                              },
+                            )
+                          ])),
                   priBtn(
                     bgColour: kDarkGreen,
                     txtColour: Colors.white,
@@ -124,6 +266,11 @@ class _ProductFormState extends State<ProductForm> {
                       if (_formKey.currentState!.validate()) {
                         prodData.name = namectrl.text;
                         prodData.desc = descctrl.text;
+                        prodData.code = int.parse(codectrl.text);
+                        prodData.retailMg = int.parse(retailMgctrl.text);
+                        prodData.wholesaleMg = int.parse(wholesaleMgctrl.text);
+                        prodData.blockingneg = blockingnegValue;
+                        prodData.active = activeValue;
 
                         if (invtCtrl.isProdEdit.value) {
                           invtCtrl.editProduct(prodData);

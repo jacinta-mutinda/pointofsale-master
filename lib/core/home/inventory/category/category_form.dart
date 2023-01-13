@@ -63,6 +63,10 @@ class _CategoryFormState extends State<CategoryForm> {
           .first
           .wholesaleMg
           .toString();
+      posValue = invtCtrl.categories
+          .where((element) => element.id == (invtCtrl.catToEdit.value))
+          .first
+          .showInPos;
     } else {
       pageTitle = 'Add Category';
       namectrl.clear();
