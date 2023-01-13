@@ -34,8 +34,7 @@ class Supplier {
   int id;
   String name;
   String item;
-  int code;
-  String bankacc;
+  int bankacc;
   int krapin;
   String address;
   int cpperson;
@@ -43,7 +42,6 @@ class Supplier {
   Supplier(
       {required this.id,
       required this.name,
-      required this.code,
       required this.item,
       required this.bankacc,
       required this.krapin,

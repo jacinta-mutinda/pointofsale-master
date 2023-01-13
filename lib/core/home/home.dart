@@ -3,7 +3,7 @@ import 'package:nawiri/core/home/banking/banking.dart';
 import 'package:nawiri/core/home/customers.dart';
 import 'package:nawiri/core/home/inventory/inventory.dart';
 import 'package:nawiri/core/home/pos.dart';
-import 'package:nawiri/core/home/suppliers.dart';
+import 'package:nawiri/core/home/suppliers/suppliers.dart';
 import 'package:nawiri/core/home/transactions.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 navItem(
                     iconPath: Icons.local_shipping_rounded,
                     label: 'Suppliers',
-                    goTo: const SuppliersPage()),
+                    goTo: const SupplierPage()),
                 navItem(
                     iconPath: Icons.inventory_2,
                     label: 'Inventory',

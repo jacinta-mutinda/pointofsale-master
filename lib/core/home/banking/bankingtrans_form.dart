@@ -91,16 +91,18 @@ class _BankTransFormState extends State<BankTransForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          formDropDownField(
-                              label: 'Bank Account',
-                              dropdownValue: bankingCtrl.accDropdown.value,
-                              dropItems: bankingCtrl.bankAccStrs,
-                              bgcolor: kGrey,
-                              function: (String? newValue) {
-                                setState(() {
-                                  bankingCtrl.accDropdown.value = newValue!;
-                                });
-                              }),
+                          Obx(() => !bankingCtrl.isTransEdit.value
+                              ? formDropDownField(
+                                  label: 'Bank Account',
+                                  dropdownValue: bankingCtrl.accDropdown.value,
+                                  dropItems: bankingCtrl.bankAccStrs,
+                                  bgcolor: kGrey,
+                                  function: (String? newValue) {
+                                    setState(() {
+                                      bankingCtrl.accDropdown.value = newValue!;
+                                    });
+                                  })
+                              : const SizedBox()),
                           formDropDownField(
                               label: 'Transaction Type',
                               dropdownValue:
