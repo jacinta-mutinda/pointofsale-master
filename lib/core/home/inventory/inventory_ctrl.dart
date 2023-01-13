@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/inventory/category/category_main.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
+import 'package:nawiri/core/home/inventory/products/product_main.dart';
+import 'package:nawiri/core/home/inventory/uoms/uom_main.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
 class InventoryCtrl extends GetxController {
@@ -152,7 +154,7 @@ class InventoryCtrl extends GetxController {
     showSnackbar(
         path: Icons.check_rounded, title: "Product Added!", subtitle: "");
     await Future.delayed(const Duration(seconds: 2));
-    // Get.off(() => const ProductsPage());
+    Get.off(() => const ProductsPage());
 
     //     return;
     //   }
@@ -184,7 +186,7 @@ class InventoryCtrl extends GetxController {
         title: "Unit of Measurement Added!",
         subtitle: "");
     await Future.delayed(const Duration(seconds: 2));
-    // Get.off(() => const UomMsPage());
+    Get.off(() => const UoMsPage());
 
     //     return;
     //   }
@@ -250,7 +252,7 @@ class InventoryCtrl extends GetxController {
     showSnackbar(
         path: Icons.check_rounded, title: "Product Updated!", subtitle: "");
     await Future.delayed(const Duration(seconds: 2));
-    // Get.off(() => const ProductsPage());
+    Get.off(() => const ProductsPage());
 
     //     return;
     //   }
@@ -282,7 +284,7 @@ class InventoryCtrl extends GetxController {
         title: "Unit of Measurement Updated!",
         subtitle: "");
     await Future.delayed(const Duration(seconds: 2));
-    // Get.off(() => const UomMsPage());
+    Get.off(() => const UoMsPage());
 
     //     return;
     //   }

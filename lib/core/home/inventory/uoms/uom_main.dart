@@ -25,7 +25,7 @@ class _UoMsPageState extends State<UoMsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: backAppBar(pageTitle: 'Unit of Measurement', actions: <Widget>[]),
+      appBar: backAppBar(pageTitle: 'Inventory', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nawiri/core/home/banking.dart';
+import 'package:nawiri/core/home/banking/banking.dart';
 import 'package:nawiri/core/home/customers.dart';
 import 'package:nawiri/core/home/inventory/inventory.dart';
 import 'package:nawiri/core/home/pos.dart';

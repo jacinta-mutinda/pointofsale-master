@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/core/home/inventory/category/category_form.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
+import 'package:nawiri/core/home/inventory/products/product_form.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 
-class CategoriesPage extends StatefulWidget {
-  static const routeName = "/category";
-  const CategoriesPage({Key? key}) : super(key: key);
+class ProductsPage extends StatefulWidget {
+  static const routeName = "/products";
+  const ProductsPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _CategoriesPageState createState() => _CategoriesPageState();
+  _ProductsPageState createState() => _ProductsPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
+class _ProductsPageState extends State<ProductsPage> {
   final invtCtrl = Get.put(InventoryCtrl());
 
   @override
@@ -34,13 +34,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   children: [
                 const Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: Text('All Categories', style: kTitle)),
+                    child: Text('All Products', style: kTitle)),
                 Obx(
                   () => ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        var categories = invtCtrl.categories;
+                        var products = invtCtrl.products;
                         return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 3),
                             child: Card(
@@ -53,13 +53,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                       decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: kLightGreen),
-                                      child: const Icon(Icons.category,
+                                      child: const Icon(Icons.shopping_basket,
                                           size: 20, color: Colors.white)),
                                   title: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 5),
-                                      child: Text(categories[index].name,
+                                      child: Text(products[index].name,
                                           style: kCardTitle)),
+                                  subtitle: Text(
+                                      'Kes.${products[index].retailMg}',
+                                      style: kBlackTxt),
                                   trailing: Container(
                                       width: 40,
                                       height: 40,
@@ -69,22 +72,22 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                       child: const Icon(Icons.edit,
                                           size: 25, color: Colors.white)),
                                   onTap: () {
-                                    invtCtrl.isCatEdit.value = true;
-                                    invtCtrl.catToEdit.value =
-                                        categories[index].id;
-                                    Get.to(() => const CategoryForm());
+                                    invtCtrl.isProdEdit.value = true;
+                                    invtCtrl.prodToEdit.value =
+                                        products[index].id;
+                                    Get.to(() => const ProductForm());
                                   },
                                 )));
                       },
-                      itemCount: invtCtrl.categories.length),
+                      itemCount: invtCtrl.products.length),
                 )
               ]))),
       floatingActionButton: FloatingActionButton(
         backgroundColor: kDarkGreen,
         foregroundColor: Colors.white,
         onPressed: () {
-          invtCtrl.isCatEdit.value = false;
-          Get.to(const CategoryForm());
+          invtCtrl.isProdEdit.value = false;
+          Get.to(const ProductForm());
         },
         child: const Icon(Icons.add),
       ),

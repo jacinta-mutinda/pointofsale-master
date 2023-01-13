@@ -54,6 +54,72 @@ Widget priBtn(
   );
 }
 
+Widget formDropDownField(
+    {required dropdownValue,
+    required label,
+    required List<String> dropItems,
+    required Color bgcolor,
+    required void Function(String?)? function}) {
+  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    RichText(
+        text: TextSpan(children: [
+      TextSpan(
+          text: label,
+          style: const TextStyle(
+              fontSize: 12,
+              fontFamily: 'Nunito',
+              fontWeight: FontWeight.w500,
+              color: kDarkGreen)),
+      const TextSpan(
+        text: '*',
+        style: TextStyle(
+            fontSize: 12,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.w500,
+            color: kPrimaryRed),
+      ),
+    ])),
+    Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: bgcolor,
+        ),
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: DropdownButton<String>(
+              dropdownColor: bgcolor,
+              value: dropdownValue,
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.black,
+                size: 16,
+              ),
+              elevation: 0,
+              underline: Container(),
+              style: const TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+              onChanged: function,
+              items: dropItems.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Nunito',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  ),
+                );
+              }).toList(),
+            )))
+  ]);
+}
+
 PreferredSizeWidget mainAppBar({required String pageTitle}) {
   return AppBar(
       backgroundColor: kDarkGreen,

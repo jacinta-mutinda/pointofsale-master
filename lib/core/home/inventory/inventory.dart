@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nawiri/core/home/inventory/category/category_main.dart';
+import 'package:nawiri/core/home/inventory/products/product_main.dart';
+import 'package:nawiri/core/home/inventory/uoms/uom_main.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
 class InventoryPage extends StatefulWidget {
@@ -30,14 +32,14 @@ class _InventoryPageState extends State<InventoryPage> {
                     iconPath: Icons.category,
                     label: 'Category',
                     goTo: const CategoriesPage()),
-                // navItem(
-                //     iconPath: Icons.shopping_basket,
-                //     label: 'Product',
-                //     goTo: const TransactionsPage()),
-                // navItem(
-                //     iconPath: Icons.scale,
-                //     label: 'Unit of Measure',
-                //     goTo: const BankingPage()),
+                navItem(
+                    iconPath: Icons.shopping_basket,
+                    label: 'Product',
+                    goTo: const ProductsPage()),
+                navItem(
+                    iconPath: Icons.scale,
+                    label: 'Unit of Measure',
+                    goTo: const UoMsPage()),
               ])),
         ));
   }

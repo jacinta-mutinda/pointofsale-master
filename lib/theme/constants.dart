@@ -5,6 +5,7 @@ const kNeonGreen = Color(0xFF2AB514);
 const kLightGreen = Color(0xFF8FBD4F);
 const kGrey = Color(0xFFD5D5D5);
 const kPrimaryRed = Color(0xFFEE4444);
+const kCreamTheme = Color(0xFFDFDFD6);
 
 const kPageTitle = TextStyle(
     fontFamily: 'Nunito',
