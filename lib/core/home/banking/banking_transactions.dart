@@ -17,7 +17,7 @@ class BankTransPage extends StatefulWidget {
 }
 
 class _BankTransPageState extends State<BankTransPage> {
-  final _isDialOpen = ValueNotifier(false);
+  bool _isLoading = false;
   final bankingCtrl = Get.put(BankingCtrl());
 
   @override
@@ -27,117 +27,119 @@ class _BankTransPageState extends State<BankTransPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          if (_isDialOpen.value) {
-            _isDialOpen.value = false;
-            return false;
-          } else {
-            return true;
-          }
-        },
-        child: Scaffold(
-            appBar: backAppBar(pageTitle: 'Bank Account', actions: <Widget>[]),
-            body: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: backAppBar(
+          pageTitle: bankingCtrl.bankPageName.value, actions: <Widget>[]),
+      body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                      Padding(
-                          padding: const EdgeInsets.only(top: 20, bottom: 10),
-                          child: Obx(() => Text(bankingCtrl.bankPageName.value,
-                              style: kTitle))),
-                      Obx(
-                        () => ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              var accTrans = bankingCtrl.accBankTrans;
-                              return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 3),
-                                  child: Card(
-                                      color: kGrey,
-                                      elevation: 7.0,
-                                      child: ListTile(
-                                        leading: Container(
-                                            width: 40,
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color:
-                                                    (accTrans[index].action ==
-                                                            'Withdraw'
-                                                        ? kPrimaryRed
-                                                        : kLightGreen)),
-                                            child: Icon(
-                                                accTrans[index].action ==
-                                                        'Withdraw'
-                                                    ? Icons.call_made
-                                                    : Icons.call_received,
-                                                size: 20,
-                                                color: Colors.white)),
-                                        title: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5),
-                                            child: Text(accTrans[index].action,
-                                                style: kCardTitle)),
-                                        subtitle: Text(
-                                            'Kes.${accTrans[index].amount}',
-                                            style: kCardTitle),
-                                        trailing: Container(
-                                            width: 40,
-                                            height: 40,
-                                            decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: kDarkGreen),
-                                            child: const Icon(Icons.edit,
-                                                size: 25, color: Colors.white)),
-                                        onTap: () {
-                                          bankingCtrl.isTransEdit.value = true;
-                                          bankingCtrl.transToEdit.value =
-                                              accTrans[index].id;
-                                          Get.to(() => const BankTransForm());
-                                        },
-                                      )));
-                            },
-                            itemCount: bankingCtrl.accBankTrans.length),
-                      )
-                    ]))),
-            floatingActionButton: SpeedDial(
-                icon: Icons.more_vert,
-                activeIcon: Icons.close,
-                iconTheme: const IconThemeData(color: Colors.white),
-                backgroundColor: kDarkGreen,
-                overlayColor: kCreamTheme,
-                overlayOpacity: 0.8,
-                spacing: 10,
-                openCloseDial: _isDialOpen,
-                children: [
-                  SpeedDialChild(
-                      child: const Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                      ),
-                      label: 'Edit Bank Account',
-                      labelBackgroundColor: kCreamTheme,
-                      backgroundColor: kDarkGreen,
-                      onTap: () {
-                        Get.to(const BankAccForm());
-                      }),
-                  SpeedDialChild(
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      label: 'Add Bank Transaction',
-                      labelBackgroundColor: kCreamTheme,
-                      backgroundColor: kDarkGreen,
-                      onTap: () {
-                        bankingCtrl.isTransEdit.value = false;
-                        Get.to(const BankTransForm());
-                      })
-                ])));
+                          const Text('Account Details', style: kTitle),
+                          smallPriBtn(
+                              label: 'Edit Transaction',
+                              txtColour: Colors.white,
+                              bgColour: kDarkGreen,
+                              isLoading: _isLoading,
+                              function: () {
+                                Get.to(const BankAccForm());
+                              })
+                        ])),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  labelSpan(
+                      mainLabel: 'Bank Name',
+                      childLabel: bankingCtrl.transAccToShow.bankName),
+                  labelSpan(
+                      mainLabel: 'Branch Name',
+                      childLabel: bankingCtrl.transAccToShow.branchName),
+                  labelSpan(
+                      mainLabel: 'Bank Account No',
+                      childLabel: bankingCtrl.transAccToShow.accno.toString()),
+                  labelSpan(
+                      mainLabel: 'Contact Person Phone',
+                      childLabel:
+                          bankingCtrl.transAccToShow.cpperson.toString()),
+                  labelSpan(
+                      mainLabel: 'Current Total',
+                      childLabel:
+                          'Kes${bankingCtrl.transAccToShow.currentTotal}'),
+                ]),
+                Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Account Transactions', style: kTitle),
+                          smallPriBtn(
+                              label: 'Add Transaction',
+                              txtColour: Colors.white,
+                              bgColour: kDarkGreen,
+                              isLoading: _isLoading,
+                              function: () {
+                                bankingCtrl.isTransEdit.value = false;
+                                Get.to(const BankTransForm());
+                              })
+                        ])),
+                Obx(
+                  () => ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        var accTrans = bankingCtrl.accBankTrans;
+                        return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 3),
+                            child: Card(
+                                color: kGrey,
+                                elevation: 7.0,
+                                child: ListTile(
+                                  leading: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: (accTrans[index].action ==
+                                                  'Withdraw'
+                                              ? kPrimaryRed
+                                              : kLightGreen)),
+                                      child: Icon(
+                                          accTrans[index].action == 'Withdraw'
+                                              ? Icons.call_made
+                                              : Icons.call_received,
+                                          size: 20,
+                                          color: Colors.white)),
+                                  title: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: Text(accTrans[index].action,
+                                          style: kCardTitle)),
+                                  subtitle: Text(
+                                      'Kes.${accTrans[index].amount}',
+                                      style: kCardTitle),
+                                  trailing: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: kDarkGreen),
+                                      child: const Icon(Icons.edit,
+                                          size: 25, color: Colors.white)),
+                                  onTap: () {
+                                    bankingCtrl.isTransEdit.value = true;
+                                    bankingCtrl.transToEdit.value =
+                                        accTrans[index].id;
+                                    Get.to(() => const BankTransForm());
+                                  },
+                                )));
+                      },
+                      itemCount: bankingCtrl.accBankTrans.length),
+                )
+              ]))),
+    );
   }
 }

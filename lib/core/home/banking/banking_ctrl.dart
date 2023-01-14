@@ -18,7 +18,13 @@ class BankingCtrl extends GetxController {
   RxString bankPageName = ''.obs;
   List<String> bankAccStrs = [];
   List<String> accActionStrs = ['', 'Withdraw', 'Deposit'];
-
+  BankAccount transAccToShow = BankAccount(
+      id: 1,
+      bankName: '',
+      accno: 1,
+      branchName: '',
+      cpperson: 1,
+      currentTotal: 1);
   RxList<BankAccount> bankAccounts = RxList<BankAccount>();
   RxList<BankTransaction> allBankTrans = RxList<BankTransaction>();
   RxList<BankTransaction> accBankTrans = RxList<BankTransaction>();
@@ -104,8 +110,13 @@ class BankingCtrl extends GetxController {
         accBankTrans.add(trans);
       }
     }
-    bankPageName.value =
-        '${bankAccounts.where((element) => element.id == (transToShow.value)).first.bankName} Transactions';
+    transAccToShow = bankAccounts
+        .where((element) => element.id == (transToShow.value))
+        .first;
+    bankPageName.value = bankAccounts
+        .where((element) => element.id == (transToShow.value))
+        .first
+        .bankName;
     Get.to(() => const BankTransPage());
     accDropdown.value = bankAccStrs[0];
     transTypeDropdown.value = accActionStrs[0];
