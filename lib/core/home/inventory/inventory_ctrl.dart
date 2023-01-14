@@ -102,6 +102,19 @@ class InventoryCtrl extends GetxController {
           id: 3,
           categoryid: 3,
           uomId: 2),
+      Product(
+          name: 'Product 03',
+          desc:
+              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
+          retailMg: 1000,
+          wholesaleMg: 750,
+          code: 0977,
+          buyingPrice: 300,
+          blockingneg: true,
+          active: true,
+          id: 4,
+          categoryid: 2,
+          uomId: 3)
     ];
   }
 

@@ -83,8 +83,20 @@ class CustomerCtrl extends GetxController {
       Sale(
           id: 1,
           cart: [
-            CartItem(id: 1, prodId: 1, quantity: 3, total: 900),
-            CartItem(id: 2, prodId: 2, quantity: 2, total: 1000),
+            CartItem(
+                id: 1,
+                prodId: 1,
+                quantity: 3,
+                total: 900,
+                unitPrice: 300,
+                name: 'Product 00'),
+            CartItem(
+                id: 2,
+                prodId: 2,
+                quantity: 2,
+                total: 1000,
+                unitPrice: 500,
+                name: 'Product 00'),
           ],
           total: 1900,
           payMethod: 'M-pesa',
@@ -95,8 +107,20 @@ class CustomerCtrl extends GetxController {
       Sale(
           id: 2,
           cart: [
-            CartItem(id: 1, prodId: 1, quantity: 3, total: 900),
-            CartItem(id: 2, prodId: 2, quantity: 2, total: 1000),
+            CartItem(
+                id: 1,
+                prodId: 1,
+                quantity: 3,
+                total: 900,
+                unitPrice: 300,
+                name: 'Product 00'),
+            CartItem(
+                id: 2,
+                prodId: 2,
+                quantity: 2,
+                total: 1000,
+                unitPrice: 500,
+                name: 'Product 00'),
           ],
           total: 1250,
           payMethod: 'M-pesa',
@@ -107,8 +131,20 @@ class CustomerCtrl extends GetxController {
       Sale(
           id: 3,
           cart: [
-            CartItem(id: 1, prodId: 1, quantity: 3, total: 900),
-            CartItem(id: 2, prodId: 2, quantity: 2, total: 1000),
+            CartItem(
+                id: 1,
+                prodId: 1,
+                quantity: 3,
+                total: 900,
+                unitPrice: 300,
+                name: 'Product 00'),
+            CartItem(
+                id: 2,
+                prodId: 2,
+                quantity: 2,
+                total: 1000,
+                unitPrice: 500,
+                name: 'Product 00'),
           ],
           total: 1900,
           payMethod: 'M-pesa',
@@ -119,8 +155,20 @@ class CustomerCtrl extends GetxController {
       Sale(
           id: 4,
           cart: [
-            CartItem(id: 1, prodId: 1, quantity: 3, total: 900),
-            CartItem(id: 2, prodId: 2, quantity: 2, total: 1000),
+            CartItem(
+                id: 1,
+                prodId: 1,
+                quantity: 3,
+                total: 900,
+                unitPrice: 300,
+                name: 'Product 00'),
+            CartItem(
+                id: 2,
+                prodId: 2,
+                quantity: 2,
+                total: 1000,
+                unitPrice: 500,
+                name: 'Product 00'),
           ],
           total: 1900,
           payMethod: 'M-pesa',

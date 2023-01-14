@@ -91,14 +91,18 @@ class Customer {
 
 class CartItem {
   int id;
+  String name;
   int prodId;
   int quantity;
+  int unitPrice;
   int total;
 
   CartItem({
     required this.id,
+    required this.name,
     required this.prodId,
     required this.quantity,
+    required this.unitPrice,
     required this.total,
   });
 }

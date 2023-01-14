@@ -217,7 +217,7 @@ class _ProductFormState extends State<ProductForm> {
                                 type: TextInputType.number,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter the buying prce';
+                                    return 'Please enter the buying price';
                                   }
                                   return null;
                                 }),

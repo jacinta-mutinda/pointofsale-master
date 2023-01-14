@@ -60,7 +60,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                           vertical: 5),
                                       child: Text(expenses[index].type,
                                           style: kCardTitle)),
-                                  subtitle: Text('Kes${expenses[index].amount}',
+                                  subtitle: Text(
+                                      'Kes.${expenses[index].amount}',
                                       style: kCardTitle),
                                   trailing: Container(
                                       width: 40,

@@ -31,7 +31,7 @@ class LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return ScreenLock(
         // correctString: loginCtrl.passcode.toString(),
-        correctString: '011234',
+        correctString: '001234',
         digits: 6,
         customizedButtonTap: auth.bioAuth,
         didOpened: auth.bioAuth,
