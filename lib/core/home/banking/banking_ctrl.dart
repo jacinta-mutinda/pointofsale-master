@@ -70,25 +70,29 @@ class BankingCtrl extends GetxController {
           bankId: 1,
           action: 'Withdraw',
           desc: 'For rent',
-          amount: 20000),
+          amount: 20000,
+          date: '2023-01-14'),
       BankTransaction(
           id: 2,
           bankId: 1,
           action: 'Deposit',
           desc: 'For clothes supplier',
-          amount: 5000),
+          amount: 5000,
+          date: '2023-01-14'),
       BankTransaction(
           id: 3,
           bankId: 2,
           action: 'Deposit',
           desc: 'For clothes supplier',
-          amount: 5000),
+          amount: 5000,
+          date: '2023-01-14'),
       BankTransaction(
           id: 4,
           bankId: 3,
           action: 'Withdraw',
           desc: 'For personal use',
-          amount: 300),
+          amount: 300,
+          date: '2023-01-14'),
     ];
   }
 

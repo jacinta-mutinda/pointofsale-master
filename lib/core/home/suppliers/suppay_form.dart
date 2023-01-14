@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/suppliers/suppliers_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
@@ -20,11 +21,17 @@ class SuppPayForm extends StatefulWidget {
 class _SuppPayFormState extends State<SuppPayForm> {
   String pageTitle = '';
   SupplierPayment supPayData = SupplierPayment(
-      id: 1, supplierId: 1, quantity: 1, unitPrice: 1, total: 1);
+      id: 1,
+      supplierId: 1,
+      quantity: 1,
+      unitPrice: 1,
+      total: 1,
+      date: '2023-01-14');
   final supplierCtrl = Get.put(SupplierCtrl());
   TextEditingController quantityctrl = TextEditingController();
   TextEditingController unitpricectrl = TextEditingController();
   TextEditingController totalctrl = TextEditingController();
+  TextEditingController datectrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -41,6 +48,7 @@ class _SuppPayFormState extends State<SuppPayForm> {
     quantityctrl.dispose();
     unitpricectrl.dispose();
     totalctrl.dispose();
+    datectrl.dispose();
     super.dispose();
   }
 
@@ -62,6 +70,10 @@ class _SuppPayFormState extends State<SuppPayForm> {
           .first
           .total
           .toString();
+      datectrl.text = supplierCtrl.oneSupPayments
+          .where((element) => element.id == (supplierCtrl.supPayToEdit.value))
+          .first
+          .date;
     } else {
       pageTitle = 'Add Supplier Payment';
       quantityctrl.clear();
@@ -118,6 +130,32 @@ class _SuppPayFormState extends State<SuppPayForm> {
                                 }
                                 return null;
                               }),
+                          dateFormField(
+                              label: 'Date of Payment',
+                              controller: datectrl,
+                              showDate: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now());
+
+                                if (pickedDate != null) {
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(pickedDate);
+
+                                  setState(() {
+                                    datectrl.text = formattedDate;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the date of payment';
+                                }
+                                return null;
+                              })
                         ],
                       )),
                   priBtn(
@@ -134,6 +172,7 @@ class _SuppPayFormState extends State<SuppPayForm> {
                         supPayData.unitPrice = int.parse(quantityctrl.text);
                         supPayData.total = int.parse(quantityctrl.text);
                         supPayData.supplierId = supplierCtrl.paysToShow.value;
+                        supPayData.date = datectrl.text;
 
                         if (supplierCtrl.isSupPayEdit.value) {
                           supplierCtrl.editSupPay(supPayData);

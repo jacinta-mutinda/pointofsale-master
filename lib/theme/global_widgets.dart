@@ -290,6 +290,73 @@ Widget navItem({required iconPath, required label, required dynamic goTo}) {
           }));
 }
 
+// ------------------ Popups
+
+Widget popupScaffold({required List<Widget> children}) {
+  return Dialog(
+      insetPadding: const EdgeInsets.only(bottom: 90, left: 26, right: 26),
+      child: SingleChildScrollView(
+          child: Container(
+              padding: const EdgeInsets.only(bottom: 20),
+              decoration: const BoxDecoration(color: kCreamTheme),
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: children)))));
+}
+
+Widget popupHeader({label}) {
+  return Padding(
+      padding: const EdgeInsets.only(top: 18, bottom: 7),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: kDarkGreen),
+          ),
+          IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: const Icon(
+                Icons.close_outlined,
+                size: 30,
+                color: kDarkGreen,
+              ))
+        ],
+      ));
+}
+
+Widget popupTitle({label}) {
+  return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: Text(
+        label,
+        style: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: kCreamTheme),
+      ));
+}
+
+Widget popupSubtitle({label}) {
+  return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(label,
+          style: const TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: kCreamTheme)));
+}
+
 // ---------------- Auth Widgets
 
 Widget formField(
@@ -328,6 +395,57 @@ Widget formField(
             controller: controller,
             keyboardType: type,
             validator: validator,
+            style: const TextStyle(
+                fontSize: 16,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w400,
+                color: Colors.black),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+              ),
+            ),
+          ),
+        )
+      ]));
+}
+
+Widget dateFormField(
+    {required label,
+    required controller,
+    required void Function()? showDate,
+    required final String? Function(String?) validator}) {
+  return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: RichText(
+                text: TextSpan(children: [
+              TextSpan(
+                  text: label,
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w500,
+                      color: kDarkGreen)),
+              const TextSpan(
+                text: '*',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w500,
+                    color: kPrimaryRed),
+              ),
+            ]))),
+        SizedBox(
+          height: 50,
+          child: TextFormField(
+            cursorColor: kDarkGreen,
+            controller: controller,
+            validator: validator,
+            readOnly: true,
+            onTap: showDate,
             style: const TextStyle(
                 fontSize: 16,
                 fontFamily: 'Nunito',

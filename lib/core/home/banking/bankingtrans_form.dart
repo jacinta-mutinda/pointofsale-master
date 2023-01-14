@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/theme/constants.dart';
@@ -19,11 +20,12 @@ class BankTransForm extends StatefulWidget {
 
 class _BankTransFormState extends State<BankTransForm> {
   String pageTitle = '';
-  BankTransaction bankTransData =
-      BankTransaction(id: 1, action: '', bankId: 1, desc: '', amount: 1);
+  BankTransaction bankTransData = BankTransaction(
+      id: 1, action: '', bankId: 1, desc: '', amount: 1, date: '2023-01-14');
   final bankingCtrl = Get.put(BankingCtrl());
   TextEditingController descctrl = TextEditingController();
   TextEditingController amountctrl = TextEditingController();
+  TextEditingController datectrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -39,6 +41,7 @@ class _BankTransFormState extends State<BankTransForm> {
   void dispose() {
     descctrl.dispose();
     amountctrl.dispose();
+    datectrl.dispose();
     super.dispose();
   }
 
@@ -69,6 +72,10 @@ class _BankTransFormState extends State<BankTransForm> {
           .first
           .amount
           .toString();
+      datectrl.text = bankingCtrl.accBankTrans
+          .where((element) => element.id == (bankingCtrl.transToEdit.value))
+          .first
+          .date;
     } else {
       pageTitle = 'Add Bank Transaction';
       descctrl.clear();
@@ -127,7 +134,33 @@ class _BankTransFormState extends State<BankTransForm> {
                                 return null;
                               }),
                           descFormField(
-                              label: 'Description', controller: descctrl)
+                              label: 'Description', controller: descctrl),
+                          dateFormField(
+                              label: 'Date of Payment',
+                              controller: datectrl,
+                              showDate: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now());
+
+                                if (pickedDate != null) {
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(pickedDate);
+
+                                  setState(() {
+                                    datectrl.text = formattedDate;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the date of payment';
+                                }
+                                return null;
+                              })
                         ],
                       )),
                   priBtn(
@@ -150,6 +183,7 @@ class _BankTransFormState extends State<BankTransForm> {
                             .first
                             .id;
                         bankTransData.amount = int.parse(amountctrl.text);
+                        bankTransData.date = datectrl.text;
 
                         if (bankingCtrl.isBankEdit.value) {
                           bankingCtrl.editBankTrans(bankTransData);

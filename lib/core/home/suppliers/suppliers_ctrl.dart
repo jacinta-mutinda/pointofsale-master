@@ -61,13 +61,33 @@ class SupplierCtrl extends GetxController {
   getSupPayments() {
     allSupPayments.value = [
       SupplierPayment(
-          id: 1, supplierId: 1, quantity: 20, unitPrice: 300, total: 6000),
+          id: 1,
+          supplierId: 1,
+          quantity: 20,
+          unitPrice: 300,
+          total: 6000,
+          date: '2023-01-14'),
       SupplierPayment(
-          id: 1, supplierId: 2, quantity: 30, unitPrice: 350, total: 6000),
+          id: 1,
+          supplierId: 2,
+          quantity: 30,
+          unitPrice: 350,
+          total: 6000,
+          date: '2023-01-14'),
       SupplierPayment(
-          id: 1, supplierId: 2, quantity: 50, unitPrice: 400, total: 6000),
+          id: 1,
+          supplierId: 2,
+          quantity: 50,
+          unitPrice: 400,
+          total: 6000,
+          date: '2023-01-14'),
       SupplierPayment(
-          id: 1, supplierId: 3, quantity: 60, unitPrice: 450, total: 6000),
+          id: 1,
+          supplierId: 3,
+          quantity: 60,
+          unitPrice: 450,
+          total: 6000,
+          date: '2023-01-14'),
     ];
   }
 
