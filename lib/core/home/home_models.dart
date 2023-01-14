@@ -21,12 +21,14 @@ class BankTransaction {
   String action;
   String desc;
   int amount;
+  String date;
 
   BankTransaction(
       {required this.id,
       required this.bankId,
       required this.action,
       required this.desc,
+      required this.date,
       required this.amount});
 }
 
@@ -55,21 +57,22 @@ class SupplierPayment {
   int quantity;
   int unitPrice;
   int total;
+  String date;
 
   SupplierPayment(
       {required this.id,
       required this.supplierId,
       required this.quantity,
       required this.unitPrice,
+      required this.date,
       required this.total});
 }
 
 class Customer {
   int id;
   String name;
-  String item;
   int phoneno;
-  String bankacc;
+  int bankacc;
   int krapin;
   String address;
   int cpperson;
@@ -79,12 +82,46 @@ class Customer {
       {required this.id,
       required this.name,
       required this.phoneno,
-      required this.item,
       required this.bankacc,
       required this.krapin,
       required this.address,
       required this.cpperson,
       required this.creditlimit});
+}
+
+class CartItem {
+  int id;
+  int prodId;
+  int quantity;
+  int total;
+
+  CartItem({
+    required this.id,
+    required this.prodId,
+    required this.quantity,
+    required this.total,
+  });
+}
+
+class Sale {
+  int id;
+  List<CartItem> cart;
+  int total;
+  String payMethod;
+  String refCode;
+  int custId;
+  bool paid;
+  String date;
+
+  Sale(
+      {required this.id,
+      required this.cart,
+      required this.total,
+      required this.payMethod,
+      required this.custId,
+      required this.refCode,
+      required this.date,
+      required this.paid});
 }
 
 class Expense {
