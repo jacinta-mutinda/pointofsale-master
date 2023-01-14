@@ -109,8 +109,10 @@ class SupplierCtrl extends GetxController {
     }
     supToShow =
         suppliers.where((element) => element.id == (paysToShow.value)).first;
-    supPageName.value =
-        '${suppliers.where((element) => element.id == (paysToShow.value)).first.name} Payments';
+    supPageName.value = suppliers
+        .where((element) => element.id == (paysToShow.value))
+        .first
+        .name;
     Get.to(() => const SupplierPayments());
   }
 

@@ -14,6 +14,15 @@ class CustomerCtrl extends GetxController {
   RxInt billsToShow = 1.obs;
   RxInt singleBillId = 1.obs;
   RxString custPageName = ''.obs;
+  Customer custToShow = Customer(
+      id: 1,
+      name: '',
+      phoneno: 1,
+      bankacc: 1,
+      krapin: 1,
+      address: '',
+      cpperson: 1,
+      creditlimit: 1);
   Sale singleBill = Sale(
       id: 1,
       cart: [],
@@ -130,8 +139,12 @@ class CustomerCtrl extends GetxController {
         oneCustSales.add(sale);
       }
     }
-    custPageName.value =
-        '${customers.where((element) => element.id == (billsToShow.value)).first.name} Payments';
+    custToShow =
+        customers.where((element) => element.id == (billsToShow.value)).first;
+    custPageName.value = customers
+        .where((element) => element.id == (billsToShow.value))
+        .first
+        .name;
     Get.to(() => const CustomerBills());
   }
 
@@ -139,7 +152,7 @@ class CustomerCtrl extends GetxController {
     singleBill = oneCustSales
         .where((element) => element.id == (singleBillId.value))
         .first;
-    Get.to(() => const SingleBill());
+    Get.dialog(const SingleBill());
   }
 
   // ---------- Add Functions -----------------

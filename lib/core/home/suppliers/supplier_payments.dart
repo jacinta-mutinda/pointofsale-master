@@ -27,7 +27,8 @@ class _SupplierPaymentsState extends State<SupplierPayments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: backAppBar(pageTitle: 'Supplier', actions: <Widget>[]),
+      appBar: backAppBar(
+          pageTitle: supplierCtrl.supPageName.value, actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(

@@ -53,7 +53,7 @@ class _CustomersPageState extends State<CustomersPage> {
                                       decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: kLightGreen),
-                                      child: const Icon(Icons.local_shipping,
+                                      child: const Icon(Icons.person,
                                           size: 20, color: Colors.white)),
                                   title: Padding(
                                       padding: const EdgeInsets.symmetric(

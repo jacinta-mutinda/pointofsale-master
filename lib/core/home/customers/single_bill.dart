@@ -23,19 +23,21 @@ class _SingleBillState extends State<SingleBill> {
   @override
   Widget build(BuildContext context) {
     return popupScaffold(children: [
-      popupHeader(label: customerCtrl.singleBill.date),
-      textSpan(
-          mainLabel: 'Payment Method',
-          childLabel: customerCtrl.singleBill.payMethod,
-          function: () {}),
-      textSpan(
-          mainLabel: 'Reference Code',
-          childLabel: customerCtrl.singleBill.refCode,
-          function: () {}),
-      textSpan(
-          mainLabel: 'Status',
-          childLabel: customerCtrl.singleBill.paid ? 'Paid' : 'Unpaid',
-          function: () {}),
+      popupHeader(label: 'Bill Date: ${customerCtrl.singleBill.date}'),
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        labelSpan(
+            mainLabel: 'Payment Method',
+            childLabel: customerCtrl.singleBill.payMethod),
+        labelSpan(
+            mainLabel: 'Reference Code',
+            childLabel: customerCtrl.singleBill.refCode),
+        labelSpan(
+            mainLabel: 'Status',
+            childLabel: customerCtrl.singleBill.paid ? 'Paid' : 'Unpaid'),
+        labelSpan(
+            mainLabel: 'Total',
+            childLabel: 'Kes${customerCtrl.singleBill.total}'),
+      ])
     ]);
   }
 }

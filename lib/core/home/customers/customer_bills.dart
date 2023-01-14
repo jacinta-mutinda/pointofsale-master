@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nawiri/core/home/customers/customer_form.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/theme/global_widgets.dart';
@@ -26,16 +27,55 @@ class _CustomerBillsState extends State<CustomerBills> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: backAppBar(pageTitle: 'Customer', actions: <Widget>[]),
+      appBar: backAppBar(
+          pageTitle: customerCtrl.custPageName.value, actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Customer Details', style: kTitle),
+                          smallPriBtn(
+                              label: 'Edit Customer',
+                              txtColour: Colors.white,
+                              bgColour: kDarkGreen,
+                              isLoading: _isLoading,
+                              function: () {
+                                Get.to(const CustomerForm());
+                              })
+                        ])),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  labelSpan(
+                      mainLabel: 'Name',
+                      childLabel: customerCtrl.custToShow.name),
+                  labelSpan(
+                      mainLabel: 'Phone Number',
+                      childLabel: customerCtrl.custToShow.phoneno.toString()),
+                  labelSpan(
+                      mainLabel: 'Bank Account No',
+                      childLabel: customerCtrl.custToShow.bankacc.toString()),
+                  labelSpan(
+                      mainLabel: 'KRA Pin',
+                      childLabel: customerCtrl.custToShow.krapin.toString()),
+                  labelSpan(
+                      mainLabel: 'Address',
+                      childLabel: customerCtrl.custToShow.address),
+                  labelSpan(
+                      mainLabel: 'Contact Person Phone',
+                      childLabel: customerCtrl.custToShow.cpperson.toString()),
+                  labelSpan(
+                      mainLabel: 'Credit Limit',
+                      childLabel: 'Kes.${customerCtrl.custToShow.creditlimit}'),
+                ]),
                 const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: Text('All Customer Bills', style: kTitle)),
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text('Customer Bills', style: kTitle)),
                 Obx(
                   () => ListView.builder(
                       shrinkWrap: true,
@@ -89,10 +129,10 @@ class _CustomerBillsState extends State<CustomerBills> {
                                                           color: custBills[
                                                                       index]
                                                                   .paid
-                                                              ? kLightGreen
+                                                              ? kDarkGreen
                                                               : kPrimaryRed))),
                                               Text(
-                                                'Kes${custBills[index].total}',
+                                                'Kes.${custBills[index].total}',
                                                 style: kCardTitle,
                                               )
                                             ]),
@@ -102,14 +142,16 @@ class _CustomerBillsState extends State<CustomerBills> {
                                           customerCtrl.getSingleBill();
                                         },
                                       ),
-                                      priBtn(
-                                          label: 'Clear Bill',
-                                          txtColour: Colors.white,
-                                          bgColour: kDarkGreen,
-                                          isLoading: _isLoading,
-                                          function: () {
-                                            Get.to(const PoSPage());
-                                          })
+                                      Obx(() => !custBills[index].paid
+                                          ? priBtn(
+                                              label: 'Clear Bill',
+                                              txtColour: Colors.white,
+                                              bgColour: kDarkGreen,
+                                              isLoading: _isLoading,
+                                              function: () {
+                                                Get.to(const PoSPage());
+                                              })
+                                          : const SizedBox())
                                     ])));
                       },
                       itemCount: customerCtrl.oneCustSales.length),
