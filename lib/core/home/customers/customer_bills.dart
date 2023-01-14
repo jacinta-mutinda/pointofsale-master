@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
-import 'package:nawiri/core/home/pos.dart';
+import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 

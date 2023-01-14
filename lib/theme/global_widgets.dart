@@ -54,6 +54,43 @@ Widget priBtn(
   );
 }
 
+Widget smallPriBtn(
+    {required String label,
+    required Color txtColour,
+    required Color bgColour,
+    required bool isLoading,
+    required void Function()? function}) {
+  return Container(
+    width: 120,
+    height: 70,
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    alignment: Alignment.center,
+    child: ElevatedButton(
+      onPressed: function,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 70),
+        backgroundColor: bgColour,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      ),
+      child: (isLoading)
+          ? const SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 1.5,
+              ))
+          : Text(label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: txtColour,
+                  fontFamily: 'Nunito',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700)),
+    ),
+  );
+}
+
 Widget formDropDownField(
     {required dropdownValue,
     required label,
@@ -357,7 +394,39 @@ Widget popupSubtitle({label}) {
               color: kCreamTheme)));
 }
 
-// ---------------- Auth Widgets
+Widget labelSpan({required mainLabel, required childLabel}) {
+  return Padding(
+      padding: const EdgeInsets.only(top: 7),
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          text: mainLabel,
+          style: const TextStyle(
+              fontSize: 14,
+              fontFamily: 'Nunito',
+              fontWeight: FontWeight.w500,
+              color: kDarkGreen),
+          children: <TextSpan>[
+            const TextSpan(
+                text: ': ',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w600,
+                    color: kDarkGreen)),
+            TextSpan(
+                text: childLabel,
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black)),
+          ],
+        ),
+      ));
+}
+
+// ---------------- Form Widgets
 
 Widget formField(
     {required label,

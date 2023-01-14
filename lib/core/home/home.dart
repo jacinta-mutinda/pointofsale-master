@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nawiri/core/home/banking/banking.dart';
 import 'package:nawiri/core/home/customers/customers.dart';
 import 'package:nawiri/core/home/inventory/inventory.dart';
-import 'package:nawiri/core/home/pos.dart';
+import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/core/home/suppliers/suppliers.dart';
 import 'package:nawiri/core/home/transactions/transactions.dart';
 import 'package:nawiri/theme/global_widgets.dart';

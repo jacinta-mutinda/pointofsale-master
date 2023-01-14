@@ -14,6 +14,14 @@ class SupplierCtrl extends GetxController {
   RxInt supPayToEdit = 1.obs;
   RxInt paysToShow = 1.obs;
   RxString supPageName = ''.obs;
+  Supplier supToShow = Supplier(
+      id: 1,
+      name: '',
+      item: '',
+      bankacc: 1,
+      krapin: 1,
+      address: '',
+      cpperson: 1);
 
   RxList<Supplier> suppliers = RxList<Supplier>();
   RxList<SupplierPayment> allSupPayments = RxList<SupplierPayment>();
@@ -99,6 +107,8 @@ class SupplierCtrl extends GetxController {
         oneSupPayments.add(pay);
       }
     }
+    supToShow =
+        suppliers.where((element) => element.id == (paysToShow.value)).first;
     supPageName.value =
         '${suppliers.where((element) => element.id == (paysToShow.value)).first.name} Payments';
     Get.to(() => const SupplierPayments());
@@ -146,6 +156,7 @@ class SupplierCtrl extends GetxController {
       'quantity': supPayData.quantity,
       'unitPrice': supPayData.unitPrice,
       'total': supPayData.total,
+      'date': supPayData.date
     });
     debugPrint(body);
     // try {
@@ -216,6 +227,7 @@ class SupplierCtrl extends GetxController {
       'quantity': supPayData.quantity,
       'unitPrice': supPayData.unitPrice,
       'total': supPayData.total,
+      'date': supPayData.date
     });
     debugPrint(body);
     // try {

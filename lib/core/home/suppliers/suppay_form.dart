@@ -97,6 +97,9 @@ class _SuppPayFormState extends State<SuppPayForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          Text(
+                              'Item Supplied: ${supplierCtrl.suppliers.where((element) => element.id == (supplierCtrl.paysToShow.value)).first.item}',
+                              style: kSubTitle),
                           formField(
                               label: 'Quantity',
                               require: true,

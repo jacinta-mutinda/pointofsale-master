@@ -71,6 +71,7 @@ class _TransactionFormState extends State<TransactionForm> {
       typectrl.clear();
       descctrl.clear();
       amountctrl.clear();
+      transCtrl.modeDropDown.value = '';
     }
   }
 

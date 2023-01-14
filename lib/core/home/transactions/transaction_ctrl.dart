@@ -33,7 +33,7 @@ class TransactionCtrl extends GetxController {
           type: 'Rent'),
       Expense(
           id: 2,
-          mode: 'Bank',
+          mode: 'Bank Account',
           desc: 'Lorem ipsum dolor',
           amount: 7000,
           type: 'Electrictity'),
