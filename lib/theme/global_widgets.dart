@@ -524,6 +524,11 @@ Widget dateFormField(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
               ),
+              suffix: Icon(
+                Icons.calendar_today,
+                color: kDarkGreen,
+                size: 16,
+              ),
             ),
           ),
         )

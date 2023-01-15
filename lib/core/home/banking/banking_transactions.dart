@@ -5,7 +5,6 @@ import 'package:nawiri/core/home/banking/banking_form.dart';
 import 'package:nawiri/core/home/banking/bankingtrans_form.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class BankTransPage extends StatefulWidget {
   static const routeName = "/banking";
