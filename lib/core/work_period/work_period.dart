@@ -29,7 +29,7 @@ class _WorkPeriodPageState extends State<WorkPeriodPage> {
               height: double.maxFinite,
               child: navMenu(navItems: [
                 navItem(
-                    iconPath: Icons.point_of_sale,
+                    iconPath: Icons.wallet,
                     label: 'Cash Drawer',
                     goTo: const DrawerPage()),
                 navItem(
