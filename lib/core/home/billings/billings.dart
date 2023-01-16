@@ -63,7 +63,10 @@ class _BillingsPageState extends State<BillingsPage> {
                                         title: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 5),
-                                            child: Text(userBills[index].date,
+                                            child: Text(
+                                                userBills[index].paid
+                                                    ? 'Receipt ${userBills[index].name}'
+                                                    : 'Invoice ${userBills[index].name}',
                                                 style: kCardTitle)),
                                         subtitle: Text(userBills[index].date,
                                             style: kCardTitle),
