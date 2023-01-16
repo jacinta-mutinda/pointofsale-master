@@ -142,3 +142,44 @@ class Expense {
       required this.amount,
       required this.type});
 }
+
+class User {
+  int id;
+  String busname;
+  String busaddress;
+  String location;
+  int phone;
+  int till;
+  String recFooter;
+  String username;
+  String address;
+  int phoneno;
+  int pin;
+
+  User(
+      {required this.id,
+      required this.busname,
+      required this.busaddress,
+      required this.location,
+      required this.phone,
+      required this.till,
+      required this.recFooter,
+      required this.username,
+      required this.address,
+      required this.phoneno,
+      required this.pin});
+}
+
+class Billing {
+  int id;
+  String name;
+  String date;
+  bool paid;
+  int amount = 250;
+
+  Billing(
+      {required this.id,
+      required this.name,
+      required this.date,
+      required this.paid});
+}

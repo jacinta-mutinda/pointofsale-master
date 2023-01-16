@@ -8,6 +8,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:nawiri/auth/screens/login.dart';
 import 'package:nawiri/auth/screens/verify.dart';
 import 'package:nawiri/bottomnav.dart';
+import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +20,18 @@ class Auth with ChangeNotifier {
   late Map<String, dynamic> _profile = {};
   static final _localAuth = LocalAuthentication();
   int? passcode;
+  User profile = User(
+      id: 1,
+      busname: 'Asis Tea Sales',
+      busaddress: 'P.O BOX 234 5788',
+      location: 'KImathi House',
+      phone: 0712345678,
+      till: 564534,
+      recFooter: 'Thank you for coming',
+      username: 'Admin_one',
+      address: 'admin@gmail.com',
+      phoneno: 0712345678,
+      pin: 1234);
 
   Auth() {
     debugPrint("#################");
