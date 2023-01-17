@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class BankAccount {
   int id;
   String bankName;
@@ -95,7 +97,7 @@ class CartItem {
   int prodId;
   int quantity;
   int unitPrice;
-  int total;
+  RxInt total;
 
   CartItem({
     required this.id,
@@ -109,8 +111,8 @@ class CartItem {
 
 class Sale {
   int id;
-  List<CartItem> cart;
-  int total;
+  RxList<CartItem> cart;
+  RxInt total;
   String payMethod;
   String refCode;
   int custId;

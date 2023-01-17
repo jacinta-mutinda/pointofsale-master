@@ -64,8 +64,8 @@ class LoginState extends State<Login> {
             spacing: 15,
             padding: EdgeInsets.all(40),
             secretConfig: SecretConfig(
-                height: 40,
-                width: 40,
+                height: 25,
+                width: 25,
                 borderColor: kDarkGreen,
                 enabledColor: kDarkGreen,
                 disabledColor: kGrey)),
@@ -74,7 +74,7 @@ class LoginState extends State<Login> {
           textStyle: kPageTitle,
           buttonStyle: OutlinedButton.styleFrom(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
             backgroundColor: kDarkGreen,
           ),
         )),

@@ -206,78 +206,73 @@ class _CartState extends State<Cart> {
     return Scaffold(
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(children: [
             const Padding(
                 padding: EdgeInsets.only(bottom: 15),
-                child: Text('Cart', style: kSubTitle)),
-            Obx(
-              () => ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    var cart = posCtrl.cartSale.cart;
-                    return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3),
-                        child: Card(
-                            color: kGrey,
-                            elevation: 7.0,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  ListTile(
-                                    leading: Container(
-                                        width: 40,
-                                        height: 40,
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: kDarkGreen),
-                                        child: const Icon(Icons.edit,
-                                            size: 20, color: Colors.white)),
-                                    title: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5),
-                                        child: Text(cart[index].name,
-                                            style: kCardTitle)),
-                                    subtitle: Text(
-                                        'Unit Price: Kes.${cart[index].unitPrice}',
-                                        style: const TextStyle(
-                                            fontFamily: 'Nunito',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black)),
-                                    trailing: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 5),
-                                              child: Text(
-                                                  'Item No:${cart[index].quantity}',
-                                                  style: const TextStyle(
-                                                      fontFamily: 'Nunito',
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.black))),
-                                          Text(
-                                            'Kes.${cart[index].total}',
-                                            style: kCardTitle,
-                                          )
-                                        ]),
-                                    onTap: () async {
-                                      posCtrl.selectedCartItem.value =
-                                          cart[index].id;
-                                      posCtrl.setCartItem();
-                                      Get.dialog(const CartItem());
-                                    },
-                                  )
-                                ])));
-                  },
-                  itemCount: posCtrl.cartSale.cart.length),
-            ),
+                child: Text('Cart', style: kTitle)),
+            Obx(() => ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  var cart = posCtrl.cartSale.cart;
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Card(
+                          color: kGrey,
+                          elevation: 7.0,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ListTile(
+                                  leading: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: kDarkGreen),
+                                      child: const Icon(Icons.edit,
+                                          size: 20, color: Colors.white)),
+                                  title: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: Text(cart[index].name,
+                                          style: kCardTitle)),
+                                  subtitle: Text(
+                                      'Unit Price: Kes.${cart[index].unitPrice}',
+                                      style: const TextStyle(
+                                          fontFamily: 'Nunito',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black)),
+                                  trailing: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 2),
+                                            child: Text(
+                                                'Item No:${cart[index].quantity}',
+                                                style: const TextStyle(
+                                                    fontFamily: 'Nunito',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.black))),
+                                        Text(
+                                          'Kes.${cart[index].total}',
+                                          style: kCardTitle,
+                                        )
+                                      ]),
+                                  onTap: () async {
+                                    posCtrl.selectedCartItem.value =
+                                        cart[index].id;
+                                    posCtrl.setCartItem();
+                                    Get.dialog(const CartItem());
+                                  },
+                                )
+                              ])));
+                },
+                itemCount: posCtrl.cartSale.cart.length)),
             const Divider(
               color: kDarkGreen,
             ),
@@ -287,123 +282,52 @@ class _CartState extends State<Cart> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Total', style: kPageTitle),
-                      Text('Kes.${posCtrl.cartSale.total}', style: kPageTitle)
+                      Obx(() => Text('Kes.${posCtrl.cartSale.total}',
+                          style: kPageTitle))
                     ])),
             const Divider(
               color: kDarkGreen,
             ),
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              priBtn(
-                  label: 'Checkout',
-                  txtColour: Colors.white,
-                  bgColour: kDarkGreen,
-                  isLoading: _isCheckoutLoading,
-                  function: () {
-                    posCtrl.checkout();
-                  }),
-              priBtn(
-                  label: 'Create Bill',
-                  txtColour: Colors.white,
-                  bgColour: kDarkGreen,
-                  isLoading: _isCreateLoading,
-                  function: () {
-                    posCtrl.createBill();
-                  }),
-              priBtn(
-                  label: 'Cancel',
-                  txtColour: Colors.white,
-                  bgColour: kDarkGreen,
-                  isLoading: _isCancelLoading,
-                  function: () {
-                    posCtrl.cancelSale();
-                  })
-            ]),
-            Form(
-                key: _formKey,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Text('Enter Checkout deatils', style: kTitle)),
-                      formDropDownField(
-                          label: 'Payment Method',
-                          dropdownValue: posCtrl.payMthdDropdown.value,
-                          dropItems: posCtrl.payMthdsStrs,
-                          bgcolor: kGrey,
-                          function: (String? newValue) {
-                            setState(() {
-                              posCtrl.payMthdDropdown.value = newValue!;
-                              posCtrl.setCheckoutForm();
-                            });
-                          }),
-                      Obx(() => posCtrl.isBankPay.value
-                          ? Column(children: [
-                              formDropDownField(
-                                  label: 'Bank Account',
-                                  dropdownValue: posCtrl.bankAccDropdown.value,
-                                  dropItems: bankingCtrl.bankAccStrs,
-                                  bgcolor: kGrey,
-                                  function: (String? newValue) {
-                                    posCtrl.setBankAcc();
-                                    setState(() {
-                                      posCtrl.bankAccDropdown.value = newValue!;
-                                    });
-                                  }),
-                              formField(
-                                  label: 'Transaction Reference Code',
-                                  require: true,
-                                  controller: bankrefcodectrl,
-                                  type: TextInputType.name,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the reference code';
-                                    }
-                                    return null;
-                                  })
-                            ])
-                          : posCtrl.isCashPay.value
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                      formField(
-                                          label: 'Amount Paid (in Kes)',
-                                          require: true,
-                                          controller: amountPaidctrl,
-                                          type: TextInputType.number,
-                                          validator: (value) {
-                                            var bal =
-                                                int.parse(amountPaidctrl.text) -
-                                                    posCtrl.cartSale.total;
-
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Please enter the amount paid';
-                                            } else if (bal < 0) {
-                                              return 'Please enter the amount paid';
-                                            } else {
-                                              setState(() {
-                                                balancectrl.text =
-                                                    bal.toString();
-                                              });
-                                            }
-                                            return null;
-                                          }),
-                                      formField(
-                                          label: 'Balance (in Kes)',
-                                          require: true,
-                                          controller: balancectrl,
-                                          readonly: true,
-                                          type: TextInputType.number,
-                                          validator: (value) {
-                                            return null;
-                                          }),
-                                    ])
-                              : posCtrl.isMpesaPay.value
-                                  ? formField(
-                                      label: 'M-pesa Reference Code',
+            Obx(() => posCtrl.showCheckoutForm.value
+                ? Form(
+                    key: _formKey,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Text('Enter Checkout deatils',
+                                  style: kTitle)),
+                          formDropDownField(
+                              label: 'Payment Method',
+                              dropdownValue: posCtrl.payMthdDropdown.value,
+                              dropItems: posCtrl.payMthdsStrs,
+                              bgcolor: kGrey,
+                              function: (String? newValue) {
+                                setState(() {
+                                  posCtrl.payMthdDropdown.value = newValue!;
+                                  posCtrl.setCheckoutForm();
+                                });
+                              }),
+                          Obx(() => posCtrl.isBankPay.value
+                              ? Column(children: [
+                                  formDropDownField(
+                                      label: 'Bank Account',
+                                      dropdownValue:
+                                          posCtrl.bankAccDropdown.value,
+                                      dropItems: bankingCtrl.bankAccStrs,
+                                      bgcolor: kGrey,
+                                      function: (String? newValue) {
+                                        posCtrl.setBankAcc();
+                                        setState(() {
+                                          posCtrl.bankAccDropdown.value =
+                                              newValue!;
+                                        });
+                                      }),
+                                  formField(
+                                      label: 'Transaction Reference Code',
                                       require: true,
-                                      controller: refcodectrl,
+                                      controller: bankrefcodectrl,
                                       type: TextInputType.name,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
@@ -411,67 +335,142 @@ class _CartState extends State<Cart> {
                                         }
                                         return null;
                                       })
-                                  : formField(
-                                      label: 'Customer Name',
-                                      require: true,
-                                      controller: customerctrl,
-                                      type: TextInputType.name,
-                                      validator: (value) {
-                                        setState(() {
-                                          customerctrl.text =
-                                              posCtrl.selectedCustAcc.value;
-                                        });
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please select a customer Account';
-                                        }
-                                        return null;
-                                      })),
-                      Row(children: [
+                                ])
+                              : posCtrl.isCashPay.value
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                          formField(
+                                              label: 'Amount Paid (in Kes)',
+                                              require: true,
+                                              controller: amountPaidctrl,
+                                              type: TextInputType.number,
+                                              validator: (value) {
+                                                var bal = int.parse(
+                                                        amountPaidctrl.text) -
+                                                    posCtrl
+                                                        .cartSale.total.value;
+
+                                                if (value == null ||
+                                                    value.isEmpty) {
+                                                  return 'Please enter the amount paid';
+                                                } else if (bal < 0) {
+                                                  return 'Amount paid cannot be less than Total Sale';
+                                                } else {
+                                                  setState(() {
+                                                    balancectrl.text =
+                                                        bal.toString();
+                                                  });
+                                                }
+                                                return null;
+                                              }),
+                                          formField(
+                                              label: 'Balance (in Kes)',
+                                              require: false,
+                                              controller: balancectrl,
+                                              readonly: true,
+                                              type: TextInputType.number,
+                                              validator: (value) {
+                                                return null;
+                                              }),
+                                        ])
+                                  : posCtrl.isMpesaPay.value
+                                      ? formField(
+                                          label: 'M-pesa Reference Code',
+                                          require: true,
+                                          controller: refcodectrl,
+                                          type: TextInputType.name,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Please enter the reference code';
+                                            }
+                                            return null;
+                                          })
+                                      : formField(
+                                          label: 'Customer Name',
+                                          require: true,
+                                          controller: customerctrl,
+                                          type: TextInputType.name,
+                                          validator: (value) {
+                                            setState(() {
+                                              customerctrl.text =
+                                                  posCtrl.selectedCustAcc.value;
+                                            });
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Please select a customer Account';
+                                            }
+                                            return null;
+                                          })),
+                          priBtn(
+                            bgColour: kDarkGreen,
+                            txtColour: Colors.white,
+                            label: 'Complete Sale',
+                            isLoading: _isLoading,
+                            function: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              if (_formKey.currentState!.validate()) {
+                                if (posCtrl.isCashPay.value) {
+                                  posCtrl.checkDetData.payMthd =
+                                      paymthdctrl.text;
+                                  posCtrl.checkDetData.paid =
+                                      int.parse(amountPaidctrl.text);
+                                  posCtrl.checkDetData.balance =
+                                      int.parse(balancectrl.text);
+                                } else if (posCtrl.isBankPay.value) {
+                                  posCtrl.checkDetData.bankAccId =
+                                      posCtrl.selectedBankId.value;
+                                  posCtrl.checkDetData.bankRefCode =
+                                      bankrefcodectrl.text;
+                                } else if (posCtrl.isMpesaPay.value) {
+                                  posCtrl.checkDetData.mpesaRefCode =
+                                      refcodectrl.text;
+                                } else {
+                                  posCtrl.checkDetData.custAccId =
+                                      posCtrl.selectedCustAccId.value;
+                                }
+
+                                posCtrl.completeSale();
+                              }
+                              await Future.delayed(const Duration(seconds: 2));
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            },
+                          )
+                        ]))
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
                         priBtn(
-                          bgColour: kDarkGreen,
-                          txtColour: Colors.white,
-                          label: 'Checkout',
-                          isLoading: _isLoading,
-                          function: () async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            if (_formKey.currentState!.validate()) {
-                              posCtrl.checkDetData.payMthd = paymthdctrl.text;
-                              posCtrl.checkDetData.paid =
-                                  int.parse(amountPaidctrl.text);
-                              posCtrl.checkDetData.balance =
-                                  int.parse(balancectrl.text);
-                              posCtrl.checkDetData.bankAccId =
-                                  posCtrl.selectedBankId.value;
-                              posCtrl.checkDetData.custAccId =
-                                  posCtrl.selectedCustAccId.value;
-                              posCtrl.checkDetData.bankRefCode =
-                                  bankrefcodectrl.text;
-                              posCtrl.checkDetData.mpesaRefCode =
-                                  refcodectrl.text;
-                              posCtrl.completeSale();
-                            }
-                            await Future.delayed(const Duration(seconds: 2));
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          },
-                        ),
+                            label: 'Checkout',
+                            txtColour: Colors.white,
+                            bgColour: kDarkGreen,
+                            isLoading: _isCheckoutLoading,
+                            function: () {
+                              posCtrl.checkout();
+                            }),
                         priBtn(
-                            label: 'Remove Item',
+                            label: 'Create Bill',
+                            txtColour: Colors.white,
+                            bgColour: kLightGreen,
+                            isLoading: _isCreateLoading,
+                            function: () {
+                              posCtrl.createBill();
+                            }),
+                        priBtn(
+                            label: 'Cancel',
                             txtColour: Colors.white,
                             bgColour: kPrimaryRed,
-                            isLoading: _isLoading,
+                            isLoading: _isCancelLoading,
                             function: () {
-                              posCtrl.cartSale.cart
-                                  .where((element) =>
-                                      element.id ==
-                                      (posCtrl.selectedCartItem.value))
-                                  .first;
+                              posCtrl.cancelSale();
                             })
-                      ])
-                    ]))
+                      ]))
           ])),
     );
   }
@@ -488,6 +487,7 @@ class CartItem extends StatefulWidget {
 
 class _CartItemState extends State<CartItem> {
   bool _isLoading = false;
+  bool _isRemoveLoading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController unitCtrl = TextEditingController();
   TextEditingController quantityCtrl = TextEditingController();
@@ -511,7 +511,7 @@ class _CartItemState extends State<CartItem> {
   Widget build(BuildContext context) {
     return popupScaffold(children: [
       popupHeader(label: 'Edit Cart Item'),
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Form(
             key: _formKey,
             child: Column(
@@ -539,45 +539,43 @@ class _CartItemState extends State<CartItem> {
                         }
                         return null;
                       }),
-                  Row(children: [
-                    priBtn(
-                      bgColour: kDarkGreen,
+                  priBtn(
+                    bgColour: kDarkGreen,
+                    txtColour: Colors.white,
+                    label: 'Update Item',
+                    isLoading: _isLoading,
+                    function: () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      if (_formKey.currentState!.validate()) {
+                        posCtrl.newCartItem.quantity =
+                            int.parse(quantityCtrl.text);
+                        posCtrl.newCartItem.unitPrice =
+                            int.parse(unitCtrl.text);
+                        posCtrl.newCartItem.total =
+                            (int.parse(quantityCtrl.text) *
+                                    int.parse(unitCtrl.text))
+                                .obs;
+                        posCtrl.updateCart();
+                      }
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    },
+                  ),
+                  priBtn(
+                      label: 'Remove Item',
                       txtColour: Colors.white,
-                      label: 'Update Item',
-                      isLoading: _isLoading,
-                      function: () async {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        if (_formKey.currentState!.validate()) {
-                          posCtrl.selectedItem.quantity =
-                              int.parse(quantityCtrl.text);
-                          posCtrl.selectedItem.unitPrice =
-                              int.parse(unitCtrl.text);
-                          posCtrl.selectedItem.total =
-                              int.parse(quantityCtrl.text) *
-                                  int.parse(unitCtrl.text);
-                          posCtrl.updateCart();
-                        }
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          _isLoading = false;
-                        });
-                      },
-                    ),
-                    priBtn(
-                        label: 'Remove Item',
-                        txtColour: Colors.white,
-                        bgColour: kPrimaryRed,
-                        isLoading: _isLoading,
-                        function: () {
-                          posCtrl.cartSale.cart
-                              .where((element) =>
-                                  element.id ==
-                                  (posCtrl.selectedCartItem.value))
-                              .first;
-                        })
-                  ])
+                      bgColour: kPrimaryRed,
+                      isLoading: _isRemoveLoading,
+                      function: () {
+                        posCtrl.cartSale.cart
+                            .where((element) =>
+                                element.id == (posCtrl.selectedCartItem.value))
+                            .first;
+                      })
                 ]))
       ])
     ]);
@@ -793,7 +791,7 @@ Widget tabitem({label, path, Color? bgcolor, int? number}) {
           color: Colors.white,
         ),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 3),
             child: Text(
               label,
               style: const TextStyle(

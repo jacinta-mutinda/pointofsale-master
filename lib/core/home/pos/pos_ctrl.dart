@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/home_models.dart';
@@ -46,12 +47,14 @@ class PoSCtrl extends GetxController {
   RxList<Product> selectedProds = RxList<Product>();
   RxList<Customer> custList = RxList<Customer>();
 
-  CartItem selectedItem =
-      CartItem(id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1);
+  CartItem selectedItem = CartItem(
+      id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1.obs);
+  CartItem newCartItem = CartItem(
+      id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1.obs);
   Sale cartSale = Sale(
       id: 1,
-      cart: [],
-      total: 1,
+      cart: <CartItem>[].obs,
+      total: 1.obs,
       payMethod: '',
       custId: 1,
       refCode: '',
@@ -82,6 +85,7 @@ class PoSCtrl extends GetxController {
       for (var cust in customersCtrl.customers) {
         custList.add(cust);
       }
+      Get.dialog(const pos.CustomerList());
     }
   }
 
@@ -111,20 +115,34 @@ class PoSCtrl extends GetxController {
           name: prod.name,
           prodId: prod.id,
           quantity: 1,
-          total: prod.retailMg,
+          total: prod.retailMg.obs,
           unitPrice: prod.retailMg));
+      cartItemId++;
     }
+    cartSale.total.value = 0;
     for (var item in cartSale.cart) {
-      var total = 0;
-      cartSale.total = total + item.total;
+      cartSale.total.value = cartSale.total.value + item.total.value;
     }
   }
 
   updateCart() {
+    var prevItem = cartSale.cart
+        .where((element) => element.id == (selectedCartItem.value))
+        .first;
+    cartSale.cart
+        .removeWhere((element) => element.id == (selectedCartItem.value));
+    cartSale.cart.add(CartItem(
+        id: selectedCartItem.value,
+        name: prevItem.name,
+        prodId: prevItem.id,
+        quantity: newCartItem.quantity,
+        total: newCartItem.total,
+        unitPrice: newCartItem.unitPrice));
+    cartSale.total.value = 0;
     for (var item in cartSale.cart) {
-      var total = 0;
-      cartSale.total = total + item.total;
+      cartSale.total.value = cartSale.total.value + item.total.value;
     }
+    Get.back();
   }
 
   setCartItem() {
@@ -185,13 +203,14 @@ class PoSCtrl extends GetxController {
   createBill() {
     // add sale to Pending Bills
     showSnackbar(title: 'Bill added to Pending Bills', subtitle: '');
+    Get.offAll(NavigatorHandler(0));
   }
 
   cancelSale() {
     cartSale = Sale(
         id: 1,
-        cart: [],
-        total: 1,
+        cart: <CartItem>[].obs,
+        total: 1.obs,
         payMethod: '',
         custId: 1,
         refCode: '',
@@ -200,10 +219,10 @@ class PoSCtrl extends GetxController {
     selectedCat = 1.obs;
     selectedCartItem = 1.obs;
     selectedItem = CartItem(
-        id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1);
+        id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1.obs);
     selectedProdIds.clear();
     selectedProds.clear();
-    Get.to(const pos.PoSPage());
+    Get.offAll(NavigatorHandler(0));
   }
 }
 
