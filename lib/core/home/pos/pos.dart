@@ -619,11 +619,12 @@ class _CustomerListState extends State<CustomerList> {
                       child: ListTile(
                           title: Text(customers[index].name,
                               style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontFamily: 'Nunito',
                                   fontWeight: FontWeight.w500,
                                   color: kDarkGreen)),
                           leading: Radio(
+                            activeColor: kLightGreen,
                             value: customers[index].name,
                             groupValue: posCtrl.selectedCustAcc.value,
                             onChanged: (value) {

@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -31,36 +32,44 @@ class _HomePageState extends State<HomePage> {
         appBar: mainAppBar(pageTitle: 'Nawiri'),
         drawer: mainDrawer(),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          child: SizedBox(
-              height: double.maxFinite,
-              child: navMenu(navItems: [
-                navItem(
-                    iconPath: Icons.point_of_sale,
-                    label: 'Point of Sale',
-                    goTo: const PoSPage()),
-                navItem(
-                    iconPath: Icons.sticky_note_2,
-                    label: 'Transactions',
-                    goTo: const TransactionsPage()),
-                navItem(
-                    iconPath: Icons.account_balance,
-                    label: 'Banking',
-                    goTo: const BankingPage()),
-                navItem(
-                    iconPath: Icons.people,
-                    label: 'Customers',
-                    goTo: const CustomersPage()),
-                navItem(
-                    iconPath: Icons.local_shipping_rounded,
-                    label: 'Suppliers',
-                    goTo: const SupplierPage()),
-                navItem(
-                    iconPath: Icons.inventory_2,
-                    label: 'Inventory',
-                    goTo: const InventoryPage()),
-              ])),
-        ));
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            child:
+                //  SizedBox(
+                //     height: double.maxFinite,
+                //     child: navMenu(navItems: [
+                //       navItem(
+                //           iconPath: Icons.point_of_sale,
+                //           label: 'Point of Sale',
+                //           goTo: const PoSPage()),
+                //       navItem(
+                //           iconPath: Icons.sticky_note_2,
+                //           label: 'Transactions',
+                //           goTo: const TransactionsPage()),
+                //       navItem(
+                //           iconPath: Icons.account_balance,
+                //           label: 'Banking',
+                //           goTo: const BankingPage()),
+                //       navItem(
+                //           iconPath: Icons.people,
+                //           label: 'Customers',
+                //           goTo: const CustomersPage()),
+                //       navItem(
+                //           iconPath: Icons.local_shipping_rounded,
+                //           label: 'Suppliers',
+                //           goTo: const SupplierPage()),
+                //       navItem(
+                //           iconPath: Icons.inventory_2,
+                //           label: 'Inventory',
+                //           goTo: const InventoryPage()),
+                //     ])),
+                priBtn(
+                    label: 'sd',
+                    txtColour: Colors.white,
+                    bgColour: kDarkGreen,
+                    isLoading: _isLoading,
+                    function: () {
+                      Get.dialog(const WelcomePrompt());
+                    })));
   }
 }
 
@@ -75,7 +84,21 @@ class WelcomePrompt extends StatefulWidget {
 
 class _WelcomePromptState extends State<WelcomePrompt> {
   bool _isLoading = false;
+  RxString methdSelcted = ''.obs;
+  RxBool showPin = true.obs;
+  RxBool showPackages = false.obs;
   RxBool showBillings = false.obs;
+  List<Package> packages = [
+    Package(
+        title: 'Anually (once an year)',
+        desc: 'Get a 30% discount on every month',
+        amount: 60),
+    Package(
+        title: 'Semi anually (every 6 months)',
+        desc: 'Get a 20% discount on every month',
+        amount: 80),
+    Package(title: 'Monthly', desc: 'Payable after every 30 days', amount: 100)
+  ];
 
   @override
   void initState() {
@@ -86,7 +109,7 @@ class _WelcomePromptState extends State<WelcomePrompt> {
   Widget build(BuildContext context) {
     return popupScaffold(children: [
       popupHeader(label: 'Welcome to Nawiri'),
-      Obx(() => !showBillings.value
+      Obx(() => showPin.value
           ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
               const Text(
                 '''
@@ -103,27 +126,97 @@ class _WelcomePromptState extends State<WelcomePrompt> {
                   bgColour: kDarkGreen,
                   isLoading: _isLoading,
                   function: () {
-                    showBillings.value = true;
+                    showPin.value = false;
+                    showPackages.value = true;
+                    showBillings.value = false;
                   })
             ])
-          : Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              const Text(
-                '''
+          : showPackages.value
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                      const Text('Choose Billing Method',
+                          textAlign: TextAlign.center, style: kTitle),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 3),
+                                child: ListTile(
+                                    title: Text(packages[index].title,
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'Nunito',
+                                            fontWeight: FontWeight.w600,
+                                            color: kDarkGreen)),
+                                    subtitle: Text(packages[index].desc,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'Nunito',
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black)),
+                                    trailing: Text(
+                                        'Kes.${packages[index].amount}',
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'Nunito',
+                                            fontWeight: FontWeight.w500,
+                                            color: kDarkGreen)),
+                                    leading: Radio(
+                                      activeColor: kLightGreen,
+                                      value: packages[index].title,
+                                      groupValue: methdSelcted.value,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          methdSelcted.value = value!;
+                                        });
+                                      },
+                                    )));
+                          },
+                          itemCount: packages.length),
+                      priBtn(
+                          label: 'Done',
+                          txtColour: Colors.white,
+                          bgColour: kDarkGreen,
+                          isLoading: _isLoading,
+                          function: () {
+                            showPin.value = false;
+                            showPackages.value = false;
+                            showBillings.value = true;
+                          })
+                    ])
+              : showBillings.value
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                          const Text(
+                            '''
            Kindly note that Kes.100 is due within the next 24 hours to continue using Nawiri. 
            Check the Billings Page to make your payment.
           ''',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-              priBtn(
-                  label: 'Open Billings Page',
-                  txtColour: Colors.white,
-                  bgColour: kDarkGreen,
-                  isLoading: _isLoading,
-                  function: () {
-                    Get.off(const BillingsPage());
-                  })
-            ]))
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          priBtn(
+                              label: 'Open Billings Page',
+                              txtColour: Colors.white,
+                              bgColour: kDarkGreen,
+                              isLoading: _isLoading,
+                              function: () {
+                                Get.off(const BillingsPage());
+                              })
+                        ])
+                  : const SizedBox())
     ]);
   }
+}
+
+class Package {
+  String title;
+  String desc;
+  int amount;
+
+  Package({required this.title, required this.desc, required this.amount});
 }
