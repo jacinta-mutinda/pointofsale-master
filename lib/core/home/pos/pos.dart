@@ -41,13 +41,10 @@ class _CategoriesState extends State<Categories> {
     for (var category in invtCtrl.categories) {
       cats.add(GestureDetector(
           onTap: () {
-            posCtrl.selectedCat.value = category.id;
-            posCtrl.setNextTab();
-            DefaultTabController.of(context)!.animateTo(1);
+            posCtrl.addToCatProds(category.id);
           },
           child: Obx(() => Card(
-              color:
-                  category.id == posCtrl.selectedCat.value ? kDarkGreen : kGrey,
+              color: posCtrl.isCatSelected(category.id) ? kDarkGreen : kGrey,
               elevation: 7.0,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,7 +52,7 @@ class _CategoriesState extends State<Categories> {
                   children: [
                     Icon(
                       Icons.category,
-                      color: category.id == posCtrl.selectedCat.value
+                      color: posCtrl.isCatSelected(category.id)
                           ? kLightGreen
                           : Colors.black,
                       size: 72,
@@ -68,7 +65,7 @@ class _CategoriesState extends State<Categories> {
                               fontFamily: 'Nunito',
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: category.id == posCtrl.selectedCat.value
+                              color: posCtrl.isCatSelected(category.id)
                                   ? kLightGreen
                                   : Colors.black),
                         ))
@@ -106,9 +103,9 @@ class _ProductsState extends State<Products> {
   }
 
   List<Widget> getProds() {
-    List<Widget> cats = [];
+    List<Widget> prods = [];
     for (var product in posCtrl.catProds) {
-      cats.add(GestureDetector(
+      prods.add(GestureDetector(
           onTap: () {
             posCtrl.addToCart(product.id);
           },
@@ -154,7 +151,7 @@ class _ProductsState extends State<Products> {
                         ]))
                   ])))));
     }
-    return cats;
+    return prods;
   }
 }
 

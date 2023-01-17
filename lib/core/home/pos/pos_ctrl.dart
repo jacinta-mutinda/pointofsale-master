@@ -22,7 +22,6 @@ class PoSCtrl extends GetxController {
   RxBool isCashPay = false.obs;
   RxBool isBankPay = false.obs;
   RxBool isOnAccPay = false.obs;
-  RxInt selectedCat = 1.obs;
   RxInt selectedCartItem = 1.obs;
   RxInt selectedCustAccId = 1.obs;
   RxInt selectedBankId = 1.obs;
@@ -45,6 +44,7 @@ class PoSCtrl extends GetxController {
   RxList<Product> catProds = RxList<Product>();
   RxList<int> selectedProdIds = RxList<int>();
   RxList<Product> selectedProds = RxList<Product>();
+  RxList<int> selectedCatIds = RxList<int>();
   RxList<Customer> custList = RxList<Customer>();
 
   CartItem selectedItem = CartItem(
@@ -89,12 +89,20 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  setNextTab() {
+  addToCatProds(int catId) async {
+    if (selectedCatIds.contains(catId)) {
+      selectedCatIds.remove(catId);
+    } else {
+      selectedCatIds.add(catId);
+    }
     selectedProds.clear();
     selectedProdIds.clear();
-    for (var prod in invtCtrl.products) {
-      if (prod.categoryid == selectedCat.value) {
-        catProds.add(prod);
+    catProds.clear();
+    for (var catId in selectedCatIds) {
+      for (var prod in invtCtrl.products) {
+        if (prod.categoryid == catId) {
+          catProds.add(prod);
+        }
       }
     }
   }
@@ -159,6 +167,14 @@ class PoSCtrl extends GetxController {
     }
   }
 
+  bool isCatSelected(int catId) {
+    if (selectedCatIds.contains(catId)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   setBankAcc() {
     for (BankAccount acc in BankingCtrl().bankAccounts) {
       if (acc.bankName == bankAccDropdown.value) {
@@ -216,7 +232,6 @@ class PoSCtrl extends GetxController {
         refCode: '',
         date: '',
         paid: false);
-    selectedCat = 1.obs;
     selectedCartItem = 1.obs;
     selectedItem = CartItem(
         id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1.obs);
