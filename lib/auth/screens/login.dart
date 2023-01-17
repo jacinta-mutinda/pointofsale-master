@@ -82,7 +82,7 @@ class LoginState extends State<Login> {
             mainLabel: "Don't have an account? ",
             childLabel: 'Register',
             function: () {
-              Get.toNamed(CompanyDetails.routeName);
+              Get.to(const CompanyDetails());
             }));
   }
 }

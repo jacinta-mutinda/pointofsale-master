@@ -86,8 +86,8 @@ class _WelcomePromptState extends State<WelcomePrompt> {
   Widget build(BuildContext context) {
     return popupScaffold(children: [
       popupHeader(label: 'Welcome to Nawiri'),
-      Obx(() => showBillings.value
-          ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Obx(() => !showBillings.value
+          ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
               const Text(
                 '''
             Please note your 6-digit login pin starts with 01 followed by your 4 digit pin.
@@ -95,34 +95,33 @@ class _WelcomePromptState extends State<WelcomePrompt> {
             01****
           ''',
                 textAlign: TextAlign.center,
-                style: TextStyle(),
+                style: TextStyle(fontWeight: FontWeight.w500),
               ),
               priBtn(
                   label: 'Next',
-                  txtColour: Colors.black,
-                  bgColour: kGrey,
+                  txtColour: Colors.white,
+                  bgColour: kDarkGreen,
                   isLoading: _isLoading,
                   function: () {
                     showBillings.value = true;
                   })
             ])
-          : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          : Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
               const Text(
                 '''
            Kindly note that Kes.100 is due within the next 24 hours to continue using Nawiri. 
            Check the Billings Page to make your payment.
           ''',
                 textAlign: TextAlign.center,
-                style: TextStyle(),
+                style: TextStyle(fontWeight: FontWeight.w500),
               ),
               priBtn(
                   label: 'Open Billings Page',
-                  txtColour: Colors.black,
-                  bgColour: kGrey,
+                  txtColour: Colors.white,
+                  bgColour: kDarkGreen,
                   isLoading: _isLoading,
                   function: () {
-                    Get.back();
-                    Get.to(const BillingsPage());
+                    Get.off(const BillingsPage());
                   })
             ]))
     ]);

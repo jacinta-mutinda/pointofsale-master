@@ -58,8 +58,12 @@ class _VerifyAccountState extends State<VerifyAccount> {
 
   void verifyAccount() {
     otpFormKey.currentState!.save();
-    otp = int.parse(
-        _fieldOne.text + _fieldTwo.text + _fieldThree.text + _fieldFour.text);
+    otp = int.parse(_fieldOne.text +
+        _fieldTwo.text +
+        _fieldThree.text +
+        _fieldFour.text +
+        _fieldFive.text +
+        _fieldSix.text);
     auth.verifyAccount(otp!);
   }
 
