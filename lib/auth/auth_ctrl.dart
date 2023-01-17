@@ -8,6 +8,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:nawiri/auth/screens/login.dart';
 import 'package:nawiri/auth/screens/verify.dart';
 import 'package:nawiri/bottomnav.dart';
+import 'package:nawiri/core/home/home.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,49 +60,6 @@ class Auth with ChangeNotifier {
     var pass = prefs.getInt('passcode');
     if (pass != null) {
       passcode = pass;
-    }
-  }
-
-  // ----------------- biometrics
-
-  bioAuth() async {
-    final isAuthenticated = await authenticate();
-    if (isAuthenticated) {
-      Get.offAll(() => NavigatorHandler(0));
-    }
-  }
-
-  Future<bool> hasBiometrics() async {
-    try {
-      return await _localAuth.canCheckBiometrics;
-    } on PlatformException {
-      return false;
-    }
-  }
-
-  static Future<List<BiometricType>> getBiometrics() async {
-    try {
-      return await _localAuth.getAvailableBiometrics();
-    } on PlatformException {
-      return <BiometricType>[];
-    }
-  }
-
-  Future<bool> authenticate() async {
-    final isAvailable = await hasBiometrics();
-    if (!isAvailable) return false;
-
-    try {
-      return await _localAuth.authenticate(
-        localizedReason: 'Please authenticate using biometrics',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          useErrorDialogs: true,
-          stickyAuth: true,
-        ),
-      );
-    } on PlatformException {
-      return false;
     }
   }
 
@@ -231,6 +189,7 @@ class Auth with ChangeNotifier {
         subtitle: "Karibu Nawiri!");
     await Future.delayed(const Duration(seconds: 2));
     Get.off(() => NavigatorHandler(0));
+    Get.dialog(const WelcomePrompt());
     //   } else {
     //     showSnackbar(
     //         path: Icons.close_rounded,

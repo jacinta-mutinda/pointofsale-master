@@ -33,8 +33,6 @@ class LoginState extends State<Login> {
         // correctString: loginCtrl.passcode.toString(),
         correctString: '001234',
         digits: 6,
-        customizedButtonTap: auth.bioAuth,
-        didOpened: auth.bioAuth,
         didUnlocked: () {
           Get.offAll(() => NavigatorHandler(0));
         },
@@ -54,11 +52,6 @@ class LoginState extends State<Login> {
             style: kSubTitle,
           ),
         ]),
-        customizedButtonChild: const Icon(
-          Icons.fingerprint,
-          color: kLightGreen,
-          size: 50,
-        ),
         deleteButton: const Icon(
           FontAwesomeIcons.deleteLeft,
           size: 40,
