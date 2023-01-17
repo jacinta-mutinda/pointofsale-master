@@ -110,6 +110,7 @@ class _BillingsPageState extends State<BillingsPage> {
                                               isLoading: _isLoading,
                                               function: () {
                                                 showSnackbar(
+                                                    path: Icons.check_rounded,
                                                     title:
                                                         'Opening M-pesa STK Push Prompt',
                                                     subtitle: '');

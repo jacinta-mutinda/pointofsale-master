@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nawiri/bottomnav.dart';
@@ -7,6 +8,7 @@ import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
 import 'package:nawiri/core/home/pos/pos.dart' as pos;
+import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
 final invtCtrl = Get.put(InventoryCtrl());
@@ -17,7 +19,6 @@ class PoSCtrl extends GetxController {
   RxString bankAccDropdown = ''.obs;
   RxString payMthdDropdown = ''.obs;
   RxBool showCheckoutForm = false.obs;
-  RxBool isCustSet = true.obs;
   RxBool isMpesaPay = false.obs;
   RxBool isCashPay = false.obs;
   RxBool isBankPay = false.obs;
@@ -25,6 +26,7 @@ class PoSCtrl extends GetxController {
   RxInt selectedCartItem = 1.obs;
   RxInt selectedCustAccId = 1.obs;
   RxInt selectedBankId = 1.obs;
+  TextEditingController customerctrl = TextEditingController();
 
   CheckOutDet checkDetData = CheckOutDet(
       payMthd: '',
@@ -82,6 +84,7 @@ class PoSCtrl extends GetxController {
       isCashPay.value = false;
       isBankPay.value = false;
       isOnAccPay.value = true;
+      custList.clear();
       for (var cust in customersCtrl.customers) {
         custList.add(cust);
       }
@@ -183,25 +186,13 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  filterCustomers(String searchName) {
-    // for (var cust in custList) {
-    //     custList.add(cust);
-    // }
-  }
-
-  resetCustomers() {
-    custList.clear();
-    for (var cust in customersCtrl.customers) {
-      custList.add(cust);
-    }
-  }
-
   setCustAcc() {
     for (Customer cust in customersCtrl.customers) {
       if (cust.name == selectedCustAcc.value) {
         selectedCustAccId.value = cust.id;
       }
     }
+    customerctrl.text = selectedCustAcc.value;
     Get.back();
   }
 
@@ -209,7 +200,9 @@ class PoSCtrl extends GetxController {
     // save form
     showSnackbar(
         title: 'Sale Successfully Closed!',
-        subtitle: 'Redirecting to Point of Sale');
+        path: Icons.check_rounded,
+        subtitle: 'Redirecting to Home Page');
+    Get.offAll(NavigatorHandler(0));
   }
 
   checkout() {
@@ -218,7 +211,10 @@ class PoSCtrl extends GetxController {
 
   createBill() {
     // add sale to Pending Bills
-    showSnackbar(title: 'Bill added to Pending Bills', subtitle: '');
+    showSnackbar(
+        title: 'Bill added to Pending Bills',
+        path: Icons.check_rounded,
+        subtitle: '');
     Get.offAll(NavigatorHandler(0));
   }
 

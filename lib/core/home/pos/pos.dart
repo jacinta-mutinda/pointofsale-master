@@ -175,7 +175,6 @@ class _CartState extends State<Cart> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController paymthdctrl = TextEditingController();
   TextEditingController amountPaidctrl = TextEditingController();
-  TextEditingController customerctrl = TextEditingController();
   TextEditingController balancectrl = TextEditingController();
   TextEditingController refcodectrl = TextEditingController();
   TextEditingController bankAccctrl = TextEditingController();
@@ -190,7 +189,6 @@ class _CartState extends State<Cart> {
   void dispose() {
     paymthdctrl.dispose();
     amountPaidctrl.dispose();
-    customerctrl.dispose();
     balancectrl.dispose();
     refcodectrl.dispose();
     bankAccctrl.dispose();
@@ -387,12 +385,13 @@ class _CartState extends State<Cart> {
                                           })
                                       : formField(
                                           label: 'Customer Name',
-                                          require: true,
-                                          controller: customerctrl,
+                                          require: false,
+                                          controller: posCtrl.customerctrl,
                                           type: TextInputType.name,
+                                          readonly: true,
                                           validator: (value) {
                                             setState(() {
-                                              customerctrl.text =
+                                              posCtrl.customerctrl.text =
                                                   posCtrl.selectedCustAcc.value;
                                             });
                                             if (value == null ||
@@ -411,9 +410,8 @@ class _CartState extends State<Cart> {
                                 _isLoading = true;
                               });
                               if (_formKey.currentState!.validate()) {
+                                posCtrl.checkDetData.payMthd = paymthdctrl.text;
                                 if (posCtrl.isCashPay.value) {
-                                  posCtrl.checkDetData.payMthd =
-                                      paymthdctrl.text;
                                   posCtrl.checkDetData.paid =
                                       int.parse(amountPaidctrl.text);
                                   posCtrl.checkDetData.balance =
@@ -430,7 +428,6 @@ class _CartState extends State<Cart> {
                                   posCtrl.checkDetData.custAccId =
                                       posCtrl.selectedCustAccId.value;
                                 }
-
                                 posCtrl.completeSale();
                               }
                               await Future.delayed(const Duration(seconds: 2));
@@ -607,80 +604,8 @@ class _CustomerListState extends State<CustomerList> {
   @override
   Widget build(BuildContext context) {
     return popupScaffold(children: [
-      popupHeader(label: 'Select a Customer Account'),
+      popupHeader(label: 'Select an account'),
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Form(
-            key: _formKey,
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  formField(
-                      label: 'Enter Customer Name',
-                      require: true,
-                      controller: searchNamectrl,
-                      type: TextInputType.name,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a search name';
-                        }
-                        return null;
-                      }),
-                  Row(children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          posCtrl.filterCustomers(searchNamectrl.text);
-                        }
-                      },
-                      child: Container(
-                          width: 40,
-                          height: 40,
-                          margin: const EdgeInsets.only(left: 10, top: 35),
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: kLightGreen),
-                          child: const Icon(Icons.search,
-                              size: 20, color: Colors.white)),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: GestureDetector(
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              posCtrl.resetCustomers();
-                            }
-                          },
-                          child: Container(
-                              width: 40,
-                              height: 40,
-                              margin: const EdgeInsets.only(left: 10, top: 35),
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.blueAccent),
-                              child: const Icon(Icons.refresh,
-                                  size: 20, color: Colors.white)),
-                        )),
-                    smallPriBtn(
-                        label: 'Done',
-                        txtColour: Colors.white,
-                        bgColour: kDarkGreen,
-                        isLoading: _isLoading,
-                        function: () {
-                          if (posCtrl.selectedCustAcc.value == '') {
-                            posCtrl.isCustSet.value = false;
-                          } else {
-                            posCtrl.setCustAcc();
-                          }
-                        })
-                  ])
-                ])),
-        Obx(() => !posCtrl.isCustSet.value
-            ? const Text('Please select a customer Account',
-                style: TextStyle(
-                    color: kPrimaryRed,
-                    fontSize: 14,
-                    fontFamily: 'Nunito',
-                    fontWeight: FontWeight.w500))
-            : const SizedBox()),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Obx(
@@ -704,6 +629,7 @@ class _CustomerListState extends State<CustomerList> {
                             onChanged: (value) {
                               setState(() {
                                 posCtrl.selectedCustAcc.value = value!;
+                                posCtrl.setCustAcc();
                               });
                             },
                           )));
