@@ -432,6 +432,7 @@ Widget formField(
     {required label,
     required require,
     required controller,
+    readonly = false,
     type,
     required final String? Function(String?) validator}) {
   return Padding(
@@ -460,6 +461,7 @@ Widget formField(
         SizedBox(
           height: 50,
           child: TextFormField(
+            readOnly: readonly,
             cursorColor: kDarkGreen,
             controller: controller,
             keyboardType: type,

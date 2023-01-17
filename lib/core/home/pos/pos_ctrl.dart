@@ -1,20 +1,53 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:nawiri/core/home/banking/banking_ctrl.dart';
+import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
+import 'package:nawiri/core/home/pos/pos.dart' as pos;
+import 'package:nawiri/theme/global_widgets.dart';
 
 final invtCtrl = Get.put(InventoryCtrl());
+final customersCtrl = Get.put(CustomerCtrl());
 
 class PoSCtrl extends GetxController {
+  RxString selectedCustAcc = ''.obs;
+  RxString bankAccDropdown = ''.obs;
+  RxString payMthdDropdown = ''.obs;
+  RxBool showCheckoutForm = false.obs;
+  RxBool isCustSet = true.obs;
+  RxBool isMpesaPay = false.obs;
+  RxBool isCashPay = false.obs;
+  RxBool isBankPay = false.obs;
+  RxBool isOnAccPay = false.obs;
   RxInt selectedCat = 1.obs;
   RxInt selectedCartItem = 1.obs;
-  CartItem selectedItem =
-      CartItem(id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1);
+  RxInt selectedCustAccId = 1.obs;
+  RxInt selectedBankId = 1.obs;
 
+  CheckOutDet checkDetData = CheckOutDet(
+      payMthd: '',
+      mpesaRefCode: '',
+      bankRefCode: '',
+      paid: 1,
+      balance: 1,
+      custAccId: 1,
+      bankAccId: 1);
+  List<String> payMthdsStrs = [
+    '',
+    'M-pesa',
+    'Cash',
+    'Bank Account',
+    'On Customer Account'
+  ];
   RxList<Product> catProds = RxList<Product>();
   RxList<int> selectedProdIds = RxList<int>();
   RxList<Product> selectedProds = RxList<Product>();
+  RxList<Customer> custList = RxList<Customer>();
+
+  CartItem selectedItem =
+      CartItem(id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1);
   Sale cartSale = Sale(
       id: 1,
       cart: [],
@@ -24,6 +57,33 @@ class PoSCtrl extends GetxController {
       refCode: '',
       date: '',
       paid: false);
+
+  setCheckoutForm() {
+    if (payMthdDropdown.value == 'M-pesa') {
+      isMpesaPay.value = true;
+      isCashPay.value = false;
+      isBankPay.value = false;
+      isOnAccPay.value = false;
+    } else if (payMthdDropdown.value == 'Cash') {
+      isMpesaPay.value = false;
+      isCashPay.value = true;
+      isBankPay.value = false;
+      isOnAccPay.value = false;
+    } else if (payMthdDropdown.value == 'Bank Account') {
+      isMpesaPay.value = false;
+      isCashPay.value = false;
+      isBankPay.value = true;
+      isOnAccPay.value = false;
+    } else {
+      isMpesaPay.value = false;
+      isCashPay.value = false;
+      isBankPay.value = false;
+      isOnAccPay.value = true;
+      for (var cust in customersCtrl.customers) {
+        custList.add(cust);
+      }
+    }
+  }
 
   setNextTab() {
     selectedProds.clear();
@@ -58,7 +118,6 @@ class PoSCtrl extends GetxController {
       var total = 0;
       cartSale.total = total + item.total;
     }
-    Get.back();
   }
 
   updateCart() {
@@ -81,4 +140,88 @@ class PoSCtrl extends GetxController {
       return false;
     }
   }
+
+  setBankAcc() {
+    for (BankAccount acc in BankingCtrl().bankAccounts) {
+      if (acc.bankName == bankAccDropdown.value) {
+        selectedBankId.value = acc.id;
+      }
+    }
+  }
+
+  filterCustomers(String searchName) {
+    // for (var cust in custList) {
+    //     custList.add(cust);
+    // }
+  }
+
+  resetCustomers() {
+    custList.clear();
+    for (var cust in customersCtrl.customers) {
+      custList.add(cust);
+    }
+  }
+
+  setCustAcc() {
+    for (Customer cust in customersCtrl.customers) {
+      if (cust.name == selectedCustAcc.value) {
+        selectedCustAccId.value = cust.id;
+      }
+    }
+    Get.back();
+  }
+
+  completeSale() {
+    // save form
+    showSnackbar(
+        title: 'Sale Successfully Closed!',
+        subtitle: 'Redirecting to Point of Sale');
+  }
+
+  checkout() {
+    showCheckoutForm.value = true;
+  }
+
+  createBill() {
+    // add sale to Pending Bills
+    showSnackbar(title: 'Bill added to Pending Bills', subtitle: '');
+  }
+
+  cancelSale() {
+    cartSale = Sale(
+        id: 1,
+        cart: [],
+        total: 1,
+        payMethod: '',
+        custId: 1,
+        refCode: '',
+        date: '',
+        paid: false);
+    selectedCat = 1.obs;
+    selectedCartItem = 1.obs;
+    selectedItem = CartItem(
+        id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1);
+    selectedProdIds.clear();
+    selectedProds.clear();
+    Get.to(const pos.PoSPage());
+  }
+}
+
+class CheckOutDet {
+  String payMthd;
+  String mpesaRefCode;
+  String bankRefCode;
+  int paid;
+  int balance;
+  int custAccId;
+  int bankAccId;
+
+  CheckOutDet(
+      {required this.payMthd,
+      required this.mpesaRefCode,
+      required this.bankRefCode,
+      required this.paid,
+      required this.balance,
+      required this.custAccId,
+      required this.bankAccId});
 }
