@@ -4,6 +4,7 @@ class Category {
   int retailMg;
   int wholesaleMg;
   bool showInPos;
+  // branchId
 
   Category(
       {required this.id,

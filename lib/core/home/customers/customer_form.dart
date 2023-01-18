@@ -20,14 +20,16 @@ class CustomerForm extends StatefulWidget {
 class _CustomerFormState extends State<CustomerForm> {
   String pageTitle = '';
   Customer custData = Customer(
-      id: 1,
+      id: '',
       name: '',
-      phoneno: 1,
-      bankacc: 1,
-      krapin: 1,
+      phoneno: '',
+      bankacc: '',
+      krapin: '',
       address: '',
-      cpperson: 1,
-      creditlimit: 1);
+      cpperson: '',
+      creditlimit: '',
+      totalCredit: '',
+      runningBal: '');
   final customerCtrl = Get.put(CustomerCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController phonectrl = TextEditingController();
@@ -37,6 +39,8 @@ class _CustomerFormState extends State<CustomerForm> {
   TextEditingController addressctrl = TextEditingController();
   TextEditingController cppersonctrl = TextEditingController();
   TextEditingController creditctrl = TextEditingController();
+  TextEditingController runbalctrl = TextEditingController();
+  TextEditingController totalcreditctrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -58,6 +62,8 @@ class _CustomerFormState extends State<CustomerForm> {
     cppersonctrl.dispose();
     addressctrl.dispose();
     creditctrl.dispose();
+    runbalctrl.dispose();
+    totalcreditctrl.dispose();
     super.dispose();
   }
 
@@ -71,28 +77,31 @@ class _CustomerFormState extends State<CustomerForm> {
       bankaccctrl.text = customerCtrl.customers
           .where((element) => element.id == (customerCtrl.custToEdit.value))
           .first
-          .bankacc
-          .toString();
+          .bankacc;
       cppersonctrl.text = customerCtrl.customers
           .where((element) => element.id == (customerCtrl.custToEdit.value))
           .first
-          .cpperson
-          .toString();
+          .cpperson;
       phonectrl.text = customerCtrl.customers
           .where((element) => element.id == (customerCtrl.custToEdit.value))
           .first
-          .phoneno
-          .toString();
+          .phoneno;
       krapinctrl.text = customerCtrl.customers
           .where((element) => element.id == (customerCtrl.custToEdit.value))
           .first
-          .krapin
-          .toString();
+          .krapin;
+      runbalctrl.text = customerCtrl.customers
+          .where((element) => element.id == (customerCtrl.custToEdit.value))
+          .first
+          .runningBal;
+      totalcreditctrl.text = customerCtrl.customers
+          .where((element) => element.id == (customerCtrl.custToEdit.value))
+          .first
+          .totalCredit;
       creditctrl.text = customerCtrl.customers
           .where((element) => element.id == (customerCtrl.custToEdit.value))
           .first
-          .creditlimit
-          .toString();
+          .creditlimit;
       addressctrl.text = customerCtrl.customers
           .where((element) => element.id == (customerCtrl.custToEdit.value))
           .first
@@ -186,6 +195,28 @@ class _CustomerFormState extends State<CustomerForm> {
                                 return null;
                               }),
                           formField(
+                              label: 'Running Balance (in Kes)',
+                              require: true,
+                              controller: runbalctrl,
+                              type: TextInputType.number,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter the customer's current running balance";
+                                }
+                                return null;
+                              }),
+                          formField(
+                              label: 'Total Credit (in Kes)',
+                              require: true,
+                              controller: totalcreditctrl,
+                              type: TextInputType.number,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter the customer's current credit total";
+                                }
+                                return null;
+                              }),
+                          formField(
                               label: 'Credit Limit (in Kes)',
                               require: true,
                               controller: creditctrl,
@@ -209,12 +240,14 @@ class _CustomerFormState extends State<CustomerForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         custData.name = namectrl.text;
-                        custData.phoneno = int.parse(phonectrl.text);
+                        custData.phoneno = phonectrl.text;
                         custData.address = addressctrl.text;
-                        custData.bankacc = int.parse(bankaccctrl.text);
-                        custData.cpperson = int.parse(cppersonctrl.text);
-                        custData.krapin = int.parse(krapinctrl.text);
-                        custData.creditlimit = int.parse(creditctrl.text);
+                        custData.bankacc = bankaccctrl.text;
+                        custData.cpperson = cppersonctrl.text;
+                        custData.krapin = krapinctrl.text;
+                        custData.creditlimit = creditctrl.text;
+                        custData.totalCredit = totalcreditctrl.text;
+                        custData.runningBal = runbalctrl.text;
 
                         if (customerCtrl.isCustEdit.value) {
                           customerCtrl.editCustomer(custData);

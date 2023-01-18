@@ -24,7 +24,7 @@ class PoSCtrl extends GetxController {
   RxBool isBankPay = false.obs;
   RxBool isOnAccPay = false.obs;
   RxInt selectedCartItem = 1.obs;
-  RxInt selectedCustAccId = 1.obs;
+  RxString selectedCustAccId = ''.obs;
   RxInt selectedBankId = 1.obs;
   TextEditingController customerctrl = TextEditingController();
 
@@ -34,7 +34,7 @@ class PoSCtrl extends GetxController {
       bankRefCode: '',
       paid: 1,
       balance: 1,
-      custAccId: 1,
+      custAccId: '',
       bankAccId: 1);
   List<String> payMthdsStrs = [
     '',
@@ -243,7 +243,7 @@ class CheckOutDet {
   String bankRefCode;
   int paid;
   int balance;
-  int custAccId;
+  String custAccId;
   int bankAccId;
 
   CheckOutDet(

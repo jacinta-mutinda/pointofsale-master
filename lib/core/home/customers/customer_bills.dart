@@ -56,19 +56,25 @@ class _CustomerBillsState extends State<CustomerBills> {
                       childLabel: customerCtrl.custToShow.name),
                   labelSpan(
                       mainLabel: 'Phone Number',
-                      childLabel: customerCtrl.custToShow.phoneno.toString()),
+                      childLabel: customerCtrl.custToShow.phoneno),
                   labelSpan(
                       mainLabel: 'Bank Account No',
-                      childLabel: customerCtrl.custToShow.bankacc.toString()),
+                      childLabel: customerCtrl.custToShow.bankacc),
                   labelSpan(
                       mainLabel: 'KRA Pin',
-                      childLabel: customerCtrl.custToShow.krapin.toString()),
+                      childLabel: customerCtrl.custToShow.krapin),
                   labelSpan(
                       mainLabel: 'Address',
                       childLabel: customerCtrl.custToShow.address),
                   labelSpan(
                       mainLabel: 'Contact Person Phone',
-                      childLabel: customerCtrl.custToShow.cpperson.toString()),
+                      childLabel: customerCtrl.custToShow.cpperson),
+                  labelSpan(
+                      mainLabel: 'Running Balance',
+                      childLabel: 'Kes.${customerCtrl.custToShow.runningBal}'),
+                  labelSpan(
+                      mainLabel: 'Total Credit',
+                      childLabel: 'Kes.${customerCtrl.custToShow.totalCredit}'),
                   labelSpan(
                       mainLabel: 'Credit Limit',
                       childLabel: 'Kes.${customerCtrl.custToShow.creditlimit}'),

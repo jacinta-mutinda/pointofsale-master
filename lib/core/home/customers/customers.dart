@@ -74,6 +74,7 @@ class _CustomersPageState extends State<CustomersPage> {
                                           size: 25,
                                           color: Colors.white)),
                                   onTap: () async {
+                                    print(customers[index].id);
                                     customersCtrl.isCustEdit.value = true;
                                     customersCtrl.custToEdit.value =
                                         customers[index].id;

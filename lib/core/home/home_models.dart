@@ -71,18 +71,22 @@ class SupplierPayment {
 }
 
 class Customer {
-  int id;
+  String id;
   String name;
-  int phoneno;
-  int bankacc;
-  int krapin;
+  String runningBal;
+  String totalCredit;
+  String phoneno;
+  String bankacc;
+  String krapin;
   String address;
-  int cpperson;
-  int creditlimit;
+  String cpperson;
+  String creditlimit;
 
   Customer(
       {required this.id,
       required this.name,
+      required this.runningBal,
+      required this.totalCredit,
       required this.phoneno,
       required this.bankacc,
       required this.krapin,

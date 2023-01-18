@@ -6,23 +6,29 @@ import 'package:nawiri/core/home/customers/customers.dart';
 import 'package:nawiri/core/home/customers/single_bill.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/utils/urls.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerCtrl extends GetxController {
+  String branchId = '0';
   RxBool showMenu = false.obs;
   RxBool isCustEdit = false.obs;
-  RxInt custToEdit = 1.obs;
-  RxInt billsToShow = 1.obs;
+  RxString custToEdit = ''.obs;
+  RxString billsToShow = ''.obs;
   RxInt singleBillId = 1.obs;
   RxString custPageName = ''.obs;
   Customer custToShow = Customer(
-      id: 1,
+      id: '',
       name: '',
-      phoneno: 1,
-      bankacc: 1,
-      krapin: 1,
+      phoneno: '',
+      bankacc: '',
+      krapin: '',
       address: '',
-      cpperson: 1,
-      creditlimit: 1);
+      cpperson: '',
+      creditlimit: '',
+      totalCredit: '',
+      runningBal: '');
   Sale singleBill = Sale(
       id: 1,
       cart: <CartItem>[].obs,
@@ -37,45 +43,49 @@ class CustomerCtrl extends GetxController {
   RxList<Sale> oneCustSales = RxList<Sale>();
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    // var prefs = await SharedPreferences.getInstance();
+    // branchId = prefs.getString('branchId')!;
     getCustomers();
     getAllSales();
   }
 
   // ---------- Get Functions -----------------
+  Map<String, String> apiHeaders = {'Content-type': 'application/json'};
 
-  getCustomers() {
+  getCustomers() async {
     customers.clear();
-    customers.value = [
-      Customer(
-          id: 1,
-          name: 'Customer 01',
-          phoneno: 0712345678,
-          bankacc: 642312,
-          krapin: 4323212,
-          address: 'Kamuthi Estate',
-          cpperson: 0712345678,
-          creditlimit: 1000),
-      Customer(
-          id: 2,
-          name: 'Customer 02',
-          phoneno: 0712345678,
-          bankacc: 642312,
-          krapin: 4323212,
-          address: 'Kamuthi Estate',
-          cpperson: 0712345678,
-          creditlimit: 1000),
-      Customer(
-          id: 3,
-          name: 'Customer 03',
-          phoneno: 0712345678,
-          bankacc: 642312,
-          krapin: 4323212,
-          address: 'Kamuthi Estate',
-          cpperson: 0712345678,
-          creditlimit: 1000),
-    ];
+    try {
+      final response = await http.get(Uri.parse('$getCustomersUrl/122'),
+          headers: apiHeaders);
+
+      if (response.statusCode == 200) {
+        var resData = json.decode(response.body);
+        for (var item in resData) {
+          Customer cust = Customer(
+              id: item['customer_id'],
+              name: item['customer_name'],
+              phoneno: item['customer_phone_no'],
+              bankacc: item['customer_bank_acc'],
+              krapin: item['pin_number'],
+              address: item['customer_address'],
+              cpperson: item['customer_contact_person'],
+              creditlimit: item['customer_credit_limit'],
+              runningBal: item['customer_running_bal'],
+              totalCredit: item['customer_total_credit']);
+          customers.add(cust);
+        }
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to load customers!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   getAllSales() {
@@ -183,9 +193,9 @@ class CustomerCtrl extends GetxController {
     custPageName.value = '';
     oneCustSales.clear();
     for (final sale in allSales) {
-      if (sale.custId == billsToShow.value) {
-        oneCustSales.add(sale);
-      }
+      // if (sale.custId == int.parse(billsToShow.value)) {
+      oneCustSales.add(sale);
+      // }
     }
     custToShow =
         customers.where((element) => element.id == (billsToShow.value)).first;
@@ -207,37 +217,36 @@ class CustomerCtrl extends GetxController {
 
   addCustomer(Customer custData) async {
     var body = jsonEncode({
-      'name': custData.name,
-      'item': custData.phoneno,
-      'bankacc': custData.bankacc,
-      'krapin': custData.krapin,
-      'address': custData.address,
-      'cpperson': custData.cpperson,
-      'creditlimit': custData.creditlimit,
+      "branch_id": '122',
+      "customer_name": custData.name,
+      "customer_running_bal": custData.runningBal,
+      "customer_bank_acc": custData.bankacc,
+      "customer_phone_no": custData.phoneno,
+      "customer_address": custData.address,
+      "customer_contact_person": custData.cpperson,
+      "customer_credit_limit": custData.creditlimit,
+      "customer_total_credit": custData.totalCredit,
+      "pin_number": custData.krapin,
     });
-    debugPrint(body);
-    // try {
-    //   var res =
-    //       await http.post(Uri.parse(addUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
-    //   if (res.statusCode == 201) {
-
-    showSnackbar(
-        path: Icons.check_rounded, title: "Customer Added!", subtitle: "");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const CustomersPage());
-
-    //     return;
-    //   }
-    //   return;
-    // } catch (error) {
-    //   debugPrint("$error");
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed to add Category!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
+    try {
+      var res =
+          await http.post(Uri.parse(addCustomerUrl), body: body, headers: {});
+      debugPrint(res.body);
+      if (res.statusCode == 201) {
+        showSnackbar(
+            path: Icons.check_rounded, title: "Customer Added!", subtitle: "");
+        await Future.delayed(const Duration(seconds: 2));
+        Get.off(() => const CustomersPage());
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to add Category!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   // ---------- Edit Functions -----------------
