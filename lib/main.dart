@@ -5,7 +5,13 @@ import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/auth/screens/login.dart';
 import 'package:nawiri/auth/screens/onboarding.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
+import 'package:nawiri/core/home/billings/billings_ctrl.dart';
+import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
+import 'package:nawiri/core/home/pos/pos_ctrl.dart';
+import 'package:nawiri/core/home/suppliers/suppliers_ctrl.dart';
+import 'package:nawiri/core/home/transactions/transaction_ctrl.dart';
+import 'package:nawiri/core/reports/report_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,6 +34,12 @@ class InitialBinding implements Bindings {
   void dependencies() {
     Get.lazyPut(() => InventoryCtrl(), fenix: true);
     Get.lazyPut(() => BankingCtrl(), fenix: true);
+    Get.lazyPut(() => CustomerCtrl(), fenix: true);
+    Get.lazyPut(() => SupplierCtrl(), fenix: true);
+    Get.lazyPut(() => PoSCtrl(), fenix: true);
+    Get.lazyPut(() => BillingsCtrl(), fenix: true);
+    Get.lazyPut(() => TransactionCtrl(), fenix: true);
+    Get.lazyPut(() => ReportCtrl(), fenix: true);
   }
 }
 

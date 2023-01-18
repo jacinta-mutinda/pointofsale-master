@@ -63,6 +63,21 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> storeBranchId(String branchId) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("branchId", branchId);
+  }
+
+  get getBranchId async {
+    var prefs = await SharedPreferences.getInstance();
+    var branchId = prefs.getString('branchId');
+    if (branchId != null) {
+      return branchId;
+    } else {
+      return null;
+    }
+  }
+
 // ----------------------------- SIGN UP -------------------------------------
 
   signUp(List userdata) async {
