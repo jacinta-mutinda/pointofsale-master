@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/core/home/banking/banking.dart';
 import 'package:nawiri/core/home/billings/billings.dart';
 import 'package:nawiri/core/home/customers/customers.dart';
@@ -9,6 +10,7 @@ import 'package:nawiri/core/home/suppliers/suppliers.dart';
 import 'package:nawiri/core/home/transactions/transactions.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = "/market";
@@ -75,6 +77,8 @@ class WelcomePrompt extends StatefulWidget {
 }
 
 class _WelcomePromptState extends State<WelcomePrompt> {
+  final auth = Get.put(AuthCtrl());
+  RxString branchId = ''.obs;
   bool _isLoading = false;
   RxString methdSelcted = ''.obs;
   RxBool showPin = true.obs;
@@ -95,6 +99,13 @@ class _WelcomePromptState extends State<WelcomePrompt> {
   @override
   void initState() {
     super.initState();
+    getBranch();
+  }
+
+  void getBranch() async {
+    var prefs = await SharedPreferences.getInstance();
+    var branch = prefs.getString('branchId');
+    branchId.value = branch!;
   }
 
   @override
@@ -103,15 +114,20 @@ class _WelcomePromptState extends State<WelcomePrompt> {
       popupHeader(label: 'Welcome to Nawiri'),
       Obx(() => showPin.value
           ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              const Text(
+              Text(
                 '''
-            Please note your 6-digit login pin starts with 01 followed by your 4 digit pin.
+            Please note your 6-digit login pin starts with ${branchId.value} followed by your 4 digit pin.
             When logging in, key in your pin as: \n
-            01****
           ''',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
+              Obx(() => Text(
+                    '${branchId.value} ****',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.w600),
+                  )),
               priBtn(
                   label: 'Next',
                   txtColour: Colors.white,

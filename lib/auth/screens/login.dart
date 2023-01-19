@@ -20,7 +20,7 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-  final auth = Auth();
+  final auth = Get.put(AuthCtrl());
 
   @override
   void initState() {

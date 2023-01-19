@@ -32,6 +32,7 @@ void main() async {
 class InitialBinding implements Bindings {
   @override
   void dependencies() {
+    Get.lazyPut(() => AuthCtrl(), fenix: true);
     Get.lazyPut(() => InventoryCtrl(), fenix: true);
     Get.lazyPut(() => BankingCtrl(), fenix: true);
     Get.lazyPut(() => CustomerCtrl(), fenix: true);
@@ -57,21 +58,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  // bool authCheck = false;
-  bool authCheck = true;
-  final auth = Auth();
   Future<bool> startApp() async {
-    // var loggedIn = await auth.getStorageToken();
-    // bool foundToken = false;
-    bool foundToken = true;
-    await auth.getPasscode();
-    // if (loggedIn) {
-    //   auth.doGetProfile();
-    //   authCheck = true;
-    //   foundToken = true;
-    //   await lockCtrl.getPasscode();
-    // }
-    return foundToken;
+    return true;
   }
 
   @override
@@ -94,14 +82,7 @@ class _MyAppState extends State<MyApp> {
                       debugPrint('$snapshot.error');
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      if (authCheck) {
-                        debugPrint("... logged in");
-                        // return NavigatorHandler(0);
-                        return const Login();
-                      } else {
-                        debugPrint("not logged in ");
-                        return const Login();
-                      }
+                      return const Login();
                     }
                 }
               },

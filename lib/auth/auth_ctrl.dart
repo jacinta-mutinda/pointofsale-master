@@ -1,26 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:local_auth/local_auth.dart';
 import 'package:nawiri/auth/screens/login.dart';
+import 'package:nawiri/auth/screens/personal_det.dart';
 import 'package:nawiri/auth/screens/verify.dart';
 import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/home.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/utils/urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants.dart';
-
-class Auth with ChangeNotifier {
-  late DateTime _expiryDate = DateTime.now().add(const Duration(days: 100));
-  late String _token = "";
-  late Map<String, dynamic> _profile = {};
-  static final _localAuth = LocalAuthentication();
-  int? passcode;
+class AuthCtrl extends GetxController {
   User profile = User(
       id: 1,
       busname: 'Asis Tea Sales',
@@ -34,39 +27,11 @@ class Auth with ChangeNotifier {
       phoneno: 0712345678,
       pin: 1234);
 
-  Auth() {
-    debugPrint("#################");
-    debugPrint("##### AUTH ######");
-    debugPrint("#################");
-
-    getStorageToken();
-  }
-
-  get authHeaders {
+  get headers {
     return {"Content-Type": "application/json"};
   }
 
-  get headers {
-    return {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $_token"
-    };
-  }
-
   // ----------------------------- SIGN IN -------------------------------------
-
-  getPasscode() async {
-    var prefs = await SharedPreferences.getInstance();
-    var pass = prefs.getInt('passcode');
-    if (pass != null) {
-      passcode = pass;
-    }
-  }
-
-  Future<void> storeBranchId(String branchId) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setString("branchId", branchId);
-  }
 
   get getBranchId async {
     var prefs = await SharedPreferences.getInstance();
@@ -80,85 +45,82 @@ class Auth with ChangeNotifier {
 
 // ----------------------------- SIGN UP -------------------------------------
 
-  signUp(List userdata) async {
-    var body = jsonEncode({
-      'bus_name': userdata[0],
-      'address': userdata[1],
-      'location': userdata[2],
-      'bus_phone': userdata[3],
-      'till_no': userdata[4],
-      'rec_footer': userdata[5],
-      'username': userdata[6],
-      'pers_email': userdata[7],
-      'pers_phone': userdata[8],
-      'pin': userdata[9]
-    });
-    debugPrint(body);
-    storePasscode(userdata[9]);
-    // try {
-    //   var res =
-    //       await http.post(Uri.parse(signUpUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
-    //   if (res.statusCode == 201) {
-    //     var token = json.decode(res.body)["token"]["access_token"];
-    //     _token = token;
-    //     await setTokenInfo(json.decode(res.body)["token"]);
-
-    //     var profile = json.decode(res.body)["profile"];
-    //     setProfile(profile);
-    //     notifyListeners();
-    debugPrint('Data posted');
-    showSnackbar(
-        path: Icons.check_rounded,
-        title: "Nawiri Account Created!",
-        subtitle: "Kindly verify your account in the next step");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.offAll(() => const VerifyAccount());
-    //     return;
-    //   } else {
-    //     showSnackbar(
-    //         path: Icons.close_rounded,
-    //         title: "Failed Sign Up!",
-    //         subtitle: "Looks like the user email already exists!");
-    //   }
-    //   return;
-    // } catch (error) {
-    //   debugPrint("$error");
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed Sign Up!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
-
-    // notifyListeners();
+  Future<void> storeBranchId(String branchId) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("branchId", branchId);
   }
 
-  Future<void> storePasscode(String passCode) async {
+  createCompany(List userdata) async {
+    var body = jsonEncode({
+      'company_name': userdata[0],
+      'company_address': userdata[1],
+      'company_town': userdata[2],
+      'company_tel': userdata[3],
+      'payment_details': userdata[4],
+      'logo': userdata[5]
+    });
+    try {
+      var res = await http.post(Uri.parse(addCompanyUrl),
+          body: body, headers: headers);
+      if (res.statusCode == 201) {
+        Map<String, dynamic> resBody = json.decode(res.body);
+        await storeBranchId(resBody['branch_id'].toString());
+        showSnackbar(
+            path: Icons.check_rounded,
+            title: "Company Created!",
+            subtitle: "Let's create your personal account in the next step");
+        await Future.delayed(const Duration(seconds: 2));
+        Get.off(() => const PersonalDetails());
+        return;
+      }
+      return;
+    } catch (error) {
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to Create Company!",
+          subtitle: "Please check your internet connection or try again later");
+    }
+  }
+
+  signUp(List userdata) async {
     var prefs = await SharedPreferences.getInstance();
-    var fullPin = '01$passCode';
-    await prefs.setInt("passcode", int.parse(fullPin));
+    var branchId = prefs.getString('branchId');
+    var body = jsonEncode({
+      'user_name': userdata[0],
+      'staff_id': userdata[1],
+      'user_lif': userdata[2],
+      'user_pin': userdata[3],
+      'branch_id': int.parse(branchId!)
+    });
+    try {
+      var res =
+          await http.post(Uri.parse(signUpUrl), body: body, headers: headers);
+      if (res.statusCode == 201) {
+        showSnackbar(
+            path: Icons.check_rounded,
+            title: "Nawiri Account Created!",
+            subtitle: "Kindly verify your account in the next step");
+        await Future.delayed(const Duration(seconds: 2));
+        Get.offAll(() => const VerifyAccount());
+        return;
+      }
+      return;
+    } catch (error) {
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed Sign Up!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   // ----------------------------- UPDATE USER -------------------------------------
 
   updateUser(String gender, String dob) async {
     var body = jsonEncode({'gender': gender, 'dob': dob});
-    debugPrint(body);
-    var prefs = await SharedPreferences.getInstance();
-    var token = json.decode(prefs.getString("token")!);
-    _token = token['access_token'];
 
     try {
-      var res = await http.patch(Uri.parse(updateUserUrl),
-          body: body, headers: headers);
-      debugPrint("Got response ${res.statusCode}");
-      debugPrint(res.body);
+      var res = await http.patch(Uri.parse(''), body: body, headers: headers);
       if (res.statusCode == 200) {
-        var profile = json.decode(res.body);
-        setProfile(profile);
-        notifyListeners();
-        debugPrint('Data posted');
         showSnackbar(
             path: Icons.check_rounded,
             title: "Details successfully added!",
@@ -176,27 +138,20 @@ class Auth with ChangeNotifier {
       }
       return;
     } catch (error) {
-      debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
           title: "Details not updated!",
           subtitle: "Please check your internet connection or try again later");
     }
-
-    notifyListeners();
   }
 
   // ----------------------------- VERIFY ACCOUNT -------------------------------------
 
   verifyAccount(int otp) async {
     var body = json.encode({"verify_code": otp});
-    debugPrint(body);
     // try {
     //   var res = await http.post(Uri.parse(resetPassUrl),
     //       body: body, headers: authHeaders);
-
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
     //   if (res.statusCode == 200) {
     showSnackbar(
         path: Icons.check_rounded,
@@ -213,7 +168,6 @@ class Auth with ChangeNotifier {
     //   }
     //   return res;
     // } catch (error) {
-    //   debugPrint('$error');
     //   showSnackbar(
     //       path: Icons.close_rounded,
     //       title: "Failed to reset password",
@@ -221,93 +175,9 @@ class Auth with ChangeNotifier {
     // }
   }
 
-// ----------------------------- TOKENS -------------------------------------
-  Future<void> setTokenInfo(info) async {
-    debugPrint('$info');
-    if (info == null) {
-      return;
-    }
-    _token = info["access_token"];
-    _expiryDate = DateTime.now().add(Duration(seconds: info['expires_in']));
-    return await storeTokenInfo(info);
-  }
-
-  Future<void> storeTokenInfo(info) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setString("token", json.encode(info));
-  }
-
-  String getToken() {
-    if (_expiryDate.isAfter(DateTime.now())) {
-      return _token;
-    }
-    return _token;
-  }
-
-  Future<bool> getStorageToken() async {
-    var prefs = await SharedPreferences.getInstance();
-    bool foundToken = false;
-    if (prefs.containsKey("token")) {
-      var token = json.decode(prefs.getString("token")!);
-      _token = token['access_token'];
-      setTokenInfo(token);
-      if (prefs.containsKey("profile")) {
-        _profile = json.decode(prefs.getString("profile")!);
-      } else {
-        debugPrint("No profile found.");
-      }
-      foundToken = true;
-    } else {
-      debugPrint("No token found.");
-    }
-    return foundToken;
-  }
-
-// ----------------------------- PROFILE -------------------------------------
-
-  void setProfile(profile) async {
-    _profile = profile;
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setString("profile", json.encode(profile));
-    debugPrint('$profile');
-  }
-
-  Future<http.Response> getProfile() {
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $_token"
-    };
-    return http.get(Uri.parse(profileUrl), headers: headers);
-  }
-
-  void updateProfile() async {
-    debugPrint("getting the profile");
-    var profileResp = await getProfile();
-
-    if (profileResp.statusCode == 200) {
-      var profile = json.decode(profileResp.body);
-      debugPrint('$profile');
-      setProfile(profile);
-    }
-  }
-
-  void doGetProfile() async {
-    var profileResp = await getProfile();
-    if (profileResp.statusCode == 200) {
-      var profile = json.decode(profileResp.body);
-      setProfile(profile);
-      debugPrint("Setting profile Complete :)");
-    }
-  }
-
 // ----------------------------- SIGN OUT -------------------------------------
   Future<bool> logout() async {
-    debugPrint("Logging out");
-    _token = '';
-    _expiryDate = DateTime.now();
-    _profile = {};
     await clearStorage();
-    notifyListeners();
     await Future.delayed(const Duration(seconds: 2));
     Get.offAll(const Login());
     return true;

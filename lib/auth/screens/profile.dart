@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController tillnoctrl = TextEditingController();
   TextEditingController taglinectrl = TextEditingController();
 
-  final auth = Auth();
+  final auth = Get.put(AuthCtrl());
   final _formKey = GlobalKey<FormState>();
   final _isHidden = false.obs;
   bool _isLoading = false;

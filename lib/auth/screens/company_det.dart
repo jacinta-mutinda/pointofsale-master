@@ -23,7 +23,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   TextEditingController phonectrl = TextEditingController();
   TextEditingController tillnoctrl = TextEditingController();
   TextEditingController taglinectrl = TextEditingController();
-  final auth = Auth();
+  final auth = Get.put(AuthCtrl());
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   final RegExp phoneNo = RegExp(r"^\+?0[0-9]{10}$");
@@ -34,6 +34,17 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    busnamectrl.dispose();
+    addressctrl.dispose();
+    phonectrl.dispose();
+    locctrl.dispose();
+    tillnoctrl.dispose();
+    taglinectrl.dispose();
+    super.dispose();
+  }
+
   bool isValidPhone(String s) {
     if (s.length > 16 || s.length < 9) return false;
     return phoneNo.hasMatch(s);
@@ -42,18 +53,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   bool isValidTill(String s) {
     if (s.length > 16 || s.length < 9) return false;
     return tillNo.hasMatch(s);
-  }
-
-  void authCompanyDetails() {
-    List userData = [
-      busnamectrl.text,
-      addressctrl.text,
-      locctrl.text,
-      phonectrl.text,
-      tillnoctrl.text,
-      taglinectrl.text
-    ];
-    Get.to(PersonalDetails(userData: userData));
   }
 
   @override
@@ -154,7 +153,15 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                   _isLoading = true;
                 });
                 if (_formKey.currentState!.validate()) {
-                  authCompanyDetails();
+                  List userData = [
+                    busnamectrl.text,
+                    addressctrl.text,
+                    locctrl.text,
+                    phonectrl.text,
+                    tillnoctrl.text,
+                    taglinectrl.text
+                  ];
+                  auth.createCompany(userData);
                 }
                 await Future.delayed(const Duration(seconds: 2));
                 setState(() {

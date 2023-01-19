@@ -16,10 +16,37 @@ class CustomersPage extends StatefulWidget {
 
 class _CustomersPageState extends State<CustomersPage> {
   final customersCtrl = Get.put(CustomerCtrl());
+  final ScrollController _scrollctrl = ScrollController();
+  bool _showBackToTopBtn = false;
 
   @override
   void initState() {
     super.initState();
+    _scrollctrl.addListener(() {
+      // if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
+      //   mpesaListCtrl.listAppender(
+      //       rangeList: allSmsCtrl.filterMessages,
+      //       selectList: allSmsCtrl.filterSelectMessages);
+      // }
+      setState(() {
+        if (_scrollctrl.offset >= 400) {
+          _showBackToTopBtn = true;
+        } else {
+          _showBackToTopBtn = false;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollctrl.dispose();
+  }
+
+  void _scrollToTop() {
+    _scrollctrl.animateTo(0,
+        duration: const Duration(milliseconds: 1), curve: Curves.linear);
   }
 
   @override
@@ -27,14 +54,45 @@ class _CustomersPageState extends State<CustomersPage> {
     return Scaffold(
       appBar: backAppBar(pageTitle: 'Customers', actions: <Widget>[]),
       body: SingleChildScrollView(
+          controller: _scrollctrl,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              child:
+                  // Obx(() => allSmsCtrl.showData.value ?
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                 const Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 10),
                     child: Text('All Customers', style: kTitle)),
+                // Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                //   Padding(
+                //       padding: const EdgeInsets.only(bottom: 10, right: 5),
+                //       child: Obx(() => RichText(
+                //               text: TextSpan(children: [
+                //             const TextSpan(
+                //               text: 'Showing ',
+                //               style: kTxt,
+                //             ),
+                //             TextSpan(
+                //               text: ' ${allSmsCtrl.filterMessages.length} ',
+                //               style: kDateTime,
+                //             ),
+                //             const TextSpan(
+                //               text: ' of ',
+                //               style: kTxt,
+                //             ),
+                //             TextSpan(
+                //               text:
+                //                   ' ${allSmsCtrl.filterSelectMessages.length} ',
+                //               style: kYellowTxt,
+                //             ),
+                //             const TextSpan(
+                //               text: ' messages',
+                //               style: kTxt,
+                //             )
+                //           ]))))
+                // ]),
                 Obx(
                   () => ListView.builder(
                       shrinkWrap: true,
@@ -86,7 +144,9 @@ class _CustomersPageState extends State<CustomersPage> {
                       },
                       itemCount: customersCtrl.customers.length),
                 ),
-              ]))),
+              ])
+              //  : noTransactionsWidget())
+              )),
       floatingActionButton: FloatingActionButton(
         backgroundColor: kDarkGreen,
         foregroundColor: Colors.white,
@@ -96,6 +156,17 @@ class _CustomersPageState extends State<CustomersPage> {
         },
         child: const Icon(Icons.add),
       ),
+      // floatingActionButton: _showBackToTopBtn
+      //       ? FloatingActionButton(
+      //           elevation: 2.0,
+      //           backgroundColor: kPrimaryPurple,
+      //           onPressed: _scrollToTop,
+      //           child: const Icon(
+      //             Icons.arrow_upward,
+      //             color: Colors.white,
+      //           ),
+      //         )
+      //       : Container()
     );
   }
 }

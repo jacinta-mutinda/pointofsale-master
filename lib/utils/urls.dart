@@ -1,5 +1,9 @@
 const rootUrl = 'https://nawiriapp.pythonanywhere.com/api/';
 
+// Auth Urls --------------------------------------
+const addCompanyUrl = '$rootUrl/addCompany';
+const signUpUrl = '$rootUrl/join';
+
 // Customer Urls --------------------------------------
 
 const getCustomersUrl = '$rootUrl/getCustomers';

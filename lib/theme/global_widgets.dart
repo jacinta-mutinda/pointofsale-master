@@ -5,7 +5,7 @@ import 'package:nawiri/auth/screens/profile.dart';
 import 'package:nawiri/core/home/billings/billings.dart';
 import 'package:nawiri/theme/constants.dart';
 
-final auth = Auth();
+final auth = Get.put(AuthCtrl());
 
 void showSnackbar({required String title, required String subtitle, path}) {
   Get.snackbar(

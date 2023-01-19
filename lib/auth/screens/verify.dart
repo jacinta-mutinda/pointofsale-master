@@ -31,7 +31,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
   TextEditingController confirmpassctrl = TextEditingController();
   int? otp;
 
-  Auth auth = Get.put(Auth());
+  final auth = Get.put(AuthCtrl());
 
   @override
   void initState() {

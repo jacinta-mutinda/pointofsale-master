@@ -9,29 +9,26 @@ import 'package:nawiri/theme/global_widgets.dart';
 class PersonalDetails extends StatefulWidget {
   static const routeName = "/personalDetails";
 
-  final List userData;
-
-  const PersonalDetails({Key? key, required this.userData}) : super(key: key);
+  const PersonalDetails({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _PersonalDetailsState createState() => _PersonalDetailsState(userData);
+  _PersonalDetailsState createState() => _PersonalDetailsState();
 }
 
 class _PersonalDetailsState extends State<PersonalDetails> {
-  late List userData;
   TextEditingController usernamectrl = TextEditingController();
   TextEditingController emailctrl = TextEditingController();
   TextEditingController phonectrl = TextEditingController();
   TextEditingController passctrl = TextEditingController();
   TextEditingController confirmpassctrl = TextEditingController();
   final RegExp phoneNo = RegExp(r"^\+?0[0-9]{10}$");
-  final auth = Auth();
+  final auth = Get.put(AuthCtrl());
   final _formKey = GlobalKey<FormState>();
   final _isHidden = false.obs;
   bool _isLoading = false;
 
-  _PersonalDetailsState(this.userData);
+  _PersonalDetailsState();
 
   @override
   void initState() {
@@ -51,19 +48,6 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   bool isValidPhone(String s) {
     if (s.length > 16 || s.length < 9) return false;
     return phoneNo.hasMatch(s);
-  }
-
-  void authPersonalDetails() {
-    List persData = [
-      usernamectrl.text,
-      emailctrl.text,
-      phonectrl.text,
-      passctrl.text,
-    ];
-    for (final item in persData) {
-      userData.add(item);
-    }
-    auth.signUp(userData);
   }
 
   @override
@@ -164,7 +148,13 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                         _isLoading = true;
                       });
                       if (_formKey.currentState!.validate()) {
-                        authPersonalDetails();
+                        List persData = [
+                          usernamectrl.text,
+                          emailctrl.text,
+                          phonectrl.text,
+                          passctrl.text,
+                        ];
+                        auth.signUp(persData);
                       }
                       await Future.delayed(const Duration(seconds: 2));
                       setState(() {
