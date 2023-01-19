@@ -390,7 +390,7 @@ Widget popupTitle({label}) {
       child: Text(
         label,
         style: const TextStyle(
-            fontFamily: 'Montserrat',
+            fontFamily: 'Nunito',
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: kCreamTheme),
@@ -402,7 +402,7 @@ Widget popupSubtitle({label}) {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Text(label,
           style: const TextStyle(
-              fontFamily: 'Montserrat',
+              fontFamily: 'Nunito',
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: kCreamTheme)));
@@ -708,6 +708,52 @@ Widget otpField({required controller, required context}) {
             OutlineInputBorder(borderSide: BorderSide(color: kPrimaryRed)),
         border: OutlineInputBorder(borderSide: BorderSide(color: kLightGreen)),
         counterText: '',
+      ),
+    ),
+  );
+}
+
+Widget searchForm(
+    {required label,
+    required = true,
+    required controller,
+    required suffix,
+    required inputType,
+    required final String? Function(String?) validator,
+    final void Function()? searchFunction}) {
+  return Container(
+    width: 270,
+    height: 70,
+    padding: const EdgeInsets.only(bottom: 5),
+    child: TextFormField(
+      cursorColor: kDarkGreen,
+      controller: controller,
+      validator: validator,
+      keyboardType: inputType,
+      maxLines: null,
+      style: const TextStyle(
+          fontSize: 15,
+          fontFamily: 'Nunito',
+          fontWeight: FontWeight.w400,
+          color: Colors.black),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(
+            fontSize: 14,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.w600,
+            color: kDarkGreen),
+        suffix: suffix
+            ? InkWell(
+                onTap: searchFunction,
+                child: const Icon(
+                  Icons.search,
+                  color: kDarkGreen,
+                ))
+            : const SizedBox(
+                width: 1,
+                height: 1,
+              ),
       ),
     ),
   );

@@ -23,3 +23,22 @@ listAppender({required RxList rangeList, required RxList selectList}) {
     }
   }
 }
+
+List<String> searchParser(String tillString) {
+  List<String> parsed = [];
+  List<String> listHolder = [];
+  String stringHolder = '';
+
+  if (tillString.contains('-')) {
+    listHolder = tillString.split('-');
+    stringHolder = listHolder.reduce((value, element) => '$value, $element');
+    stringHolder = stringHolder.replaceAll(RegExp(r'[^\w\s\-]+'), '');
+  } else if (tillString.contains('.')) {
+    stringHolder = tillString.replaceAll(RegExp(r'[^\w\s\-]+'), '');
+  } else {
+    stringHolder = tillString;
+  }
+  stringHolder = stringHolder.toLowerCase();
+  parsed = stringHolder.split(' ');
+  return parsed;
+}

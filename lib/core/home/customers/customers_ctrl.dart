@@ -310,6 +310,27 @@ class CustomerCtrl extends GetxController {
     }
   }
 
+  searchFilter(String searchItem) async {
+    List<String> searchList = searchParser(searchItem);
+    RxList<Customer> searchResult = RxList<Customer>();
+
+    for (var cust in customers) {
+      List<String> custValue = searchParser(cust.name);
+      for (var value in searchList) {
+        if (searchResult.contains(cust) == false) {
+          if (custValue.contains(value)) {
+            searchResult.add(cust);
+          }
+        }
+      }
+    }
+
+    clearLists();
+    rangeCustList = searchResult;
+    filterPaginator();
+    update();
+  }
+
   clearLists() {
     rangeCustList.clear();
     customers.clear();

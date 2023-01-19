@@ -18,6 +18,8 @@ class CustomersPage extends StatefulWidget {
 class _CustomersPageState extends State<CustomersPage> {
   final customersCtrl = Get.put(CustomerCtrl());
   final ScrollController _scrollctrl = ScrollController();
+  TextEditingController searchCtrl = TextEditingController();
+  final GlobalKey<FormState> _searchForm = GlobalKey<FormState>();
   bool _showBackToTopBtn = false;
   bool _isAddLoading = false;
 
@@ -84,6 +86,44 @@ class _CustomersPageState extends State<CustomersPage> {
                                                 false;
                                             Get.to(const CustomerForm());
                                           }),
+                                    ])),
+                            Padding(
+                                padding: const EdgeInsets.only(bottom: 25),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Form(
+                                          key: _searchForm,
+                                          child: searchForm(
+                                              label: 'Search by customer name',
+                                              controller: searchCtrl,
+                                              suffix: true,
+                                              inputType: TextInputType.text,
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.isEmpty) {
+                                                  return 'Please enter search name';
+                                                }
+                                                return null;
+                                              },
+                                              searchFunction: () {
+                                                if (_searchForm.currentState!
+                                                    .validate()) {
+                                                  customersCtrl.searchFilter(
+                                                      searchCtrl.text);
+                                                }
+                                              })),
+                                      GestureDetector(
+                                          onTap: () {
+                                            customersCtrl.getCustomers();
+                                            searchCtrl.clear();
+                                          },
+                                          child: const Icon(
+                                            Icons.refresh,
+                                            color: kDarkGreen,
+                                            size: 25,
+                                          ))
                                     ])),
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
