@@ -4,6 +4,7 @@ import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/auth/screens/profile.dart';
 import 'package:nawiri/core/home/billings/billings.dart';
 import 'package:nawiri/theme/constants.dart';
+import 'package:lottie/lottie.dart';
 
 final auth = Get.put(AuthCtrl());
 
@@ -62,7 +63,7 @@ Widget smallPriBtn(
     required void Function()? function}) {
   return Container(
     width: 120,
-    height: 70,
+    height: 50,
     padding: const EdgeInsets.symmetric(vertical: 10),
     alignment: Alignment.center,
     child: ElevatedButton(
@@ -85,7 +86,7 @@ Widget smallPriBtn(
               style: TextStyle(
                   color: txtColour,
                   fontFamily: 'Nunito',
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w700)),
     ),
   );
@@ -155,6 +156,19 @@ Widget formDropDownField(
               }).toList(),
             )))
   ]);
+}
+
+Widget noTransactionsWidget({required String label}) {
+  return Padding(
+      padding: const EdgeInsets.all(70),
+      child: Column(children: [
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: kSubTitle,
+        ),
+        Lottie.asset('assets/images/empty.json', width: 250),
+      ]));
 }
 
 PreferredSizeWidget mainAppBar({required String pageTitle}) {

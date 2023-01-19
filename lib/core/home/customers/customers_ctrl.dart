@@ -6,13 +6,14 @@ import 'package:nawiri/core/home/customers/customers.dart';
 import 'package:nawiri/core/home/customers/single_bill.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/utils/functions.dart';
 import 'package:nawiri/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerCtrl extends GetxController {
-  String branchId = '0';
-  RxBool showMenu = false.obs;
+  RxString branchId = ''.obs;
+  RxBool showData = false.obs;
   RxBool isCustEdit = false.obs;
   RxString custToEdit = ''.obs;
   RxString billsToShow = ''.obs;
@@ -39,27 +40,37 @@ class CustomerCtrl extends GetxController {
       paid: true,
       date: '');
   RxList<Customer> customers = RxList<Customer>();
+  RxList<Customer> rangeCustList = RxList<Customer>();
   RxList<Sale> allSales = RxList<Sale>();
   RxList<Sale> oneCustSales = RxList<Sale>();
 
   @override
   void onInit() async {
     super.onInit();
-    // var prefs = await SharedPreferences.getInstance();
-    // branchId = prefs.getString('branchId')!;
+    getBranch();
     getCustomers();
     getAllSales();
+  }
+
+  void getBranch() async {
+    var prefs = await SharedPreferences.getInstance();
+    var branch = prefs.getString('branchId');
+    if (branch != null) {
+      branchId.value = branch;
+    }
   }
 
   // ---------- Get Functions -----------------
   Map<String, String> apiHeaders = {'Content-type': 'application/json'};
 
   getCustomers() async {
-    customers.clear();
+    clearLists();
+    // get branchId
     try {
-      final response = await http.get(Uri.parse('$getCustomersUrl/122'),
+      branchId.value = '122';
+      final response = await http.get(
+          Uri.parse('$getCustomersUrl/${branchId.value}'),
           headers: apiHeaders);
-
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
@@ -76,6 +87,8 @@ class CustomerCtrl extends GetxController {
               totalCredit: item['customer_total_credit']);
           customers.add(cust);
         }
+        filterPaginator();
+        update();
         return;
       }
       return;
@@ -217,7 +230,7 @@ class CustomerCtrl extends GetxController {
 
   addCustomer(Customer custData) async {
     var body = jsonEncode({
-      "branch_id": '122',
+      "branch_id": branchId.value,
       "customer_name": custData.name,
       "customer_running_bal": custData.runningBal,
       "customer_bank_acc": custData.bankacc,
@@ -284,5 +297,21 @@ class CustomerCtrl extends GetxController {
     //       title: "Failed to update category!",
     //       subtitle: "Please check your internet connection or try again later");
     // }
+  }
+
+  // ---------- Utility Functions -----------------
+
+  filterPaginator() {
+    listPaginator(rangeList: rangeCustList, selectList: customers);
+    if (rangeCustList.isEmpty) {
+      showData.value = false;
+    } else {
+      showData.value = true;
+    }
+  }
+
+  clearLists() {
+    rangeCustList.clear();
+    customers.clear();
   }
 }

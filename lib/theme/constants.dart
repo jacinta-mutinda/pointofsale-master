@@ -55,6 +55,18 @@ const kBlackTxt = TextStyle(
     fontWeight: FontWeight.w400,
     color: Colors.black);
 
+const kNeonTxt = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: kNeonGreen);
+
+const kDarkGreenTxt = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: kDarkGreen);
+
 const kWhiteTxt = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 12,

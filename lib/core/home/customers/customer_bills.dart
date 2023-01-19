@@ -30,7 +30,7 @@ class _CustomerBillsState extends State<CustomerBills> {
       appBar: backAppBar(
           pageTitle: customerCtrl.custPageName.value, actions: <Widget>[]),
       body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 40),
           child: SizedBox(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
