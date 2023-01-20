@@ -20,18 +20,12 @@ class BankAccForm extends StatefulWidget {
 class _BankAccFormState extends State<BankAccForm> {
   String pageTitle = '';
   BankAccount bankAccData = BankAccount(
-      id: 1,
-      bankName: '',
-      accno: 1,
-      branchName: '',
-      cpperson: 1,
-      currentTotal: 1);
+      id: '', bankName: '', accno: '', branchName: '', cpperson: '');
   final bankingCtrl = Get.put(BankingCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController accnoctrl = TextEditingController();
   TextEditingController branchctrl = TextEditingController();
   TextEditingController cppersonctrl = TextEditingController();
-  TextEditingController totalctrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -49,7 +43,6 @@ class _BankAccFormState extends State<BankAccForm> {
     accnoctrl.dispose();
     branchctrl.dispose();
     cppersonctrl.dispose();
-    totalctrl.dispose();
     super.dispose();
   }
 
@@ -74,18 +67,12 @@ class _BankAccFormState extends State<BankAccForm> {
           .where((element) => element.id == (bankingCtrl.bankToEdit.value))
           .first
           .branchName;
-      totalctrl.text = bankingCtrl.bankAccounts
-          .where((element) => element.id == (bankingCtrl.bankToEdit.value))
-          .first
-          .currentTotal
-          .toString();
     } else {
       pageTitle = 'Add Bank Account';
       namectrl.clear();
       accnoctrl.clear();
       branchctrl.clear();
       cppersonctrl.clear();
-      totalctrl.clear();
     }
   }
 
@@ -106,7 +93,7 @@ class _BankAccFormState extends State<BankAccForm> {
                         children: <Widget>[
                           formField(
                               label: 'Bank Name',
-                              require: true,
+                              require: bankingCtrl.fieldsRequired.value,
                               controller: namectrl,
                               type: TextInputType.name,
                               validator: (value) {
@@ -117,7 +104,7 @@ class _BankAccFormState extends State<BankAccForm> {
                               }),
                           formField(
                               label: 'Branch Name',
-                              require: true,
+                              require: bankingCtrl.fieldsRequired.value,
                               controller: branchctrl,
                               type: TextInputType.name,
                               validator: (value) {
@@ -128,7 +115,7 @@ class _BankAccFormState extends State<BankAccForm> {
                               }),
                           formField(
                               label: 'Account Number',
-                              require: true,
+                              require: bankingCtrl.fieldsRequired.value,
                               controller: accnoctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -139,7 +126,7 @@ class _BankAccFormState extends State<BankAccForm> {
                               }),
                           formField(
                               label: 'Contact Person Phone Number',
-                              require: true,
+                              require: bankingCtrl.fieldsRequired.value,
                               controller: cppersonctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -150,18 +137,7 @@ class _BankAccFormState extends State<BankAccForm> {
                                   return 'Please enter a 10-digit phone number';
                                 }
                                 return null;
-                              }),
-                          formField(
-                              label: 'Current Account Balance (in Kes)',
-                              require: true,
-                              controller: totalctrl,
-                              type: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the current Bank Balance';
-                                }
-                                return null;
-                              }),
+                              })
                         ],
                       )),
                   priBtn(
@@ -176,9 +152,8 @@ class _BankAccFormState extends State<BankAccForm> {
                       if (_formKey.currentState!.validate()) {
                         bankAccData.bankName = namectrl.text;
                         bankAccData.branchName = branchctrl.text;
-                        bankAccData.accno = int.parse(accnoctrl.text);
-                        bankAccData.cpperson = int.parse(cppersonctrl.text);
-                        bankAccData.currentTotal = int.parse(totalctrl.text);
+                        bankAccData.accno = accnoctrl.text;
+                        bankAccData.cpperson = cppersonctrl.text;
 
                         if (bankingCtrl.isBankEdit.value) {
                           bankingCtrl.editBankAcc(bankAccData);

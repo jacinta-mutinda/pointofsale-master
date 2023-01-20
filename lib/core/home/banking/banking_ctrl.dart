@@ -5,27 +5,29 @@ import 'package:nawiri/core/home/banking/banking.dart';
 import 'package:nawiri/core/home/banking/banking_transactions.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/utils/functions.dart';
+import 'package:http/http.dart' as http;
+import 'package:nawiri/utils/urls.dart';
 
 class BankingCtrl extends GetxController {
+  RxString branchId = ''.obs;
   RxString accDropdown = ''.obs;
   RxString transTypeDropdown = ''.obs;
-  RxBool showMenu = false.obs;
+  RxBool showData = false.obs;
+  RxBool showLoading = true.obs;
+  RxBool fieldsRequired = false.obs;
   RxBool isBankEdit = false.obs;
-  RxInt bankToEdit = 1.obs;
+  RxString bankToEdit = ''.obs;
   RxBool isTransEdit = false.obs;
   RxInt transToEdit = 1.obs;
-  RxInt transToShow = 1.obs;
+  RxString transToShow = ''.obs;
   RxString bankPageName = ''.obs;
   List<String> bankAccStrs = [];
   List<String> accActionStrs = ['', 'Withdraw', 'Deposit'];
   BankAccount transAccToShow = BankAccount(
-      id: 1,
-      bankName: '',
-      accno: 1,
-      branchName: '',
-      cpperson: 1,
-      currentTotal: 1);
+      id: '', bankName: '', accno: '', branchName: '', cpperson: '');
   RxList<BankAccount> bankAccounts = RxList<BankAccount>();
+  RxList<BankAccount> rangeAccList = RxList<BankAccount>();
   RxList<BankTransaction> allBankTrans = RxList<BankTransaction>();
   RxList<BankTransaction> accBankTrans = RxList<BankTransaction>();
 
@@ -38,34 +40,37 @@ class BankingCtrl extends GetxController {
 
   // ---------- Get Functions -----------------
 
-  getBanks() {
-    bankAccounts.clear();
-    bankAccounts.value = [
-      BankAccount(
-          id: 1,
-          bankName: 'Equity Bank',
-          accno: 1244411231,
-          branchName: 'Kimathi Street',
-          cpperson: 0712345678,
-          currentTotal: 50000),
-      BankAccount(
-          id: 2,
-          bankName: 'KCB',
-          accno: 1244411231,
-          branchName: 'Ronald Ngara',
-          cpperson: 0712345678,
-          currentTotal: 10560),
-      BankAccount(
-          id: 3,
-          bankName: 'Stanbic Bank',
-          accno: 1244411231,
-          branchName: 'Kimathi Street',
-          cpperson: 0712345678,
-          currentTotal: 5600),
-    ];
-    bankAccStrs.add('');
-    for (final acc in bankAccounts) {
-      bankAccStrs.add(acc.bankName);
+  getBanks() async {
+    clearLists();
+    // get branchId from functions.dart
+    try {
+      branchId.value = '122';
+      final response = await http.get(
+          Uri.parse('$getBankAccsUrl/${branchId.value}'),
+          headers: apiHeaders);
+      if (response.statusCode == 200) {
+        var resData = json.decode(response.body);
+        for (var item in resData) {
+          BankAccount bankAcc = BankAccount(
+              id: item['bank_id'].toString(),
+              bankName: item['bank_name'],
+              accno: item['bank_acc_no'],
+              branchName: item['account_details'],
+              cpperson: item['account_manager']);
+          bankAccounts.add(bankAcc);
+          bankAccStrs.add(item['bank_name']);
+        }
+        filterPaginator();
+        update();
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to load bank accounts!",
+          subtitle: "Please check your internet connection or try again later");
     }
   }
 
@@ -106,7 +111,7 @@ class BankingCtrl extends GetxController {
     bankPageName.value = '';
     accBankTrans.clear();
     for (final trans in allBankTrans) {
-      if (trans.bankId == transToShow.value) {
+      if (trans.bankId.toString() == transToShow.value) {
         accBankTrans.add(trans);
       }
     }
@@ -126,34 +131,33 @@ class BankingCtrl extends GetxController {
 
   addBankAcc(BankAccount bankAccData) async {
     var body = jsonEncode({
-      'bankName': bankAccData.bankName,
-      'accno': bankAccData.accno,
-      'branchName': bankAccData.branchName,
-      'cpperson': bankAccData.cpperson,
+      'bank_name': bankAccData.bankName,
+      'bank_acc_no': bankAccData.accno,
+      'account_details': bankAccData.branchName,
+      'account_manager': bankAccData.cpperson,
+      'branch_id': '122'
     });
-    debugPrint(body);
-    // try {
-    //   var res =
-    //       await http.post(Uri.parse(addUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
-    //   if (res.statusCode == 201) {
-
-    showSnackbar(
-        path: Icons.check_rounded, title: "Bank Account Added!", subtitle: "");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const BankingPage());
-
-    //     return;
-    //   }
-    //   return;
-    // } catch (error) {
-    //   debugPrint("$error");
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed to add Category!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
+    try {
+      var res =
+          await http.post(Uri.parse(addBankAccUrl), body: body, headers: {});
+      if (res.statusCode == 201) {
+        showSnackbar(
+            path: Icons.check_rounded,
+            title: "Bank Account Added!",
+            subtitle: "");
+        await Future.delayed(const Duration(seconds: 2));
+        getBanks();
+        Get.off(() => const BankingPage());
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to add Bank Account!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   addBankTrans(BankTransaction bankTransData) async {
@@ -193,37 +197,42 @@ class BankingCtrl extends GetxController {
   // ---------- Edit Functions -----------------
 
   editBankAcc(BankAccount bankAccData) async {
+    print(bankToEdit.value);
+    print(bankToEdit.value.trim());
+    if (bankToEdit.value == bankToEdit.value.trim()) {
+      print('the same');
+    }
     var body = jsonEncode({
-      'bankName': bankAccData.bankName,
-      'accno': bankAccData.accno,
-      'branchName': bankAccData.branchName,
-      'cpperson': bankAccData.cpperson,
+      'bank_id': bankToEdit.value,
+      'bank_name': bankAccData.bankName,
+      'bank_acc_no': bankAccData.accno,
+      'account_details': bankAccData.branchName,
+      'account_manager': bankAccData.cpperson,
+      'branch_id': '122',
     });
-    debugPrint(body);
-    // try {
-    //   var res =
-    //       await http.patch(Uri.parse(editUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
-    //   if (res.statusCode == 201) {
-
-    showSnackbar(
-        path: Icons.check_rounded,
-        title: "Bank Account Updated!",
-        subtitle: "");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const BankingPage());
-
-    //     return;
-    //   }
-    //   return;
-    // } catch (error) {
-    //   debugPrint("$error");
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed to update category!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
+    try {
+      var res = await http.patch(Uri.parse(updateBankUrl),
+          body: body, headers: headers);
+      debugPrint("Got response ${res.statusCode}");
+      // debugPrint(res.body);
+      if (res.statusCode == 200) {
+        showSnackbar(
+            path: Icons.check_rounded,
+            title: "Bank Account Updated!",
+            subtitle: "");
+        await Future.delayed(const Duration(seconds: 2));
+        getBanks();
+        Get.off(() => const BankingPage());
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to update bank account!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   editBankTrans(BankTransaction bankTransData) async {
@@ -258,5 +267,43 @@ class BankingCtrl extends GetxController {
     //       title: "Failed to update Product!",
     //       subtitle: "Please check your internet connection or try again later");
     // }
+  }
+  // ---------- Utility Functions -----------------
+
+  filterPaginator() {
+    listPaginator(rangeList: rangeAccList, selectList: bankAccounts);
+    if (rangeAccList.isEmpty) {
+      showLoading.value = false;
+      showData.value = false;
+    } else {
+      showLoading.value = false;
+      showData.value = true;
+    }
+  }
+
+  searchFilter(String searchItem) async {
+    List<String> searchList = searchParser(searchItem);
+    RxList<BankAccount> searchResult = RxList<BankAccount>();
+
+    for (var acc in bankAccounts) {
+      List<String> custValue = searchParser(acc.bankName);
+      for (var value in searchList) {
+        if (searchResult.contains(acc) == false) {
+          if (custValue.contains(value)) {
+            searchResult.add(acc);
+          }
+        }
+      }
+    }
+
+    clearLists();
+    rangeAccList = searchResult;
+    filterPaginator();
+    update();
+  }
+
+  clearLists() {
+    rangeAccList.clear();
+    bankAccounts.clear();
   }
 }

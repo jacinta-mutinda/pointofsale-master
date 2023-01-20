@@ -176,12 +176,13 @@ class _BankTransFormState extends State<BankTransForm> {
                         bankTransData.desc = descctrl.text;
                         bankTransData.action =
                             bankingCtrl.transTypeDropdown.value;
-                        bankTransData.bankId = bankingCtrl.bankAccounts
+                        bankTransData.bankId = int.parse(bankingCtrl
+                            .bankAccounts
                             .where((element) =>
                                 element.bankName ==
                                 (bankingCtrl.accDropdown.value))
                             .first
-                            .id;
+                            .id);
                         bankTransData.amount = int.parse(amountctrl.text);
                         bankTransData.date = datectrl.text;
 

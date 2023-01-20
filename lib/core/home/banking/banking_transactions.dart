@@ -42,7 +42,7 @@ class _BankTransPageState extends State<BankTransPage> {
                         children: [
                           const Text('Account Details', style: kTitle),
                           smallPriBtn(
-                              label: 'Edit Transaction',
+                              label: 'Edit Account',
                               txtColour: Colors.white,
                               bgColour: kDarkGreen,
                               isLoading: _isLoading,
@@ -63,11 +63,7 @@ class _BankTransPageState extends State<BankTransPage> {
                   labelSpan(
                       mainLabel: 'Contact Person Phone',
                       childLabel:
-                          bankingCtrl.transAccToShow.cpperson.toString()),
-                  labelSpan(
-                      mainLabel: 'Current Total',
-                      childLabel:
-                          'Kes${bankingCtrl.transAccToShow.currentTotal}'),
+                          bankingCtrl.transAccToShow.cpperson.toString())
                 ]),
                 Padding(
                     padding: const EdgeInsets.only(top: 20),

@@ -1,20 +1,18 @@
 import 'package:get/get.dart';
 
 class BankAccount {
-  int id;
+  String id;
   String bankName;
-  int accno;
-  String branchName;
-  int cpperson;
-  int currentTotal;
+  String accno;
+  String branchName; // account_details
+  String cpperson; //account_manager
 
   BankAccount(
       {required this.id,
       required this.bankName,
       required this.accno,
       required this.branchName,
-      required this.cpperson,
-      required this.currentTotal});
+      required this.cpperson});
 }
 
 class BankTransaction {
