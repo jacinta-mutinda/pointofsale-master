@@ -46,7 +46,7 @@ class PoSCtrl extends GetxController {
   RxList<Product> catProds = RxList<Product>();
   RxList<int> selectedProdIds = RxList<int>();
   RxList<Product> selectedProds = RxList<Product>();
-  RxList<int> selectedCatIds = RxList<int>();
+  RxList<String> selectedCatIds = RxList<String>();
   RxList<Customer> custList = RxList<Customer>();
 
   CartItem selectedItem = CartItem(
@@ -92,7 +92,7 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  addToCatProds(int catId) async {
+  addToCatProds(String catId) async {
     if (selectedCatIds.contains(catId)) {
       selectedCatIds.remove(catId);
     } else {
@@ -170,7 +170,7 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  bool isCatSelected(int catId) {
+  bool isCatSelected(String catId) {
     if (selectedCatIds.contains(catId)) {
       return true;
     } else {

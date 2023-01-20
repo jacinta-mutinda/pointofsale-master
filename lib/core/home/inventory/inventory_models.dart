@@ -1,10 +1,9 @@
 class Category {
-  int id;
+  String id;
   String name;
-  int retailMg;
-  int wholesaleMg;
-  bool showInPos;
-  // branchId
+  String retailMg;
+  String wholesaleMg;
+  String showInPos;
 
   Category(
       {required this.id,
@@ -42,11 +41,9 @@ class Product {
 }
 
 class UoM {
-  int id;
+  String id;
   String name;
+  String uomCode;
 
-  UoM({
-    required this.id,
-    required this.name,
-  });
+  UoM({required this.id, required this.name, required this.uomCode});
 }
