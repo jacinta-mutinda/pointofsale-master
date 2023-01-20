@@ -181,7 +181,7 @@ class PoSCtrl extends GetxController {
   setBankAcc() {
     for (BankAccount acc in BankingCtrl().bankAccounts) {
       if (acc.bankName == bankAccDropdown.value) {
-        selectedBankId.value = acc.id;
+        selectedBankId.value = int.parse(acc.id);
       }
     }
   }

@@ -30,8 +30,8 @@ class LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return ScreenLock(
-        // correctString: loginCtrl.passcode.toString(),
-        correctString: '001234',
+        // correctString: auth.getPassCode(),
+        correctString: '000000',
         digits: 6,
         didUnlocked: () {
           Get.offAll(() => NavigatorHandler(0));

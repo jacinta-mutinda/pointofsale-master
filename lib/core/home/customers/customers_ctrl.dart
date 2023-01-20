@@ -9,12 +9,13 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:nawiri/utils/urls.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerCtrl extends GetxController {
   RxString branchId = ''.obs;
   RxBool showData = false.obs;
+  RxBool showLoading = true.obs;
   RxBool isCustEdit = false.obs;
+  RxBool fieldsRequired = false.obs;
   RxString custToEdit = ''.obs;
   RxString billsToShow = ''.obs;
   RxInt singleBillId = 1.obs;
@@ -47,25 +48,15 @@ class CustomerCtrl extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    getBranch();
     getCustomers();
     getAllSales();
   }
 
-  void getBranch() async {
-    var prefs = await SharedPreferences.getInstance();
-    var branch = prefs.getString('branchId');
-    if (branch != null) {
-      branchId.value = branch;
-    }
-  }
-
   // ---------- Get Functions -----------------
-  Map<String, String> apiHeaders = {'Content-type': 'application/json'};
 
   getCustomers() async {
     clearLists();
-    // get branchId
+    // get branchId from functions.dart
     try {
       branchId.value = '122';
       final response = await http.get(
@@ -244,11 +235,52 @@ class CustomerCtrl extends GetxController {
     try {
       var res =
           await http.post(Uri.parse(addCustomerUrl), body: body, headers: {});
-      debugPrint(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded, title: "Customer Added!", subtitle: "");
         await Future.delayed(const Duration(seconds: 2));
+        getCustomers();
+        Get.off(() => const CustomersPage());
+        return;
+      }
+      return;
+    } catch (error) {
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to add Customer!",
+          subtitle: "Please check your internet connection or try again later");
+    }
+  }
+
+  // ---------- Edit Functions -----------------
+
+  editCustomer(Customer custData) async {
+    print(custToEdit.value);
+    var body = jsonEncode({
+      "customer_id": custToEdit.value,
+      "branch_id": branchId.value,
+      "customer_name": custData.name,
+      "customer_running_bal": custData.runningBal,
+      "customer_bank_acc": custData.bankacc,
+      "customer_phone_no": custData.phoneno,
+      "customer_address": custData.address,
+      "customer_contact_person": custData.cpperson,
+      "customer_credit_limit": custData.creditlimit,
+      "customer_total_credit": custData.totalCredit,
+      "pin_number": custData.krapin,
+    });
+    try {
+      var res = await http.patch(Uri.parse(updateCustomerUrl),
+          body: body, headers: headers);
+      debugPrint("Got response ${res.statusCode}");
+      // debugPrint(res.body);
+      if (res.statusCode == 200) {
+        showSnackbar(
+            path: Icons.check_rounded,
+            title: "Customer Updated!",
+            subtitle: "");
+        await Future.delayed(const Duration(seconds: 2));
+        getCustomers();
         Get.off(() => const CustomersPage());
         return;
       }
@@ -257,46 +289,9 @@ class CustomerCtrl extends GetxController {
       debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
-          title: "Failed to add Category!",
+          title: "Failed to update customer!",
           subtitle: "Please check your internet connection or try again later");
     }
-  }
-
-  // ---------- Edit Functions -----------------
-
-  editCustomer(Customer custData) async {
-    var body = jsonEncode({
-      'name': custData.name,
-      'item': custData.phoneno,
-      'bankacc': custData.bankacc,
-      'krapin': custData.krapin,
-      'address': custData.address,
-      'cpperson': custData.cpperson,
-      'creditlimit': custData.creditlimit,
-    });
-    debugPrint(body);
-    // try {
-    //   var res =
-    //       await http.patch(Uri.parse(editUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
-    //   if (res.statusCode == 201) {
-
-    showSnackbar(
-        path: Icons.check_rounded, title: "Customer Updated!", subtitle: "");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const CustomersPage());
-
-    //     return;
-    //   }
-    //   return;
-    // } catch (error) {
-    //   debugPrint("$error");
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed to update category!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
   }
 
   // ---------- Utility Functions -----------------
@@ -304,8 +299,10 @@ class CustomerCtrl extends GetxController {
   filterPaginator() {
     listPaginator(rangeList: rangeCustList, selectList: customers);
     if (rangeCustList.isEmpty) {
+      showLoading.value = false;
       showData.value = false;
     } else {
+      showLoading.value = false;
       showData.value = true;
     }
   }

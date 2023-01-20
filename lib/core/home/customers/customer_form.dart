@@ -135,7 +135,7 @@ class _CustomerFormState extends State<CustomerForm> {
                         children: <Widget>[
                           formField(
                               label: 'Customer Name',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: namectrl,
                               type: TextInputType.name,
                               validator: (value) {
@@ -146,7 +146,7 @@ class _CustomerFormState extends State<CustomerForm> {
                               }),
                           formField(
                               label: 'Bank Account Number',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: bankaccctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -157,7 +157,7 @@ class _CustomerFormState extends State<CustomerForm> {
                               }),
                           formField(
                               label: 'KRA Pin',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: krapinctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -168,7 +168,7 @@ class _CustomerFormState extends State<CustomerForm> {
                               }),
                           formField(
                               label: 'Phone Number',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: phonectrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -182,7 +182,7 @@ class _CustomerFormState extends State<CustomerForm> {
                               }),
                           formField(
                               label: 'Contact Person Phone Number',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: cppersonctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -196,7 +196,7 @@ class _CustomerFormState extends State<CustomerForm> {
                               }),
                           formField(
                               label: 'Running Balance (in Kes)',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: runbalctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -207,7 +207,7 @@ class _CustomerFormState extends State<CustomerForm> {
                               }),
                           formField(
                               label: 'Total Credit (in Kes)',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: totalcreditctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -218,7 +218,7 @@ class _CustomerFormState extends State<CustomerForm> {
                               }),
                           formField(
                               label: 'Credit Limit (in Kes)',
-                              require: true,
+                              require: customerCtrl.fieldsRequired.value,
                               controller: creditctrl,
                               type: TextInputType.number,
                               validator: (value) {

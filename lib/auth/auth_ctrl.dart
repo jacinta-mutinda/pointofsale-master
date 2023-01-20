@@ -43,6 +43,8 @@ class AuthCtrl extends GetxController {
     }
   }
 
+  getPassCode() {}
+
 // ----------------------------- SIGN UP -------------------------------------
 
   Future<void> storeBranchId(String branchId) async {

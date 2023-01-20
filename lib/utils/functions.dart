@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const pageSize = 30;
 
@@ -41,4 +42,19 @@ List<String> searchParser(String tillString) {
   stringHolder = stringHolder.toLowerCase();
   parsed = stringHolder.split(' ');
   return parsed;
+}
+
+Map<String, String> apiHeaders = {'Content-type': 'application/json'};
+
+Future<String?> get getBranch async {
+  var prefs = await SharedPreferences.getInstance();
+  var branch = prefs.getString('branchId');
+  if (branch != null) {
+    return branch;
+  }
+  return branch;
+}
+
+get headers {
+  return {"Content-Type": "application/json"};
 }

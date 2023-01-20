@@ -83,6 +83,7 @@ flutter:
     - assets/images/nawiri-logo.png
     - assets/images/thrift-shop.png
     - assets/images/empty.json
+    - assets/images/loading.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

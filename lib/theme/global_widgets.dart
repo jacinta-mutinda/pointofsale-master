@@ -158,6 +158,19 @@ Widget formDropDownField(
   ]);
 }
 
+Widget loadingWidget({required String label}) {
+  return Padding(
+      padding: const EdgeInsets.all(70),
+      child: Column(children: [
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: kSubTitle,
+        ),
+        Lottie.asset('assets/images/loading.json', width: 250),
+      ]));
+}
+
 Widget noTransactionsWidget({required String label}) {
   return Padding(
       padding: const EdgeInsets.all(70),
