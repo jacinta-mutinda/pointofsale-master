@@ -14,8 +14,8 @@ class CustomerCtrl extends GetxController {
   RxString branchId = ''.obs;
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
-  RxBool isCustEdit = false.obs;
   RxBool fieldsRequired = false.obs;
+  RxBool isCustEdit = false.obs;
   RxString custToEdit = ''.obs;
   RxString billsToShow = ''.obs;
   RxInt singleBillId = 1.obs;
