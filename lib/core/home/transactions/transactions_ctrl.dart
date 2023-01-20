@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/home_models.dart';
-import 'package:nawiri/core/home/expenses/expenses.dart';
+import 'package:nawiri/core/home/transactions/transactions.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
 class TransactionCtrl extends GetxController {

@@ -7,7 +7,7 @@ import 'package:nawiri/core/home/customers/customers.dart';
 import 'package:nawiri/core/home/inventory/inventory.dart';
 import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/core/home/suppliers/suppliers.dart';
-import 'package:nawiri/core/home/expenses/expenses.dart';
+import 'package:nawiri/core/home/transactions/transactions.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,32 +37,35 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           child: SizedBox(
               height: double.maxFinite,
-              child: navMenu(navItems: [
-                navItem(
-                    iconPath: Icons.point_of_sale,
-                    label: 'Point of Sale',
-                    goTo: const PoSPage()),
-                navItem(
-                    iconPath: Icons.sticky_note_2,
-                    label: 'Expenses',
-                    goTo: const TransactionsPage()),
-                navItem(
-                    iconPath: Icons.account_balance,
-                    label: 'Banking',
-                    goTo: const BankingPage()),
-                navItem(
-                    iconPath: Icons.people,
-                    label: 'Customers',
-                    goTo: const CustomersPage()),
-                navItem(
-                    iconPath: Icons.local_shipping_rounded,
-                    label: 'Suppliers',
-                    goTo: const SupplierPage()),
-                navItem(
-                    iconPath: Icons.inventory_2,
-                    label: 'Inventory',
-                    goTo: const InventoryPage()),
-              ])),
+              child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  child: navMenu(navItems: [
+                    navItem(
+                        iconPath: Icons.point_of_sale,
+                        label: 'Point of Sale',
+                        goTo: const PoSPage()),
+                    navItem(
+                        iconPath: Icons.sticky_note_2,
+                        label: 'Expenses',
+                        goTo: const TransactionsPage()),
+                    navItem(
+                        iconPath: Icons.account_balance,
+                        label: 'Banking',
+                        goTo: const BankingPage()),
+                    navItem(
+                        iconPath: Icons.people,
+                        label: 'Customers',
+                        goTo: const CustomersPage()),
+                    navItem(
+                        iconPath: Icons.local_shipping_rounded,
+                        label: 'Suppliers',
+                        goTo: const SupplierPage()),
+                    navItem(
+                        iconPath: Icons.inventory_2,
+                        label: 'Inventory',
+                        goTo: const InventoryPage()),
+                  ]))),
         ));
   }
 }
