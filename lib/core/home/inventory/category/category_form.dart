@@ -21,7 +21,7 @@ class _CategoryFormState extends State<CategoryForm> {
   bool posValue = false;
   String pageTitle = '';
   Category catData =
-      Category(id: 1, name: '', retailMg: 0, wholesaleMg: 0, showInPos: true);
+      Category(id: '', name: '', retailMg: '', wholesaleMg: '', showInPos: '');
   final invtCtrl = Get.put(InventoryCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController retailMgctrl = TextEditingController();
@@ -55,18 +55,20 @@ class _CategoryFormState extends State<CategoryForm> {
       retailMgctrl.text = invtCtrl.categories
           .where((element) => element.id == (invtCtrl.catToEdit.value))
           .first
-          .retailMg
-          .toString();
-
+          .retailMg;
       wholesaleMgctrl.text = invtCtrl.categories
           .where((element) => element.id == (invtCtrl.catToEdit.value))
           .first
-          .wholesaleMg
-          .toString();
-      posValue = invtCtrl.categories
+          .wholesaleMg;
+      var showInPos = invtCtrl.categories
           .where((element) => element.id == (invtCtrl.catToEdit.value))
           .first
           .showInPos;
+      if (showInPos == 'Y') {
+        posValue = true;
+      } else {
+        posValue = false;
+      }
     } else {
       pageTitle = 'Add Category';
       namectrl.clear();
@@ -90,7 +92,7 @@ class _CategoryFormState extends State<CategoryForm> {
                           children: <Widget>[
                             formField(
                                 label: 'Name',
-                                require: true,
+                                require: invtCtrl.fieldsCatRequired.value,
                                 controller: namectrl,
                                 type: TextInputType.name,
                                 validator: (value) {
@@ -101,7 +103,7 @@ class _CategoryFormState extends State<CategoryForm> {
                                 }),
                             formField(
                                 label: 'Retail Margin (in Kes)',
-                                require: true,
+                                require: invtCtrl.fieldsCatRequired.value,
                                 controller: retailMgctrl,
                                 type: TextInputType.number,
                                 validator: (value) {
@@ -112,7 +114,7 @@ class _CategoryFormState extends State<CategoryForm> {
                                 }),
                             formField(
                                 label: 'Wholesale Margin (in Kes)',
-                                require: true,
+                                require: invtCtrl.fieldsCatRequired.value,
                                 controller: wholesaleMgctrl,
                                 type: TextInputType.number,
                                 validator: (value) {
@@ -149,9 +151,13 @@ class _CategoryFormState extends State<CategoryForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         catData.name = namectrl.text;
-                        catData.retailMg = int.parse(retailMgctrl.text);
-                        catData.wholesaleMg = int.parse(wholesaleMgctrl.text);
-                        catData.showInPos = posValue;
+                        catData.retailMg = retailMgctrl.text;
+                        catData.wholesaleMg = wholesaleMgctrl.text;
+                        if (posValue) {
+                          catData.showInPos = 'Y';
+                        } else {
+                          catData.showInPos = 'N';
+                        }
 
                         if (invtCtrl.isCatEdit.value) {
                           invtCtrl.editCategory(catData);
