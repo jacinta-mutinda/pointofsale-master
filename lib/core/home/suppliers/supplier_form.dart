@@ -21,13 +21,13 @@ class SupplierForm extends StatefulWidget {
 class _SupplierFormState extends State<SupplierForm> {
   String pageTitle = '';
   Supplier supData = Supplier(
-      id: 1,
+      id: '',
       name: '',
       item: '',
-      bankacc: 1,
-      krapin: 1,
+      bankacc: '',
+      krapin: '',
       address: '',
-      cpperson: 1);
+      cpperson: '');
   final supplierCtrl = Get.put(SupplierCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController bankaccctrl = TextEditingController();
@@ -67,13 +67,11 @@ class _SupplierFormState extends State<SupplierForm> {
       bankaccctrl.text = supplierCtrl.suppliers
           .where((element) => element.id == (supplierCtrl.supToEdit.value))
           .first
-          .bankacc
-          .toString();
+          .bankacc;
       cppersonctrl.text = supplierCtrl.suppliers
           .where((element) => element.id == (supplierCtrl.supToEdit.value))
           .first
-          .cpperson
-          .toString();
+          .cpperson;
       itemctrl.text = supplierCtrl.suppliers
           .where((element) => element.id == (supplierCtrl.supToEdit.value))
           .first
@@ -81,8 +79,7 @@ class _SupplierFormState extends State<SupplierForm> {
       krapinctrl.text = supplierCtrl.suppliers
           .where((element) => element.id == (supplierCtrl.supToEdit.value))
           .first
-          .krapin
-          .toString();
+          .krapin;
       addressctrl.text = supplierCtrl.suppliers
           .where((element) => element.id == (supplierCtrl.supToEdit.value))
           .first
@@ -115,7 +112,7 @@ class _SupplierFormState extends State<SupplierForm> {
                         children: <Widget>[
                           formField(
                               label: 'Supplier Name',
-                              require: true,
+                              require: supplierCtrl.fieldsRequired.value,
                               controller: namectrl,
                               type: TextInputType.name,
                               validator: (value) {
@@ -126,7 +123,7 @@ class _SupplierFormState extends State<SupplierForm> {
                               }),
                           formField(
                               label: 'Item',
-                              require: true,
+                              require: supplierCtrl.fieldsRequired.value,
                               controller: itemctrl,
                               type: TextInputType.name,
                               validator: (value) {
@@ -137,7 +134,7 @@ class _SupplierFormState extends State<SupplierForm> {
                               }),
                           formField(
                               label: 'Bank Account Number',
-                              require: true,
+                              require: supplierCtrl.fieldsRequired.value,
                               controller: bankaccctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -148,7 +145,7 @@ class _SupplierFormState extends State<SupplierForm> {
                               }),
                           formField(
                               label: 'KRA Pin',
-                              require: true,
+                              require: supplierCtrl.fieldsRequired.value,
                               controller: krapinctrl,
                               type: TextInputType.number,
                               validator: (value) {
@@ -159,7 +156,7 @@ class _SupplierFormState extends State<SupplierForm> {
                               }),
                           formField(
                               label: 'Address',
-                              require: true,
+                              require: supplierCtrl.fieldsRequired.value,
                               controller: itemctrl,
                               type: TextInputType.name,
                               validator: (value) {
@@ -169,13 +166,13 @@ class _SupplierFormState extends State<SupplierForm> {
                                 return null;
                               }),
                           formField(
-                              label: 'Contact Person Phone Number',
-                              require: true,
+                              label: 'Phone Number',
+                              require: supplierCtrl.fieldsRequired.value,
                               controller: cppersonctrl,
                               type: TextInputType.number,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter the Contact Person Phone Number';
+                                  return "Please enter the supplier's Phone Number";
                                 }
                                 if (value.length != 10) {
                                   return 'Please enter a 10-digit phone number';
@@ -197,9 +194,9 @@ class _SupplierFormState extends State<SupplierForm> {
                         supData.name = namectrl.text;
                         supData.item = itemctrl.text;
                         supData.address = addressctrl.text;
-                        supData.bankacc = int.parse(bankaccctrl.text);
-                        supData.cpperson = int.parse(cppersonctrl.text);
-                        supData.krapin = int.parse(krapinctrl.text);
+                        supData.bankacc = bankaccctrl.text;
+                        supData.cpperson = cppersonctrl.text;
+                        supData.krapin = krapinctrl.text;
 
                         if (supplierCtrl.isSupEdit.value) {
                           supplierCtrl.editSupplier(supData);

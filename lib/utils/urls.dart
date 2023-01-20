@@ -1,9 +1,5 @@
 const rootUrl = 'https://nawiriapp.pythonanywhere.com/api/';
 
-// Auth Urls --------------------------------------
-const addCompanyUrl = '$rootUrl/addCompany';
-const signUpUrl = '$rootUrl/join';
-
 // Customer Urls --------------------------------------
 
 const getCustomersUrl = '$rootUrl/getCustomers';
@@ -28,14 +24,22 @@ const getUoMsUrl = '$rootUrl/getUom';
 const addUoMUrl = '$rootUrl/addUom';
 const updateUomUrl = '$rootUrl/updateUom';
 
-// Suppliers Urls --------------------------------------
-
 // Bank Accounts Urls ----------------------------------
 
 const getBankAccsUrl = '$rootUrl/banks';
 const addBankAccUrl = '$rootUrl/addbank';
 const updateBankUrl = '$rootUrl/updateBank';
 
+// Expenses Urls --------------------------------------
+
+// Suppliers Urls --------------------------------------
+
+const getSupplierUrl = '$rootUrl/supplier';
+const addSupplierUrl = '$rootUrl/add_supplier';
+const updateSupUrl = '$rootUrl/updateSupplier';
+
 // Shift Urls --------------------------------------
 
-// Expenses Urls --------------------------------------
+// Auth Urls --------------------------------------
+const addCompanyUrl = '$rootUrl/addCompany';
+const signUpUrl = '$rootUrl/join';

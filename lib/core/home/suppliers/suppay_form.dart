@@ -174,7 +174,8 @@ class _SuppPayFormState extends State<SuppPayForm> {
                         supPayData.quantity = int.parse(quantityctrl.text);
                         supPayData.unitPrice = int.parse(quantityctrl.text);
                         supPayData.total = int.parse(quantityctrl.text);
-                        supPayData.supplierId = supplierCtrl.paysToShow.value;
+                        supPayData.supplierId =
+                            int.parse(supplierCtrl.paysToShow.value);
                         supPayData.date = datectrl.text;
 
                         if (supplierCtrl.isSupPayEdit.value) {

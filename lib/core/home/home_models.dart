@@ -33,13 +33,13 @@ class BankTransaction {
 }
 
 class Supplier {
-  int id;
+  String id;
   String name;
   String item;
-  int bankacc;
-  int krapin;
+  String bankacc;
+  String krapin;
   String address;
-  int cpperson;
+  String cpperson;
 
   Supplier(
       {required this.id,
