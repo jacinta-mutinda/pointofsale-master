@@ -10,7 +10,7 @@ import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
 import 'package:nawiri/core/home/suppliers/suppliers_ctrl.dart';
-import 'package:nawiri/core/home/transactions/transaction_ctrl.dart';
+import 'package:nawiri/core/home/expenses/expenses_ctrl.dart';
 import 'package:nawiri/core/reports/report_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';

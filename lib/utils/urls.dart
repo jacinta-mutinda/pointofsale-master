@@ -32,6 +32,9 @@ const updateBankUrl = '$rootUrl/updateBank';
 
 // Expenses Urls --------------------------------------
 
+const getExpensesUrl = '$rootUrl/getExpenses';
+const addExpenseUrl = '$rootUrl/addExpense';
+
 // Suppliers Urls --------------------------------------
 
 const getSupplierUrl = '$rootUrl/supplier';

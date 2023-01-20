@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/core/home/transactions/transaction_ctrl.dart';
-import 'package:nawiri/core/home/transactions/transaction_form.dart';
+import 'package:nawiri/core/home/expenses/expenses_ctrl.dart';
+import 'package:nawiri/core/home/expenses/expense_form.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 

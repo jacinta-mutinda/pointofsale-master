@@ -7,7 +7,7 @@ import 'package:nawiri/core/home/customers/customers.dart';
 import 'package:nawiri/core/home/inventory/inventory.dart';
 import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/core/home/suppliers/suppliers.dart';
-import 'package:nawiri/core/home/transactions/transactions.dart';
+import 'package:nawiri/core/home/expenses/expenses.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                     goTo: const PoSPage()),
                 navItem(
                     iconPath: Icons.sticky_note_2,
-                    label: 'Transactions',
+                    label: 'Expenses',
                     goTo: const TransactionsPage()),
                 navItem(
                     iconPath: Icons.account_balance,
