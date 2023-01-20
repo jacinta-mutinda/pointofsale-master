@@ -19,9 +19,10 @@ class UomForm extends StatefulWidget {
 
 class _UomFormState extends State<UomForm> {
   String pageTitle = '';
-  UoM uomData = UoM(id: 1, name: '');
+  UoM uomData = UoM(id: '', name: '', uomCode: '');
   final invtCtrl = Get.put(InventoryCtrl());
   TextEditingController namectrl = TextEditingController();
+  TextEditingController uomCodeCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -36,6 +37,7 @@ class _UomFormState extends State<UomForm> {
   @override
   void dispose() {
     namectrl.dispose();
+    uomCodeCtrl.dispose();
     super.dispose();
   }
 
@@ -46,6 +48,10 @@ class _UomFormState extends State<UomForm> {
           .where((element) => element.id == (invtCtrl.uoMToEdit.value))
           .first
           .name;
+      uomCodeCtrl.text = invtCtrl.uoms
+          .where((element) => element.id == (invtCtrl.uoMToEdit.value))
+          .first
+          .uomCode;
     } else {
       pageTitle = 'Add Unit';
       namectrl.clear();
@@ -69,12 +75,23 @@ class _UomFormState extends State<UomForm> {
                         children: <Widget>[
                           formField(
                               label: 'Name',
-                              require: true,
+                              require: invtCtrl.fieldsUoMRequired.value,
                               controller: namectrl,
                               type: TextInputType.name,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter the Unit of Measurement name';
+                                }
+                                return null;
+                              }),
+                          formField(
+                              label: 'UoM Code (short form)',
+                              require: invtCtrl.fieldsUoMRequired.value,
+                              controller: uomCodeCtrl,
+                              type: TextInputType.name,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the Unit of Measurement code';
                                 }
                                 return null;
                               })
