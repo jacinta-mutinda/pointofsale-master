@@ -135,10 +135,10 @@ class Sale {
 }
 
 class Expense {
-  int id;
+  String id;
   String mode;
   String desc;
-  int amount;
+  String amount;
   String type;
 
   Expense(

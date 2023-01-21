@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/core/home/transactions/bankingtrans_form.dart';
-import 'package:nawiri/core/home/customers/custrec_form.dart';
-import 'package:nawiri/core/home/transactions/suppay_form.dart';
+import 'package:nawiri/core/home/banking/banking.dart';
+import 'package:nawiri/core/home/customers/customers.dart';
+import 'package:nawiri/core/home/suppliers/suppliers.dart';
+import 'package:nawiri/core/home/transactions/expense_main.dart';
 import 'package:nawiri/core/home/transactions/transactions_ctrl.dart';
 import 'package:nawiri/core/home/transactions/expense_form.dart';
 import 'package:nawiri/theme/global_widgets.dart';
-import 'package:nawiri/theme/constants.dart';
 
 class TransactionsPage extends StatefulWidget {
   static const routeName = "/transactions";
@@ -37,88 +37,21 @@ class _TransactionsPageState extends State<TransactionsPage> {
               navItem(
                   iconPath: Icons.sticky_note_2,
                   label: 'Add Daily Expense',
-                  goTo: const TransactionForm()),
+                  goTo: const ExpensesPage()),
               navItem(
                   iconPath: Icons.account_balance,
                   label: 'Add Bank Transaction',
-                  goTo: const BankTransForm()),
+                  goTo: const BankingPage()),
               navItem(
                   iconPath: Icons.people,
                   label: 'Add Customer Receipt',
-                  goTo: const CustomerReceipt()),
+                  goTo: const CustomersPage()),
               navItem(
                   iconPath: Icons.local_shipping_rounded,
                   label: 'Add Supplier Payment',
-                  goTo: const SuppPayForm())
+                  goTo: const SupplierPage())
             ])),
       ),
-      // SingleChildScrollView(
-      //     padding: const EdgeInsets.symmetric(horizontal: 20),
-      //     child: SizedBox(
-      //         child: Column(
-      //             crossAxisAlignment: CrossAxisAlignment.start,
-      //             children: [
-      //           const Padding(
-      //               padding: EdgeInsets.only(top: 20, bottom: 10),
-      //               child: Text('All Expenses', style: kTitle)),
-      //           Obx(
-      //             () => ListView.builder(
-      //                 shrinkWrap: true,
-      //                 physics: const NeverScrollableScrollPhysics(),
-      //                 itemBuilder: (context, index) {
-      //                   var expenses = transCtrl.expenses;
-      //                   return Padding(
-      //                       padding: const EdgeInsets.symmetric(vertical: 3),
-      //                       child: Card(
-      //                           color: kGrey,
-      //                           elevation: 7.0,
-      //                           child: ListTile(
-      //                             leading: Container(
-      //                                 width: 40,
-      //                                 height: 40,
-      //                                 decoration: const BoxDecoration(
-      //                                     shape: BoxShape.circle,
-      //                                     color: kLightGreen),
-      //                                 child: const Icon(Icons.local_shipping,
-      //                                     size: 20, color: Colors.white)),
-      //                             title: Padding(
-      //                                 padding: const EdgeInsets.symmetric(
-      //                                     vertical: 5),
-      //                                 child: Text(expenses[index].type,
-      //                                     style: kCardTitle)),
-      //                             subtitle: Text(
-      //                                 'Kes.${expenses[index].amount}',
-      //                                 style: kCardTitle),
-      //                             trailing: Container(
-      //                                 width: 40,
-      //                                 height: 40,
-      //                                 decoration: const BoxDecoration(
-      //                                     shape: BoxShape.circle,
-      //                                     color: kDarkGreen),
-      //                                 child: const Icon(
-      //                                     Icons.keyboard_arrow_right,
-      //                                     size: 25,
-      //                                     color: Colors.white)),
-      //                             onTap: () async {
-      //                               transCtrl.isTransEdit.value = true;
-      //                               transCtrl.transToEdit.value =
-      //                                   expenses[index].id;
-      //                               Get.to(const TransactionForm());
-      //                             },
-      //                           )));
-      //                 },
-      //                 itemCount: transCtrl.expenses.length),
-      //           ),
-      //         ]))),
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: kDarkGreen,
-      //   foregroundColor: Colors.white,
-      //   onPressed: () {
-      //     transCtrl.isTransEdit.value = false;
-      //     Get.to(const TransactionForm());
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 }

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/core/home/banking/banking_ctrl.dart';
-import 'package:nawiri/core/home/banking/banking_form.dart';
+import 'package:nawiri/core/home/transactions/expense_form.dart';
+import 'package:nawiri/core/home/transactions/transactions_ctrl.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/utils/functions.dart';
 
-class BankingPage extends StatefulWidget {
-  static const routeName = "/accounts";
-  const BankingPage({Key? key}) : super(key: key);
+class ExpensesPage extends StatefulWidget {
+  static const routeName = "/expenses";
+  const ExpensesPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _BankingPageState createState() => _BankingPageState();
+  _ExpensesPageState createState() => _ExpensesPageState();
 }
 
-class _BankingPageState extends State<BankingPage> {
-  final bankingCtrl = Get.put(BankingCtrl());
+class _ExpensesPageState extends State<ExpensesPage> {
+  final transCtrl = Get.put(TransactionCtrl());
   final ScrollController _scrollctrl = ScrollController();
   TextEditingController searchCtrl = TextEditingController();
   final GlobalKey<FormState> _searchForm = GlobalKey<FormState>();
@@ -29,8 +29,7 @@ class _BankingPageState extends State<BankingPage> {
     _scrollctrl.addListener(() {
       if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
         listAppender(
-            rangeList: bankingCtrl.rangeAccList,
-            selectList: bankingCtrl.bankAccounts);
+            rangeList: transCtrl.rangeExpList, selectList: transCtrl.expenses);
       }
       setState(() {
         if (_scrollctrl.offset >= 400) {
@@ -56,7 +55,7 @@ class _BankingPageState extends State<BankingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: backAppBar(pageTitle: 'Bank accounts', actions: <Widget>[]),
+        appBar: backAppBar(pageTitle: 'expenses', actions: <Widget>[]),
         body: SingleChildScrollView(
             controller: _scrollctrl,
             padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -68,22 +67,21 @@ class _BankingPageState extends State<BankingPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'All bank accounts',
+                          'All Expenses',
                           style: kTitle,
                         ),
                         smallPriBtn(
-                            label: 'Add Account',
+                            label: 'Add Expense',
                             txtColour: Colors.white,
                             bgColour: kDarkGreen,
                             isLoading: _isAddLoading,
                             function: () {
-                              bankingCtrl.isBankEdit.value = false;
-                              Get.to(const BankAccForm());
+                              Get.to(const ExpenseForm());
                             }),
                       ])),
-              Obx(() => bankingCtrl.showLoading.value
-                  ? loadingWidget(label: 'Loading Bank Accounts ...')
-                  : bankingCtrl.showData.value
+              Obx(() => transCtrl.showLoading.value
+                  ? loadingWidget(label: 'Loading Expenses ...')
+                  : transCtrl.showData.value
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -96,7 +94,8 @@ class _BankingPageState extends State<BankingPage> {
                                         Form(
                                             key: _searchForm,
                                             child: searchForm(
-                                                label: 'Search by account name',
+                                                label:
+                                                    'Search by expense description',
                                                 controller: searchCtrl,
                                                 suffix: true,
                                                 inputType: TextInputType.text,
@@ -110,13 +109,13 @@ class _BankingPageState extends State<BankingPage> {
                                                 searchFunction: () {
                                                   if (_searchForm.currentState!
                                                       .validate()) {
-                                                    bankingCtrl.searchFilter(
+                                                    transCtrl.searchFilter(
                                                         searchCtrl.text);
                                                   }
                                                 })),
                                         GestureDetector(
                                             onTap: () {
-                                              bankingCtrl.getBanks();
+                                              transCtrl.getExpesnses();
                                               searchCtrl.clear();
                                             },
                                             child: const Icon(
@@ -142,7 +141,7 @@ class _BankingPageState extends State<BankingPage> {
                                               ),
                                               TextSpan(
                                                 text:
-                                                    ' ${bankingCtrl.rangeAccList.length} ',
+                                                    ' ${transCtrl.rangeExpList.length} ',
                                                 style: kNeonTxt,
                                               ),
                                               const TextSpan(
@@ -151,11 +150,11 @@ class _BankingPageState extends State<BankingPage> {
                                               ),
                                               TextSpan(
                                                 text:
-                                                    ' ${bankingCtrl.bankAccounts.length} ',
+                                                    ' ${transCtrl.expenses.length} ',
                                                 style: kDarkGreenTxt,
                                               ),
                                               const TextSpan(
-                                                text: ' accounts',
+                                                text: ' expenses',
                                                 style: kBlackTxt,
                                               )
                                             ]))))
@@ -166,7 +165,7 @@ class _BankingPageState extends State<BankingPage> {
                                     physics:
                                         const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
-                                      var accounts = bankingCtrl.rangeAccList;
+                                      var expenses = transCtrl.rangeExpList;
                                       return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 3),
@@ -190,13 +189,10 @@ class _BankingPageState extends State<BankingPage> {
                                                     padding: const EdgeInsets
                                                         .symmetric(vertical: 5),
                                                     child: Text(
-                                                        accounts[index]
-                                                            .bankName,
+                                                        expenses[index].desc,
                                                         style: kCardTitle)),
                                                 subtitle: Text(
-                                                    accounts[index]
-                                                        .accno
-                                                        .toString(),
+                                                    'Kes.${expenses[index].amount}',
                                                     style: kCardTitle),
                                                 trailing: Container(
                                                     width: 40,
@@ -212,22 +208,14 @@ class _BankingPageState extends State<BankingPage> {
                                                         size: 25,
                                                         color: Colors.white)),
                                                 onTap: () async {
-                                                  bankingCtrl.isBankEdit.value =
-                                                      true;
-                                                  bankingCtrl.bankToEdit.value =
-                                                      accounts[index].id;
-                                                  bankingCtrl
-                                                          .transToShow.value =
-                                                      accounts[index].id;
-                                                  await bankingCtrl
-                                                      .getAccBankTrans();
+                                                  // show more details
                                                 },
                                               )));
                                     },
-                                    itemCount: bankingCtrl.rangeAccList.length),
+                                    itemCount: transCtrl.rangeExpList.length),
                               ),
                             ])
-                      : noTransactionsWidget(label: 'No accounts Found'))
+                      : noTransactionsWidget(label: 'No expenses Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(

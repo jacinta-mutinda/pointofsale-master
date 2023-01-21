@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/core/home/transactions/suppay_form.dart';
+import 'package:nawiri/core/home/suppliers/suppay_form.dart';
 import 'package:nawiri/core/home/suppliers/supplier_form.dart';
 import 'package:nawiri/core/home/suppliers/suppliers_ctrl.dart';
 import 'package:nawiri/theme/global_widgets.dart';

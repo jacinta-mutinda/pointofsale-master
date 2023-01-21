@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/banking/banking_form.dart';
-import 'package:nawiri/core/home/transactions/bankingtrans_form.dart';
+import 'package:nawiri/core/home/banking/bankingtrans_form.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 

@@ -7,19 +7,19 @@ import 'package:nawiri/core/home/transactions/transactions_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
-class TransactionForm extends StatefulWidget {
-  static const routeName = "/TransactionForm";
+class ExpenseForm extends StatefulWidget {
+  static const routeName = "/ExpenseForm";
 
-  const TransactionForm({Key? key}) : super(key: key);
+  const ExpenseForm({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _TransactionFormState createState() => _TransactionFormState();
+  _ExpenseFormState createState() => _ExpenseFormState();
 }
 
-class _TransactionFormState extends State<TransactionForm> {
+class _ExpenseFormState extends State<ExpenseForm> {
   String pageTitle = '';
-  Expense expData = Expense(id: 1, mode: '', type: '', desc: '', amount: 0);
+  Expense expData = Expense(id: '', mode: '', type: '', desc: '', amount: '');
   final transCtrl = Get.put(TransactionCtrl());
   TextEditingController modectrl = TextEditingController();
   TextEditingController typectrl = TextEditingController();
@@ -28,12 +28,11 @@ class _TransactionFormState extends State<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  _TransactionFormState();
+  _ExpenseFormState();
 
   @override
   void initState() {
     super.initState();
-    setForm();
   }
 
   @override
@@ -45,41 +44,11 @@ class _TransactionFormState extends State<TransactionForm> {
     super.dispose();
   }
 
-  setForm() {
-    if (transCtrl.isTransEdit.value) {
-      pageTitle = 'Edit Expense';
-      transCtrl.modeDropDown.value = transCtrl.expenses
-          .where((element) => element.id == (transCtrl.transToEdit.value))
-          .first
-          .mode;
-      typectrl.text = transCtrl.expenses
-          .where((element) => element.id == (transCtrl.transToEdit.value))
-          .first
-          .type;
-      amountctrl.text = transCtrl.expenses
-          .where((element) => element.id == (transCtrl.transToEdit.value))
-          .first
-          .amount
-          .toString();
-      descctrl.text = transCtrl.expenses
-          .where((element) => element.id == (transCtrl.transToEdit.value))
-          .first
-          .desc;
-    } else {
-      pageTitle = 'Add Expense';
-      modectrl.clear();
-      typectrl.clear();
-      descctrl.clear();
-      amountctrl.clear();
-      transCtrl.modeDropDown.value = '';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: secAppBar(pageTitle: pageTitle),
+        appBar: secAppBar(pageTitle: 'Add Expense'),
         body: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 25, left: 30, right: 30),
             child: Column(
@@ -139,13 +108,9 @@ class _TransactionFormState extends State<TransactionForm> {
                         expData.mode = modectrl.text;
                         expData.type = typectrl.text;
                         expData.desc = descctrl.text;
-                        expData.amount = int.parse(amountctrl.text);
+                        expData.amount = amountctrl.text;
 
-                        if (transCtrl.isTransEdit.value) {
-                          transCtrl.editExpense(expData);
-                        } else {
-                          transCtrl.addExpense(expData);
-                        }
+                        transCtrl.addExpense(expData);
                       }
                       await Future.delayed(const Duration(seconds: 2));
                       setState(() {
