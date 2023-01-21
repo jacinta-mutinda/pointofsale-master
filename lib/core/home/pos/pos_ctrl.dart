@@ -8,7 +8,6 @@ import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
 import 'package:nawiri/core/home/pos/pos.dart' as pos;
-import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
 final invtCtrl = Get.put(InventoryCtrl());
@@ -44,7 +43,7 @@ class PoSCtrl extends GetxController {
     'On Customer Account'
   ];
   RxList<Product> catProds = RxList<Product>();
-  RxList<int> selectedProdIds = RxList<int>();
+  RxList<String> selectedProdIds = RxList<String>();
   RxList<Product> selectedProds = RxList<Product>();
   RxList<String> selectedCatIds = RxList<String>();
   RxList<Customer> custList = RxList<Customer>();
@@ -110,7 +109,7 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  addToCart(int prodId) {
+  addToCart(String prodId) {
     selectedProds.add(
         invtCtrl.products.where((element) => element.id == (prodId)).first);
     selectedProdIds.add(prodId);
@@ -124,10 +123,10 @@ class PoSCtrl extends GetxController {
       cartSale.cart.add(CartItem(
           id: cartItemId + 1,
           name: prod.name,
-          prodId: prod.id,
+          prodId: int.parse(prod.id),
           quantity: 1,
-          total: prod.retailMg.obs,
-          unitPrice: prod.retailMg));
+          total: int.parse(prod.retailMg).obs,
+          unitPrice: int.parse(prod.retailMg)));
       cartItemId++;
     }
     cartSale.total.value = 0;
@@ -162,7 +161,7 @@ class PoSCtrl extends GetxController {
         .first;
   }
 
-  bool isSelected(int prodId) {
+  bool isSelected(String prodId) {
     if (selectedProdIds.contains(prodId)) {
       return true;
     } else {

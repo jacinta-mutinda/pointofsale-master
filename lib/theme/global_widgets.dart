@@ -63,7 +63,7 @@ Widget smallPriBtn(
     required void Function()? function}) {
   return Container(
     width: 120,
-    height: 50,
+    height: 70,
     padding: const EdgeInsets.symmetric(vertical: 10),
     alignment: Alignment.center,
     child: ElevatedButton(

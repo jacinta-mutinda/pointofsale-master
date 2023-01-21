@@ -14,7 +14,7 @@ const updateCatUrl = '$rootUrl/updateCategory';
 
 // Products Urls --------------------------------------
 
-const getProductsUrl = '$rootUrl/products';
+const getProductsUrl = '$rootUrl/products_all';
 const addProductUrl = '$rootUrl/add_product';
 const updateProdUrl = '$rootUrl/updateCategory';
 
@@ -38,7 +38,7 @@ const addExpenseUrl = '$rootUrl/addExpense';
 // Suppliers Urls --------------------------------------
 
 const getSupplierUrl = '$rootUrl/supplier';
-const addSupplierUrl = '$rootUrl/add_supplier';
+const addSupplierUrl = '$rootUrl/add_Supplier';
 const updateSupUrl = '$rootUrl/updateSupplier';
 
 // Shift Urls --------------------------------------
