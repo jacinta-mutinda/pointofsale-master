@@ -48,22 +48,13 @@ class _CategoryFormState extends State<CategoryForm> {
   setForm() {
     if (invtCtrl.isCatEdit.value) {
       pageTitle = 'Edit Category';
-      namectrl.text = invtCtrl.categories
+      Category selectedCat = invtCtrl.categories
           .where((element) => element.id == (invtCtrl.catToEdit.value))
-          .first
-          .name;
-      retailMgctrl.text = invtCtrl.categories
-          .where((element) => element.id == (invtCtrl.catToEdit.value))
-          .first
-          .retailMg;
-      wholesaleMgctrl.text = invtCtrl.categories
-          .where((element) => element.id == (invtCtrl.catToEdit.value))
-          .first
-          .wholesaleMg;
-      var showInPos = invtCtrl.categories
-          .where((element) => element.id == (invtCtrl.catToEdit.value))
-          .first
-          .showInPos;
+          .first;
+      namectrl.text = selectedCat.name;
+      retailMgctrl.text = selectedCat.retailMg;
+      wholesaleMgctrl.text = selectedCat.wholesaleMg;
+      var showInPos = selectedCat.showInPos;
       if (showInPos == 'Y') {
         posValue = true;
       } else {

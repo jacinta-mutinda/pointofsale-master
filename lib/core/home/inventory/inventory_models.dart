@@ -14,17 +14,17 @@ class Category {
 }
 
 class Product {
-  int id;
+  String id;
   String name;
   String desc;
-  int code;
-  int retailMg;
-  int wholesaleMg;
-  int buyingPrice;
-  int categoryid;
-  int uomId;
-  bool blockingneg;
-  bool active;
+  String code;
+  String retailMg;
+  String wholesaleMg;
+  String buyingPrice;
+  String categoryid;
+  String uomId;
+  String blockingneg;
+  String active;
 
   Product(
       {required this.id,

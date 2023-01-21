@@ -14,6 +14,14 @@ import 'package:nawiri/utils/urls.dart';
 class InventoryCtrl extends GetxController {
   RxString branchId = ''.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getCategories();
+    getUoMs();
+    getProducts();
+  }
+
   // ---------------------------------- Category Variables & Functions -----------------------------------------------
 
   RxBool isCatEdit = false.obs;
@@ -30,22 +38,26 @@ class InventoryCtrl extends GetxController {
     clearCatLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '122';
+      branchId.value = '57';
       final response = await http.get(
           Uri.parse('$getCategoriesUrl/${branchId.value}'),
           headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
+          print(item);
           Category cat = Category(
-              id: item['Category_id'],
+              id: item['category_id'],
               name: item['category_desc'],
-              retailMg: item['Rmargin'],
+              retailMg: item['rmargin'],
               wholesaleMg: item['wmargin'],
-              showInPos: item['Show_in_pos']);
+              showInPos: item['show_in_pos']);
           categories.add(cat);
-          catStrs.add(item['category_desc']);
+          if (!catStrs.contains(item['category_desc'])) {
+            catStrs.add(item['category_desc']);
+          }
         }
+        catStrs.add(catDropdown.value);
         filterCatPaginator();
         update();
         return;
@@ -62,10 +74,11 @@ class InventoryCtrl extends GetxController {
 
   addCategory(Category catData) async {
     var body = jsonEncode({
+      'branch_id': '57',
       'category_desc': catData.name,
-      'Rmargin': catData.retailMg,
+      'rmargin': catData.retailMg,
       'wmargin': catData.wholesaleMg,
-      'Show_in_pos': catData.showInPos,
+      'show_in_pos': catData.showInPos,
     });
     try {
       var res =
@@ -154,6 +167,7 @@ class InventoryCtrl extends GetxController {
   clearCatLists() {
     rangeCatList.clear();
     categories.clear();
+    catStrs.clear();
   }
 
   // ---------------------------------- UoM Variables & Functions -----------------------------------------------
@@ -172,7 +186,7 @@ class InventoryCtrl extends GetxController {
     clearUomLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '122';
+      branchId.value = '57';
       final response = await http
           .get(Uri.parse('$getUoMsUrl/${branchId.value}'), headers: apiHeaders);
       if (response.statusCode == 200) {
@@ -183,8 +197,11 @@ class InventoryCtrl extends GetxController {
               name: item['uom_description'],
               uomCode: item['uom_code']);
           uoms.add(um);
-          uomStr.add(item['uom_description']);
+          if (!uomStr.contains(item['uom_description'])) {
+            uomStr.add(item['uom_description']);
+          }
         }
+        uomStr.add(uomDropdown.value);
         filterUoMPaginator();
         update();
         return;
@@ -200,10 +217,15 @@ class InventoryCtrl extends GetxController {
   }
 
   addUoM(UoM uomData) async {
-    var body = jsonEncode(
-        {'uom_description': uomData.name, 'uom_code': uomData.uomCode});
+    var body = jsonEncode({
+      'branch_id': '57',
+      'uom_description': uomData.name,
+      'uom_code': uomData.uomCode
+    });
     try {
-      var res = await http.post(Uri.parse(addUoMUrl), body: body, headers: {});
+      var res =
+          await http.post(Uri.parse(addUoMUrl), body: body, headers: headers);
+      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded,
@@ -290,6 +312,7 @@ class InventoryCtrl extends GetxController {
   clearUomLists() {
     rangeUomList.clear();
     uoms.clear();
+    uomStr.clear();
   }
 
   // ---------------------------------- Product Variables & Functions -----------------------------------------------
@@ -298,103 +321,81 @@ class InventoryCtrl extends GetxController {
   RxBool showProdLoading = true.obs;
   RxBool fieldsProdRequired = false.obs;
   RxBool isProdEdit = false.obs;
-  RxInt prodToEdit = 1.obs;
+  RxString prodToEdit = ''.obs;
   RxList<Product> products = RxList<Product>();
   RxList<Product> rangeProdList = RxList<Product>();
 
-  getProducts() {
-    products.value = [
-      Product(
-          name: 'Product 01',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
-          retailMg: 700,
-          wholesaleMg: 500,
-          code: 1234,
-          buyingPrice: 300,
-          blockingneg: true,
-          active: true,
-          id: 1,
-          categoryid: 1,
-          uomId: 1),
-      Product(
-          name: 'Product 02',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
-          retailMg: 850,
-          wholesaleMg: 600,
-          code: 9656,
-          buyingPrice: 300,
-          blockingneg: true,
-          active: true,
-          id: 2,
-          categoryid: 3,
-          uomId: 2),
-      Product(
-          name: 'Product 03',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
-          retailMg: 1000,
-          wholesaleMg: 750,
-          code: 0977,
-          buyingPrice: 300,
-          blockingneg: true,
-          active: true,
-          id: 3,
-          categoryid: 3,
-          uomId: 2),
-      Product(
-          name: 'Product 03',
-          desc:
-              'Lorem ipsum dolor sit amet, consecuture adipscing elit. Nam quis felis magna',
-          retailMg: 1000,
-          wholesaleMg: 750,
-          code: 0977,
-          buyingPrice: 300,
-          blockingneg: true,
-          active: true,
-          id: 4,
-          categoryid: 2,
-          uomId: 3)
-    ];
+  getProducts() async {
+    clearProdLists();
+    // get branchId from functions.dart
+    try {
+      branchId.value = '57';
+      final response = await http.get(
+          Uri.parse('$getProductsUrl/${branchId.value}'),
+          headers: apiHeaders);
+      if (response.statusCode == 200) {
+        var resData = json.decode(response.body);
+        for (var item in resData) {
+          Product product = Product(
+              id: item['location_product_id'],
+              name: item['location_product_description'],
+              desc: item['location_product_description'],
+              code: item['location_productcode'],
+              retailMg: item['location_product_sp'],
+              wholesaleMg: item['location_product_sp1'],
+              buyingPrice: item['location_product_sp'],
+              categoryid: item['category_id'],
+              uomId: item['uom_code'],
+              blockingneg: item['blockneg'],
+              active: item['active']);
+          products.add(product);
+        }
+        filterProdPaginator();
+        update();
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to load products",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   addProduct(Product prodData) async {
     var body = jsonEncode({
-      'name': prodData.name,
-      'desc': prodData.desc,
-      'retailMg': prodData.retailMg,
-      'wholesaleMg': prodData.wholesaleMg,
-      'code': prodData.code,
-      'buyingPrice': prodData.buyingPrice,
-      'blockingneg': prodData.blockingneg,
+      'branch_id': '57',
+      'location_product_description': prodData.name,
+      'location_productcode': prodData.code,
+      'location_product_sp': prodData.retailMg,
+      'location_product_sp1': prodData.wholesaleMg,
+      'category_id': prodData.categoryid,
+      'product_bp': prodData.buyingPrice,
+      'blockneg': prodData.blockingneg,
       'active': prodData.active,
-      'categoryId': prodData.categoryid,
-      'uomId': prodData.uomId
+      'uom_code': prodData.uomId
     });
-    debugPrint(body);
-    // try {
-    //   var res =
-    //       await http.post(Uri.parse(addUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
-    //   if (res.statusCode == 201) {
-
-    showSnackbar(
-        path: Icons.check_rounded, title: "Product Added!", subtitle: "");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const ProductsPage());
-
-    //     return;
-    //   }
-    //   return;
-    // } catch (error) {
-    //   debugPrint("$error");
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed to add Product!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
+    try {
+      var res =
+          await http.post(Uri.parse(addProductUrl), body: body, headers: {});
+      print(res.body);
+      if (res.statusCode == 201) {
+        showSnackbar(
+            path: Icons.check_rounded, title: "Product Added!", subtitle: "");
+        await Future.delayed(const Duration(seconds: 2));
+        getProducts();
+        Get.off(() => const ProductsPage());
+        return;
+      }
+      return;
+    } catch (error) {
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to add Product!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   editProduct(Product prodData) async {
