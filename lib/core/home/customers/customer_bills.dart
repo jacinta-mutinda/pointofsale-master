@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/customers/customer_form.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
+import 'package:nawiri/core/home/customers/custrec_form.dart';
 import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
@@ -79,86 +80,101 @@ class _CustomerBillsState extends State<CustomerBills> {
                       mainLabel: 'Credit Limit',
                       childLabel: 'Kes.${customerCtrl.custToShow.creditlimit}'),
                 ]),
-                const Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text('Customer Bills', style: kTitle)),
+                Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Customer Receipts', style: kTitle),
+                          smallPriBtn(
+                              label: 'Add Payment',
+                              txtColour: Colors.white,
+                              bgColour: kDarkGreen,
+                              isLoading: _isLoading,
+                              function: () {
+                                Get.to(const CustomerReceipt());
+                              })
+                        ])),
                 Obx(
                   () => ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        var custBills = customerCtrl.oneCustSales;
-                        return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 3),
-                            child: Card(
-                                color: kGrey,
-                                elevation: 7.0,
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      ListTile(
-                                        leading: Container(
-                                            width: 40,
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: (custBills[index].paid
-                                                    ? kLightGreen
-                                                    : kPrimaryRed)),
-                                            child: const Icon(Icons.receipt,
-                                                size: 20, color: Colors.white)),
-                                        title: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5),
-                                            child: Text(custBills[index].date,
-                                                style: kCardTitle)),
-                                        subtitle: Text(
-                                            custBills[index].total.toString(),
-                                            style: kCardTitle),
-                                        trailing: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 5),
-                                                  child: Text(
-                                                      custBills[index].paid
-                                                          ? 'Paid'
-                                                          : 'Unpaid',
-                                                      style: TextStyle(
-                                                          fontFamily: 'Nunito',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: custBills[
-                                                                      index]
-                                                                  .paid
-                                                              ? kDarkGreen
-                                                              : kPrimaryRed))),
-                                              Text(
-                                                'Kes.${custBills[index].total}',
-                                                style: kCardTitle,
-                                              )
-                                            ]),
-                                        onTap: () async {
-                                          customerCtrl.singleBillId.value =
-                                              custBills[index].id;
-                                          customerCtrl.getSingleBill();
-                                        },
-                                      ),
-                                      Obx(() => !custBills[index].paid
-                                          ? priBtn(
-                                              label: 'Clear Bill',
-                                              txtColour: Colors.white,
-                                              bgColour: kDarkGreen,
-                                              isLoading: _isLoading,
-                                              function: () {
-                                                Get.to(const PoSPage());
-                                              })
-                                          : const SizedBox())
-                                    ])));
+                        return const SizedBox();
+                        // return list of customer receipts
+
+                        // var custBills = customerCtrl.oneCustSales;
+                        // return Padding(
+                        //     padding: const EdgeInsets.symmetric(vertical: 3),
+                        //     child: Card(
+                        //         color: kGrey,
+                        //         elevation: 7.0,
+                        //         child: Column(
+                        //             crossAxisAlignment:
+                        //                 CrossAxisAlignment.center,
+                        //             children: [
+                        //               ListTile(
+                        //                 leading: Container(
+                        //                     width: 40,
+                        //                     height: 40,
+                        //                     decoration: BoxDecoration(
+                        //                         shape: BoxShape.circle,
+                        //                         color: (custBills[index].paid
+                        //                             ? kLightGreen
+                        //                             : kPrimaryRed)),
+                        //                     child: const Icon(Icons.receipt,
+                        //                         size: 20, color: Colors.white)),
+                        //                 title: Padding(
+                        //                     padding: const EdgeInsets.symmetric(
+                        //                         vertical: 5),
+                        //                     child: Text(custBills[index].date,
+                        //                         style: kCardTitle)),
+                        //                 subtitle: Text(
+                        //                     custBills[index].total.toString(),
+                        //                     style: kCardTitle),
+                        //                 trailing: Column(
+                        //                     crossAxisAlignment:
+                        //                         CrossAxisAlignment.end,
+                        //                     children: [
+                        //                       Padding(
+                        //                           padding: const EdgeInsets
+                        //                               .symmetric(vertical: 5),
+                        //                           child: Text(
+                        //                               custBills[index].paid
+                        //                                   ? 'Paid'
+                        //                                   : 'Unpaid',
+                        //                               style: TextStyle(
+                        //                                   fontFamily: 'Nunito',
+                        //                                   fontSize: 12,
+                        //                                   fontWeight:
+                        //                                       FontWeight.w400,
+                        //                                   color: custBills[
+                        //                                               index]
+                        //                                           .paid
+                        //                                       ? kDarkGreen
+                        //                                       : kPrimaryRed))),
+                        //                       Text(
+                        //                         'Kes.${custBills[index].total}',
+                        //                         style: kCardTitle,
+                        //                       )
+                        //                     ]),
+                        //                 onTap: () async {
+                        //                   customerCtrl.singleBillId.value =
+                        //                       custBills[index].id;
+                        //                   customerCtrl.getSingleBill();
+                        //                 },
+                        //               ),
+                        //               Obx(() => !custBills[index].paid
+                        //                   ? priBtn(
+                        //                       label: 'Clear Bill',
+                        //                       txtColour: Colors.white,
+                        //                       bgColour: kDarkGreen,
+                        //                       isLoading: _isLoading,
+                        //                       function: () {
+                        //                         Get.to(const PoSPage());
+                        //                       })
+                        //                   : const SizedBox())
+                        //             ])));
                       },
                       itemCount: customerCtrl.oneCustSales.length),
                 ),

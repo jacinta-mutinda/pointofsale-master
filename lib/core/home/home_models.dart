@@ -40,6 +40,7 @@ class Supplier {
   String krapin;
   String address;
   String cpperson;
+  String phoneno;
 
   Supplier(
       {required this.id,
@@ -48,6 +49,7 @@ class Supplier {
       required this.bankacc,
       required this.krapin,
       required this.address,
+      required this.phoneno,
       required this.cpperson});
 }
 

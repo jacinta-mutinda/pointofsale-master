@@ -37,35 +37,32 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           child: SizedBox(
               height: double.maxFinite,
-              child: SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  child: navMenu(navItems: [
-                    navItem(
-                        iconPath: Icons.point_of_sale,
-                        label: 'Point of Sale',
-                        goTo: const PoSPage()),
-                    navItem(
-                        iconPath: Icons.sticky_note_2,
-                        label: 'Expenses',
-                        goTo: const TransactionsPage()),
-                    navItem(
-                        iconPath: Icons.account_balance,
-                        label: 'Banking',
-                        goTo: const BankingPage()),
-                    navItem(
-                        iconPath: Icons.people,
-                        label: 'Customers',
-                        goTo: const CustomersPage()),
-                    navItem(
-                        iconPath: Icons.local_shipping_rounded,
-                        label: 'Suppliers',
-                        goTo: const SupplierPage()),
-                    navItem(
-                        iconPath: Icons.inventory_2,
-                        label: 'Inventory',
-                        goTo: const InventoryPage()),
-                  ]))),
+              child: navMenu(navItems: [
+                navItem(
+                    iconPath: Icons.point_of_sale,
+                    label: 'Point of Sale',
+                    goTo: const PoSPage()),
+                navItem(
+                    iconPath: Icons.sticky_note_2,
+                    label: 'Transactions',
+                    goTo: const TransactionsPage()),
+                navItem(
+                    iconPath: Icons.account_balance,
+                    label: 'Banking',
+                    goTo: const BankingPage()),
+                navItem(
+                    iconPath: Icons.people,
+                    label: 'Customers',
+                    goTo: const CustomersPage()),
+                navItem(
+                    iconPath: Icons.local_shipping_rounded,
+                    label: 'Suppliers',
+                    goTo: const SupplierPage()),
+                navItem(
+                    iconPath: Icons.inventory_2,
+                    label: 'Inventory',
+                    goTo: const InventoryPage()),
+              ])),
         ));
   }
 }
