@@ -44,17 +44,15 @@ class _UomFormState extends State<UomForm> {
   setForm() {
     if (invtCtrl.isUoMEdit.value) {
       pageTitle = 'Edit Unit';
-      namectrl.text = invtCtrl.uoms
+      UoM selectedUoM = invtCtrl.uoms
           .where((element) => element.id == (invtCtrl.uoMToEdit.value))
-          .first
-          .name;
-      uomCodeCtrl.text = invtCtrl.uoms
-          .where((element) => element.id == (invtCtrl.uoMToEdit.value))
-          .first
-          .uomCode;
+          .first;
+      namectrl.text = selectedUoM.name;
+      uomCodeCtrl.text = selectedUoM.uomCode;
     } else {
       pageTitle = 'Add Unit';
       namectrl.clear();
+      uomCodeCtrl.clear();
     }
   }
 
@@ -108,7 +106,7 @@ class _UomFormState extends State<UomForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         uomData.name = namectrl.text;
-
+                        uomData.uomCode = uomCodeCtrl.text;
                         if (invtCtrl.isUoMEdit.value) {
                           invtCtrl.editUOM(uomData);
                         } else {

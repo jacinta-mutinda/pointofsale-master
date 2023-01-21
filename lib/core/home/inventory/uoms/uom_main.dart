@@ -55,8 +55,8 @@ class _UoMsPageState extends State<UoMsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:
-            backAppBar(pageTitle: 'Units of Measurement', actions: <Widget>[]),
+        appBar: backAppBar(
+            pageTitle: 'Units of Measurement (UoM)', actions: <Widget>[]),
         body: SingleChildScrollView(
             controller: _scrollctrl,
             padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -68,7 +68,7 @@ class _UoMsPageState extends State<UoMsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'All Units of Measurement',
+                          'All UoMs',
                           style: kTitle,
                         ),
                         smallPriBtn(
@@ -78,7 +78,7 @@ class _UoMsPageState extends State<UoMsPage> {
                             isLoading: _isAddLoading,
                             function: () {
                               invtCtrl.isUoMEdit.value = false;
-                              invtCtrl.fieldsUoMRequired.value = false;
+                              invtCtrl.fieldsUoMRequired.value = true;
                               Get.to(const UomForm());
                             }),
                       ])),
