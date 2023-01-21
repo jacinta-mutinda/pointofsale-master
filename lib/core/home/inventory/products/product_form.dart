@@ -22,17 +22,17 @@ class _ProductFormState extends State<ProductForm> {
   bool activeValue = false;
   String pageTitle = '';
   Product prodData = Product(
-      id: 1,
+      id: '',
       name: '',
       desc: '',
-      categoryid: 1,
-      uomId: 1,
-      code: 1,
-      buyingPrice: 1,
-      blockingneg: true,
-      active: true,
-      retailMg: 100,
-      wholesaleMg: 50);
+      categoryid: '',
+      uomId: '',
+      code: '',
+      buyingPrice: '',
+      blockingneg: '',
+      active: '',
+      retailMg: '',
+      wholesaleMg: '');
   final invtCtrl = Get.put(InventoryCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController descctrl = TextEditingController();
@@ -65,61 +65,37 @@ class _ProductFormState extends State<ProductForm> {
   setForm() {
     if (invtCtrl.isProdEdit.value) {
       pageTitle = 'Edit Product';
-      namectrl.text = invtCtrl.products
+      Product selectedProd = invtCtrl.products
           .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .name;
-      descctrl.text = invtCtrl.products
-          .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .desc;
-      retailMgctrl.text = invtCtrl.products
-          .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .retailMg
-          .toString();
-
-      wholesaleMgctrl.text = invtCtrl.products
-          .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .wholesaleMg
-          .toString();
-      codectrl.text = invtCtrl.products
-          .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .code
-          .toString();
-      buyingPricectrl.text = invtCtrl.products
-          .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .buyingPrice
-          .toString();
-      invtCtrl.catDropdown.value = invtCtrl.categories
-          .where((element) =>
-              element.id ==
-              (invtCtrl.products
-                  .where((element) => element.id == (invtCtrl.prodToEdit.value))
-                  .first
-                  .categoryid))
-          .first
-          .name;
-      invtCtrl.uomDropdown.value = invtCtrl.uoms
-          .where((element) =>
-              element.id ==
-              (invtCtrl.products
-                  .where((element) => element.id == (invtCtrl.prodToEdit.value))
-                  .first
-                  .uomId))
-          .first
-          .name;
-      blockingnegValue = invtCtrl.products
-          .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .blockingneg;
-      activeValue = invtCtrl.products
-          .where((element) => element.id == (invtCtrl.prodToEdit.value))
-          .first
-          .active;
+          .first;
+      namectrl.text = selectedProd.name;
+      descctrl.text = selectedProd.desc;
+      retailMgctrl.text = selectedProd.retailMg;
+      wholesaleMgctrl.text = selectedProd.wholesaleMg;
+      codectrl.text = selectedProd.code;
+      buyingPricectrl.text = selectedProd.buyingPrice;
+      invtCtrl.catDropdown.value = '';
+      // invtCtrl.catDropdown.value = invtCtrl.categories
+      //     .where((element) => element.id == (selectedProd.categoryid))
+      //     .first
+      //     .name;
+      // invtCtrl.uomDropdown.value = invtCtrl.uoms
+      //     .where((element) => element.uomCode == (selectedProd.uomId))
+      //     .first
+      //     .name;
+      invtCtrl.uomDropdown.value = '';
+      var blockNeg = selectedProd.blockingneg;
+      if (blockNeg == 'Y') {
+        blockingnegValue = true;
+      } else {
+        blockingnegValue = false;
+      }
+      var activeVal = selectedProd.active;
+      if (activeVal == 'Y') {
+        activeValue = true;
+      } else {
+        activeValue = false;
+      }
     } else {
       pageTitle = 'Add Product';
       namectrl.clear();
@@ -266,12 +242,29 @@ class _ProductFormState extends State<ProductForm> {
                       if (_formKey.currentState!.validate()) {
                         prodData.name = namectrl.text;
                         prodData.desc = descctrl.text;
-                        prodData.code = int.parse(codectrl.text);
-                        prodData.retailMg = int.parse(retailMgctrl.text);
-                        prodData.wholesaleMg = int.parse(wholesaleMgctrl.text);
-                        prodData.blockingneg = blockingnegValue;
-                        prodData.active = activeValue;
-
+                        prodData.code = codectrl.text;
+                        prodData.categoryid = invtCtrl.categories
+                            .where((element) =>
+                                element.name == (invtCtrl.catDropdown.value))
+                            .first
+                            .id;
+                        prodData.uomId = invtCtrl.uoms
+                            .where((element) =>
+                                element.name == (invtCtrl.uomDropdown.value))
+                            .first
+                            .id;
+                        prodData.retailMg = retailMgctrl.text;
+                        prodData.wholesaleMg = wholesaleMgctrl.text;
+                        if (blockingnegValue) {
+                          prodData.blockingneg = 'Y';
+                        } else {
+                          prodData.blockingneg = 'N';
+                        }
+                        if (activeValue) {
+                          prodData.active = 'Y';
+                        } else {
+                          prodData.active = 'N';
+                        }
                         if (invtCtrl.isProdEdit.value) {
                           invtCtrl.editProduct(prodData);
                         } else {
