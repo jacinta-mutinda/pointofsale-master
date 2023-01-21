@@ -27,7 +27,8 @@ class SupplierCtrl extends GetxController {
       bankacc: '',
       krapin: '',
       address: '',
-      cpperson: '');
+      cpperson: '',
+      phoneno: '');
   RxList<Supplier> suppliers = RxList<Supplier>();
   RxList<Supplier> rangeSupList = RxList<Supplier>();
   RxList<SupplierPayment> allSupPayments = RxList<SupplierPayment>();
@@ -60,7 +61,8 @@ class SupplierCtrl extends GetxController {
               bankacc: item['supplier_bank_acc'],
               krapin: item['supplier_pin'],
               address: item['supplier_address'],
-              cpperson: item['supplier_phone_no']);
+              cpperson: item['supplier_contact_person'],
+              phoneno: item['supplier_phone_no']);
           suppliers.add(sup);
         }
         filterPaginator();
@@ -137,10 +139,12 @@ class SupplierCtrl extends GetxController {
       'supplier_pin': supData.krapin,
       'supplier_address': supData.address,
       'supplier_phone_no': supData.cpperson,
+      'supplier_contact_person': supData.cpperson,
     });
     try {
-      var res =
-          await http.post(Uri.parse(addSupplierUrl), body: body, headers: {});
+      var res = await http.post(Uri.parse(addSupplierUrl),
+          body: body, headers: headers);
+      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded, title: "Supplier Added!", subtitle: "");

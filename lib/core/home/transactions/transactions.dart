@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/transactions/bankingtrans_form.dart';
-import 'package:nawiri/core/home/transactions/custrec_form.dart';
+import 'package:nawiri/core/home/customers/custrec_form.dart';
 import 'package:nawiri/core/home/transactions/suppay_form.dart';
 import 'package:nawiri/core/home/transactions/transactions_ctrl.dart';
 import 'package:nawiri/core/home/transactions/expense_form.dart';
@@ -33,27 +33,24 @@ class _TransactionsPageState extends State<TransactionsPage> {
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         child: SizedBox(
             height: double.maxFinite,
-            child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                child: navMenu(navItems: [
-                  navItem(
-                      iconPath: Icons.sticky_note_2,
-                      label: 'Add Daily Expense',
-                      goTo: const TransactionForm()),
-                  navItem(
-                      iconPath: Icons.account_balance,
-                      label: 'Add Bank Transaction',
-                      goTo: const BankTransForm()),
-                  navItem(
-                      iconPath: Icons.people,
-                      label: 'Add Customer Receipt',
-                      goTo: const CustomerReceipt()),
-                  navItem(
-                      iconPath: Icons.local_shipping_rounded,
-                      label: 'Add Supplier Payment',
-                      goTo: const SuppPayForm())
-                ]))),
+            child: navMenu(navItems: [
+              navItem(
+                  iconPath: Icons.sticky_note_2,
+                  label: 'Add Daily Expense',
+                  goTo: const TransactionForm()),
+              navItem(
+                  iconPath: Icons.account_balance,
+                  label: 'Add Bank Transaction',
+                  goTo: const BankTransForm()),
+              navItem(
+                  iconPath: Icons.people,
+                  label: 'Add Customer Receipt',
+                  goTo: const CustomerReceipt()),
+              navItem(
+                  iconPath: Icons.local_shipping_rounded,
+                  label: 'Add Supplier Payment',
+                  goTo: const SuppPayForm())
+            ])),
       ),
       // SingleChildScrollView(
       //     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -113,15 +110,15 @@ class _TransactionsPageState extends State<TransactionsPage> {
       //                 itemCount: transCtrl.expenses.length),
       //           ),
       //         ]))),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kDarkGreen,
-        foregroundColor: Colors.white,
-        onPressed: () {
-          transCtrl.isTransEdit.value = false;
-          Get.to(const TransactionForm());
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: kDarkGreen,
+      //   foregroundColor: Colors.white,
+      //   onPressed: () {
+      //     transCtrl.isTransEdit.value = false;
+      //     Get.to(const TransactionForm());
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }

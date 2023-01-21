@@ -82,7 +82,6 @@ class _SupplierPaymentsState extends State<SupplierPayments> {
                               bgColour: kDarkGreen,
                               isLoading: _isLoading,
                               function: () {
-                                supplierCtrl.isSupPayEdit.value = false;
                                 Get.to(const SuppPayForm());
                               })
                         ])),

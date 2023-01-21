@@ -27,13 +27,15 @@ class _SupplierFormState extends State<SupplierForm> {
       bankacc: '',
       krapin: '',
       address: '',
-      cpperson: '');
+      cpperson: '',
+      phoneno: '');
   final supplierCtrl = Get.put(SupplierCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController bankaccctrl = TextEditingController();
   TextEditingController itemctrl = TextEditingController();
   TextEditingController krapinctrl = TextEditingController();
   TextEditingController addressctrl = TextEditingController();
+  TextEditingController phonenoctrl = TextEditingController();
   TextEditingController cppersonctrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -49,6 +51,7 @@ class _SupplierFormState extends State<SupplierForm> {
   @override
   void dispose() {
     namectrl.dispose();
+    phonenoctrl.dispose();
     krapinctrl.dispose();
     bankaccctrl.dispose();
     itemctrl.dispose();
@@ -87,6 +90,7 @@ class _SupplierFormState extends State<SupplierForm> {
     } else {
       pageTitle = 'Add Supplier';
       namectrl.clear();
+      phonenoctrl.clear();
       bankaccctrl.clear();
       itemctrl.clear();
       cppersonctrl.clear();
@@ -157,7 +161,7 @@ class _SupplierFormState extends State<SupplierForm> {
                           formField(
                               label: 'Address',
                               require: supplierCtrl.fieldsRequired.value,
-                              controller: itemctrl,
+                              controller: addressctrl,
                               type: TextInputType.name,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -168,11 +172,25 @@ class _SupplierFormState extends State<SupplierForm> {
                           formField(
                               label: 'Phone Number',
                               require: supplierCtrl.fieldsRequired.value,
-                              controller: cppersonctrl,
+                              controller: phonenoctrl,
                               type: TextInputType.number,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return "Please enter the supplier's Phone Number";
+                                }
+                                if (value.length != 10) {
+                                  return 'Please enter a 10-digit phone number';
+                                }
+                                return null;
+                              }),
+                          formField(
+                              label: 'Conatct Person Phone Number',
+                              require: supplierCtrl.fieldsRequired.value,
+                              controller: cppersonctrl,
+                              type: TextInputType.number,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter the contact person's Phone Number";
                                 }
                                 if (value.length != 10) {
                                   return 'Please enter a 10-digit phone number';
@@ -196,6 +214,7 @@ class _SupplierFormState extends State<SupplierForm> {
                         supData.address = addressctrl.text;
                         supData.bankacc = bankaccctrl.text;
                         supData.cpperson = cppersonctrl.text;
+                        supData.phoneno = phonenoctrl.text;
                         supData.krapin = krapinctrl.text;
 
                         if (supplierCtrl.isSupEdit.value) {
