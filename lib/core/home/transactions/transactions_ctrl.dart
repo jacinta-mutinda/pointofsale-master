@@ -41,11 +41,11 @@ class TransactionCtrl extends GetxController {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Expense exp = Expense(
-              id: item[''],
-              mode: item[''],
-              desc: item[''],
-              type: item[''],
-              amount: item['']);
+              id: item['pay_ref'],
+              mode: item['voucher_amount'],
+              desc: item['pay_description'],
+              type: item['pay_to'],
+              amount: item['pay_amount']);
           expenses.add(exp);
         }
         filterPaginator();
