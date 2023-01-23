@@ -70,42 +70,15 @@ class _CustomerFormState extends State<CustomerForm> {
   setForm() {
     if (customerCtrl.isCustEdit.value) {
       pageTitle = 'Edit customer';
-      namectrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .name;
-      bankaccctrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .bankacc;
-      cppersonctrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .cpperson;
-      phonectrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .phoneno;
-      krapinctrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .krapin;
-      runbalctrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .runningBal;
-      totalcreditctrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .totalCredit;
-      creditctrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .creditlimit;
-      addressctrl.text = customerCtrl.customers
-          .where((element) => element.id == (customerCtrl.custToEdit.value))
-          .first
-          .address;
+      namectrl.text = customerCtrl.custToShow.name;
+      bankaccctrl.text = customerCtrl.custToShow.bankacc;
+      cppersonctrl.text = customerCtrl.custToShow.cpperson;
+      phonectrl.text = customerCtrl.custToShow.phoneno;
+      krapinctrl.text = customerCtrl.custToShow.krapin;
+      runbalctrl.text = customerCtrl.custToShow.runningBal;
+      totalcreditctrl.text = customerCtrl.custToShow.totalCredit;
+      creditctrl.text = customerCtrl.custToShow.creditlimit;
+      addressctrl.text = customerCtrl.custToShow.address;
     } else {
       pageTitle = 'Add customer';
       namectrl.clear();

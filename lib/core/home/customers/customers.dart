@@ -216,14 +216,8 @@ class _CustomersPageState extends State<CustomersPage> {
                                                       .isCustEdit.value = true;
                                                   customersCtrl.fieldsRequired
                                                       .value = false;
-                                                  customersCtrl
-                                                          .custToEdit.value =
-                                                      customers[index].id;
-                                                  customersCtrl
-                                                          .billsToShow.value =
-                                                      customers[index].id;
-                                                  await customersCtrl
-                                                      .getCustSales();
+                                                  customersCtrl.custToShow =
+                                                      customers[index];
                                                 },
                                               )));
                                     },

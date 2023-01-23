@@ -3,20 +3,19 @@ import 'package:get/get.dart';
 import 'package:nawiri/core/home/customers/customer_form.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/customers/custrec_form.dart';
-import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 
-class CustomerBills extends StatefulWidget {
-  static const routeName = "/customerbills";
-  const CustomerBills({Key? key}) : super(key: key);
+class CustomerReceipts extends StatefulWidget {
+  static const routeName = "/CustomerReceipts";
+  const CustomerReceipts({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _CustomerBillsState createState() => _CustomerBillsState();
+  _CustomerReceiptsState createState() => _CustomerReceiptsState();
 }
 
-class _CustomerBillsState extends State<CustomerBills> {
+class _CustomerReceiptsState extends State<CustomerReceipts> {
   final customerCtrl = Get.put(CustomerCtrl());
   bool _isLoading = false;
 
@@ -28,8 +27,7 @@ class _CustomerBillsState extends State<CustomerBills> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: backAppBar(
-          pageTitle: customerCtrl.custPageName.value, actions: <Widget>[]),
+      appBar: backAppBar(pageTitle: 'custReceipts', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: SizedBox(
@@ -85,7 +83,7 @@ class _CustomerBillsState extends State<CustomerBills> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Customer Receipts', style: kTitle),
+                          const Text('Customer Payments', style: kTitle),
                           smallPriBtn(
                               label: 'Add Payment',
                               txtColour: Colors.white,
@@ -95,90 +93,155 @@ class _CustomerBillsState extends State<CustomerBills> {
                                 Get.to(const CustomerReceipt());
                               })
                         ])),
-                Obx(
-                  () => ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return const SizedBox();
-                        // return list of customer receipts
-
-                        // var custBills = customerCtrl.oneCustSales;
-                        // return Padding(
-                        //     padding: const EdgeInsets.symmetric(vertical: 3),
-                        //     child: Card(
-                        //         color: kGrey,
-                        //         elevation: 7.0,
-                        //         child: Column(
-                        //             crossAxisAlignment:
-                        //                 CrossAxisAlignment.center,
-                        //             children: [
-                        //               ListTile(
-                        //                 leading: Container(
-                        //                     width: 40,
-                        //                     height: 40,
-                        //                     decoration: BoxDecoration(
-                        //                         shape: BoxShape.circle,
-                        //                         color: (custBills[index].paid
-                        //                             ? kLightGreen
-                        //                             : kPrimaryRed)),
-                        //                     child: const Icon(Icons.receipt,
-                        //                         size: 20, color: Colors.white)),
-                        //                 title: Padding(
-                        //                     padding: const EdgeInsets.symmetric(
-                        //                         vertical: 5),
-                        //                     child: Text(custBills[index].date,
-                        //                         style: kCardTitle)),
-                        //                 subtitle: Text(
-                        //                     custBills[index].total.toString(),
-                        //                     style: kCardTitle),
-                        //                 trailing: Column(
-                        //                     crossAxisAlignment:
-                        //                         CrossAxisAlignment.end,
-                        //                     children: [
-                        //                       Padding(
-                        //                           padding: const EdgeInsets
-                        //                               .symmetric(vertical: 5),
-                        //                           child: Text(
-                        //                               custBills[index].paid
-                        //                                   ? 'Paid'
-                        //                                   : 'Unpaid',
-                        //                               style: TextStyle(
-                        //                                   fontFamily: 'Nunito',
-                        //                                   fontSize: 12,
-                        //                                   fontWeight:
-                        //                                       FontWeight.w400,
-                        //                                   color: custBills[
-                        //                                               index]
-                        //                                           .paid
-                        //                                       ? kDarkGreen
-                        //                                       : kPrimaryRed))),
-                        //                       Text(
-                        //                         'Kes.${custBills[index].total}',
-                        //                         style: kCardTitle,
-                        //                       )
-                        //                     ]),
-                        //                 onTap: () async {
-                        //                   customerCtrl.singleBillId.value =
-                        //                       custBills[index].id;
-                        //                   customerCtrl.getSingleBill();
-                        //                 },
-                        //               ),
-                        //               Obx(() => !custBills[index].paid
-                        //                   ? priBtn(
-                        //                       label: 'Clear Bill',
-                        //                       txtColour: Colors.white,
-                        //                       bgColour: kDarkGreen,
-                        //                       isLoading: _isLoading,
-                        //                       function: () {
-                        //                         Get.to(const PoSPage());
-                        //                       })
-                        //                   : const SizedBox())
-                        //             ])));
-                      },
-                      itemCount: customerCtrl.oneCustSales.length),
-                ),
+                Obx(() => customerCtrl.showRecLoading.value
+                    ? loadingWidget(label: 'Loading Customer Payments ...')
+                    : customerCtrl.showRecData.value
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const SizedBox(),
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10, right: 5),
+                                          child: Obx(() => RichText(
+                                                  text: TextSpan(children: [
+                                                const TextSpan(
+                                                  text: 'Showing ',
+                                                  style: kBlackTxt,
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      ' ${customerCtrl.rangeCustReceipts.length} ',
+                                                  style: kNeonTxt,
+                                                ),
+                                                const TextSpan(
+                                                  text: ' of ',
+                                                  style: kBlackTxt,
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      ' ${customerCtrl.custReceipts.length} ',
+                                                  style: kDarkGreenTxt,
+                                                ),
+                                                const TextSpan(
+                                                  text: ' payments',
+                                                  style: kBlackTxt,
+                                                )
+                                              ]))))
+                                    ]),
+                                Obx(
+                                  () => ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        var custReceipts =
+                                            customerCtrl.rangeCustReceipts;
+                                        return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 3),
+                                            child: Card(
+                                                color: kGrey,
+                                                elevation: 7.0,
+                                                child: ListTile(
+                                                  leading: Container(
+                                                      width: 40,
+                                                      height: 40,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color:
+                                                                  kLightGreen),
+                                                      child: const Icon(
+                                                          Icons.person,
+                                                          size: 20,
+                                                          color: Colors.white)),
+                                                  title: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 5),
+                                                      child: Text(
+                                                          custReceipts[index]
+                                                              .date,
+                                                          style: kCardTitle)),
+                                                  subtitle: Text(
+                                                      'Kes${custReceipts[index].amount}',
+                                                      style: kCardTitle),
+                                                  trailing: Container(
+                                                      width: 40,
+                                                      height: 40,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color:
+                                                                  kDarkGreen),
+                                                      child: const Icon(
+                                                          Icons
+                                                              .keyboard_arrow_right,
+                                                          size: 25,
+                                                          color: Colors.white)),
+                                                  onTap: () async {
+                                                    customerCtrl.singleRec =
+                                                        custReceipts[index];
+                                                    Get.dialog(
+                                                        const SingleReceipt());
+                                                  },
+                                                )));
+                                      },
+                                      itemCount:
+                                          customerCtrl.rangeCustList.length),
+                                ),
+                              ])
+                        : noTransactionsWidget(label: 'No Receipts Found'))
               ]))),
     );
+  }
+}
+
+class SingleReceipt extends StatefulWidget {
+  static const routeName = "/SingleReceipt";
+
+  const SingleReceipt({Key? key}) : super(key: key);
+
+  @override
+  _SingleReceiptState createState() => _SingleReceiptState();
+}
+
+class _SingleReceiptState extends State<SingleReceipt> {
+  final customerCtrl = Get.put(CustomerCtrl());
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return popupScaffold(children: [
+      popupHeader(label: 'Payment Date: ${customerCtrl.singleRec.date}'),
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        labelSpan(
+            mainLabel: 'Transaction Type Method',
+            childLabel: customerCtrl.singleRec.transtype),
+        labelSpan(
+            mainLabel: 'Reference Code',
+            childLabel: customerCtrl.singleRec.ref),
+        labelSpan(
+            mainLabel: 'Comment', childLabel: customerCtrl.singleRec.comment),
+        labelSpan(
+            mainLabel: 'Discount',
+            childLabel: 'Kes${customerCtrl.singleRec.discount}'),
+        labelSpan(
+            mainLabel: 'Total',
+            childLabel: 'Kes${customerCtrl.singleRec.amount}'),
+      ])
+    ]);
   }
 }
