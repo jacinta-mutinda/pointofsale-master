@@ -6,6 +6,9 @@ const getCustomersUrl = '$rootUrl/getCustomers';
 const addCustomerUrl = '$rootUrl/addCustomer';
 const updateCustomerUrl = '$rootUrl/updateCustomer';
 
+const getCustReceiptsUrl = '$rootUrl/receipts';
+const addCustReceiptUrl = '$rootUrl/Customerreceipt';
+
 // Category Urls --------------------------------------
 
 const getCategoriesUrl = '$rootUrl/categories';
@@ -40,6 +43,9 @@ const addExpenseUrl = '$rootUrl/addExpense';
 const getSupplierUrl = '$rootUrl/supplier';
 const addSupplierUrl = '$rootUrl/add_Supplier';
 const updateSupUrl = '$rootUrl/updateSupplier';
+
+const addSupPayUrl = '$rootUrl/paySupplier';
+const getSupPayUrl = '$rootUrl/supplierPays';
 
 // Shift Urls --------------------------------------
 

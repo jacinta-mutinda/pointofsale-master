@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/transactions/transactions_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
@@ -18,13 +19,14 @@ class ExpenseForm extends StatefulWidget {
 }
 
 class _ExpenseFormState extends State<ExpenseForm> {
-  String pageTitle = '';
-  Expense expData = Expense(id: '', mode: '', type: '', desc: '', amount: '');
+  Expense expData =
+      Expense(id: '', date: '', payto: '', ref: '', desc: '', amount: '');
   final transCtrl = Get.put(TransactionCtrl());
-  TextEditingController modectrl = TextEditingController();
-  TextEditingController typectrl = TextEditingController();
+  TextEditingController paytoctrl = TextEditingController();
+  TextEditingController refctrl = TextEditingController();
   TextEditingController descctrl = TextEditingController();
   TextEditingController amountctrl = TextEditingController();
+  TextEditingController datectrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -37,9 +39,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   void dispose() {
-    modectrl.dispose();
+    datectrl.dispose();
+    paytoctrl.dispose();
     amountctrl.dispose();
-    typectrl.dispose();
+    refctrl.dispose();
     descctrl.dispose();
     super.dispose();
   }
@@ -59,24 +62,51 @@ class _ExpenseFormState extends State<ExpenseForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          formDropDownField(
-                              label: 'Mode of Transaction',
-                              dropdownValue: transCtrl.modeDropDown.value,
-                              dropItems: transCtrl.expModeStr,
-                              bgcolor: kGrey,
-                              function: (String? newValue) {
-                                setState(() {
-                                  transCtrl.modeDropDown.value = newValue!;
-                                });
+                          dateFormField(
+                              label: 'Date of Transaction',
+                              controller: datectrl,
+                              showDate: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now());
+
+                                if (pickedDate != null) {
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(pickedDate);
+
+                                  setState(() {
+                                    datectrl.text = formattedDate;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the date of payment';
+                                }
+                                return null;
                               }),
                           formField(
-                              label: 'Type',
+                              label: 'Paid To',
                               require: true,
-                              controller: typectrl,
+                              controller: paytoctrl,
                               type: TextInputType.name,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter the type of expense spent';
+                                  return 'Please enter the account paid to';
+                                }
+                                return null;
+                              }),
+                          formField(
+                              label: 'Referenec Code',
+                              require: true,
+                              controller: refctrl,
+                              type: TextInputType.name,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the reference code';
                                 }
                                 return null;
                               }),
@@ -98,15 +128,16 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   priBtn(
                     bgColour: kDarkGreen,
                     txtColour: Colors.white,
-                    label: pageTitle,
+                    label: 'Add Expense',
                     isLoading: _isLoading,
                     function: () async {
                       setState(() {
                         _isLoading = true;
                       });
                       if (_formKey.currentState!.validate()) {
-                        expData.mode = modectrl.text;
-                        expData.type = typectrl.text;
+                        expData.payto = paytoctrl.text;
+                        expData.date = datectrl.text;
+                        expData.ref = refctrl.text;
                         expData.desc = descctrl.text;
                         expData.amount = amountctrl.text;
 

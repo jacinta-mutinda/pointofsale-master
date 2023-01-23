@@ -54,20 +54,24 @@ class Supplier {
 }
 
 class SupplierPayment {
-  int id;
-  int supplierId;
-  int quantity;
-  int unitPrice;
-  int total;
+  String id;
+  String supId;
+  String ref;
   String date;
+  String transtype;
+  String discount;
+  String amount;
+  String comment;
 
   SupplierPayment(
       {required this.id,
-      required this.supplierId,
-      required this.quantity,
-      required this.unitPrice,
+      required this.supId,
+      required this.ref,
       required this.date,
-      required this.total});
+      required this.amount,
+      required this.discount,
+      required this.transtype,
+      required this.comment});
 }
 
 class Customer {
@@ -136,17 +140,40 @@ class Sale {
 
 class Expense {
   String id;
-  String mode;
+  String date;
+  String payto;
+  String ref;
   String desc;
   String amount;
-  String type;
 
   Expense(
       {required this.id,
-      required this.mode,
+      required this.date,
       required this.desc,
       required this.amount,
-      required this.type});
+      required this.ref,
+      required this.payto});
+}
+
+class CustReceipt {
+  String id;
+  String custId;
+  String ref;
+  String date;
+  String transtype;
+  String discount;
+  String amount;
+  String comment;
+
+  CustReceipt(
+      {required this.id,
+      required this.custId,
+      required this.ref,
+      required this.date,
+      required this.amount,
+      required this.discount,
+      required this.transtype,
+      required this.comment});
 }
 
 class User {

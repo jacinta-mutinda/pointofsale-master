@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/transactions/expense_main.dart';
-import 'package:nawiri/core/home/transactions/transactions.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:http/http.dart' as http;
@@ -13,11 +12,9 @@ class TransactionCtrl extends GetxController {
   RxString branchId = ''.obs;
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
-  RxString modeDropDown = ''.obs;
-  RxBool isTransEdit = false.obs;
-  RxInt transToEdit = 1.obs;
+  Expense singleExpense =
+      Expense(id: '', date: '', payto: '', ref: '', desc: '', amount: '');
 
-  List<String> expModeStr = ['', 'Bank Account', 'Cash', 'M-pesa'];
   RxList<Expense> expenses = RxList<Expense>();
   RxList<Expense> rangeExpList = RxList<Expense>();
 
@@ -41,10 +38,11 @@ class TransactionCtrl extends GetxController {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Expense exp = Expense(
-              id: item['pay_ref'],
-              mode: item['voucher_amount'],
+              id: item['pay_id'],
+              payto: item['pay_to'],
               desc: item['pay_description'],
-              type: item['pay_to'],
+              date: item['pay_date'],
+              ref: item['pay_ref'],
               amount: item['pay_amount']);
           expenses.add(exp);
         }
@@ -66,14 +64,14 @@ class TransactionCtrl extends GetxController {
 
   addExpense(Expense expData) async {
     var body = jsonEncode({
-      '': expData.id,
-      '': expData.mode,
-      '': expData.desc,
-      '': expData.amount,
-      '': expData.type
+      'pay_to': expData.payto,
+      'pay_description': expData.desc,
+      'pay_amount': expData.amount,
+      'pay_date': expData.date,
+      'pay_ref': expData.ref
     });
     try {
-      var res = await http.post(Uri.parse(addSupplierUrl),
+      var res = await http.post(Uri.parse(addExpenseUrl),
           body: body, headers: headers);
       print(res.body);
       if (res.statusCode == 201) {

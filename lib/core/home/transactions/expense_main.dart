@@ -6,6 +6,8 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/utils/functions.dart';
 
+final transCtrl = Get.put(TransactionCtrl());
+
 class ExpensesPage extends StatefulWidget {
   static const routeName = "/expenses";
   const ExpensesPage({Key? key}) : super(key: key);
@@ -16,7 +18,6 @@ class ExpensesPage extends StatefulWidget {
 }
 
 class _ExpensesPageState extends State<ExpensesPage> {
-  final transCtrl = Get.put(TransactionCtrl());
   final ScrollController _scrollctrl = ScrollController();
   TextEditingController searchCtrl = TextEditingController();
   final GlobalKey<FormState> _searchForm = GlobalKey<FormState>();
@@ -189,7 +190,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                                     padding: const EdgeInsets
                                                         .symmetric(vertical: 5),
                                                     child: Text(
-                                                        expenses[index].desc,
+                                                        expenses[index].payto,
                                                         style: kCardTitle)),
                                                 subtitle: Text(
                                                     'Kes.${expenses[index].amount}',
@@ -208,7 +209,10 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                                         size: 25,
                                                         color: Colors.white)),
                                                 onTap: () async {
-                                                  // show more details
+                                                  transCtrl.singleExpense =
+                                                      expenses[index];
+                                                  Get.dialog(
+                                                      const SingleExpense());
                                                 },
                                               )));
                                     },
@@ -228,5 +232,40 @@ class _ExpensesPageState extends State<ExpensesPage> {
                 ),
               )
             : Container());
+  }
+}
+
+class SingleExpense extends StatefulWidget {
+  static const routeName = "/SingleExpense";
+
+  const SingleExpense({Key? key}) : super(key: key);
+
+  @override
+  _SingleExpenseState createState() => _SingleExpenseState();
+}
+
+class _SingleExpenseState extends State<SingleExpense> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return popupScaffold(children: [
+      popupHeader(label: 'Transaction Date: ${transCtrl.singleExpense.date}'),
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        labelSpan(
+            mainLabel: 'Paid To', childLabel: transCtrl.singleExpense.payto),
+        labelSpan(
+            mainLabel: 'Reference Code',
+            childLabel: transCtrl.singleExpense.ref),
+        labelSpan(
+            mainLabel: 'Description', childLabel: transCtrl.singleExpense.desc),
+        labelSpan(
+            mainLabel: 'Amount',
+            childLabel: 'Kes${transCtrl.singleExpense.amount}'),
+      ])
+    ]);
   }
 }
