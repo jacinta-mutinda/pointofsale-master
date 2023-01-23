@@ -100,12 +100,12 @@ class Customer {
 }
 
 class CartItem {
-  int id;
+  String id;
   String name;
-  int prodId;
-  int quantity;
-  int unitPrice;
-  RxInt total;
+  String prodId;
+  String quantity;
+  String unitPrice;
+  RxString total;
 
   CartItem({
     required this.id,
@@ -118,12 +118,12 @@ class CartItem {
 }
 
 class Sale {
-  int id;
+  String id;
   RxList<CartItem> cart;
-  RxInt total;
+  RxString total;
   String payMethod;
   String refCode;
-  int custId;
+  String custId;
   bool paid;
   String date;
 

@@ -404,8 +404,8 @@ class _CartState extends State<Cart> {
                                               validator: (value) {
                                                 var bal = int.parse(
                                                         amountPaidctrl.text) -
-                                                    posCtrl
-                                                        .cartSale.total.value;
+                                                    int.parse(posCtrl
+                                                        .cartSale.total.value);
 
                                                 if (value == null ||
                                                     value.isEmpty) {
@@ -473,12 +473,12 @@ class _CartState extends State<Cart> {
                                 posCtrl.checkDetData.payMthd = paymthdctrl.text;
                                 if (posCtrl.isCashPay.value) {
                                   posCtrl.checkDetData.paid =
-                                      int.parse(amountPaidctrl.text);
+                                      amountPaidctrl.text;
                                   posCtrl.checkDetData.balance =
-                                      int.parse(balancectrl.text);
+                                      balancectrl.text.obs;
                                 } else if (posCtrl.isBankPay.value) {
                                   posCtrl.checkDetData.bankAccId =
-                                      posCtrl.selectedBankId.value;
+                                      posCtrl.selectedBankId.value.toString();
                                   posCtrl.checkDetData.bankRefCode =
                                       bankrefcodectrl.text;
                                 } else if (posCtrl.isMpesaPay.value) {
@@ -668,13 +668,12 @@ class _CartItemState extends State<CartItem> {
                         _isLoading = true;
                       });
                       if (_formKey.currentState!.validate()) {
-                        posCtrl.newCartItem.quantity =
-                            int.parse(quantityCtrl.text);
-                        posCtrl.newCartItem.unitPrice =
-                            int.parse(unitCtrl.text);
+                        posCtrl.newCartItem.quantity = quantityCtrl.text;
+                        posCtrl.newCartItem.unitPrice = unitCtrl.text;
                         posCtrl.newCartItem.total =
                             (int.parse(quantityCtrl.text) *
                                     int.parse(unitCtrl.text))
+                                .toString()
                                 .obs;
                         posCtrl.updateCart();
                       }

@@ -22,7 +22,7 @@ class PoSCtrl extends GetxController {
   RxBool isCashPay = false.obs;
   RxBool isBankPay = false.obs;
   RxBool isOnAccPay = false.obs;
-  RxInt selectedCartItem = 1.obs;
+  RxString selectedCartItem = ''.obs;
   RxString selectedCustAccId = ''.obs;
   RxInt selectedBankId = 1.obs;
   TextEditingController customerctrl = TextEditingController();
@@ -31,10 +31,10 @@ class PoSCtrl extends GetxController {
       payMthd: '',
       mpesaRefCode: '',
       bankRefCode: '',
-      paid: 1,
-      balance: 1,
+      paid: '',
+      balance: ''.obs,
       custAccId: '',
-      bankAccId: 1);
+      bankAccId: '');
   List<String> payMthdsStrs = [
     '',
     'M-pesa',
@@ -49,15 +49,15 @@ class PoSCtrl extends GetxController {
   RxList<Customer> custList = RxList<Customer>();
 
   CartItem selectedItem = CartItem(
-      id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1.obs);
+      id: '', name: '', prodId: '', quantity: '', unitPrice: '', total: ''.obs);
   CartItem newCartItem = CartItem(
-      id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1.obs);
+      id: '', name: '', prodId: '', quantity: '', unitPrice: '', total: ''.obs);
   Sale cartSale = Sale(
-      id: 1,
+      id: '',
       cart: <CartItem>[].obs,
-      total: 1.obs,
+      total: ''.obs,
       payMethod: '',
-      custId: 1,
+      custId: '',
       refCode: '',
       date: '',
       paid: false);
@@ -121,15 +121,15 @@ class PoSCtrl extends GetxController {
     var cartItemId = -1;
     for (var prod in selectedProds) {
       cartSale.cart.add(CartItem(
-          id: cartItemId + 1,
+          id: (cartItemId + 1).toString(),
           name: prod.name,
-          prodId: int.parse(prod.id),
-          quantity: 1,
-          total: int.parse(prod.retailMg).obs,
-          unitPrice: int.parse(prod.retailMg)));
+          prodId: prod.id,
+          quantity: 1.toString(),
+          total: (prod.retailMg).obs,
+          unitPrice: (prod.retailMg).toString()));
       cartItemId++;
     }
-    cartSale.total.value = 0;
+    cartSale.total.value = 0.toString();
     for (var item in cartSale.cart) {
       cartSale.total.value = cartSale.total.value + item.total.value;
     }
@@ -148,7 +148,7 @@ class PoSCtrl extends GetxController {
         quantity: newCartItem.quantity,
         total: newCartItem.total,
         unitPrice: newCartItem.unitPrice));
-    cartSale.total.value = 0;
+    cartSale.total.value = 0.toString();
     for (var item in cartSale.cart) {
       cartSale.total.value = cartSale.total.value + item.total.value;
     }
@@ -219,17 +219,22 @@ class PoSCtrl extends GetxController {
 
   cancelSale() {
     cartSale = Sale(
-        id: 1,
+        id: '',
         cart: <CartItem>[].obs,
-        total: 1.obs,
+        total: 1.toString().obs,
         payMethod: '',
-        custId: 1,
+        custId: 1.toString(),
         refCode: '',
         date: '',
         paid: false);
-    selectedCartItem = 1.obs;
+    selectedCartItem = 1.toString().obs;
     selectedItem = CartItem(
-        id: 1, name: '', prodId: 1, quantity: 1, unitPrice: 1, total: 1.obs);
+        id: 1.toString(),
+        name: '',
+        prodId: 1.toString(),
+        quantity: 1.toString(),
+        unitPrice: 1.toString(),
+        total: 1.toString().obs);
     selectedProdIds.clear();
     selectedProds.clear();
     Get.offAll(NavigatorHandler(0));
@@ -240,10 +245,10 @@ class CheckOutDet {
   String payMthd;
   String mpesaRefCode;
   String bankRefCode;
-  int paid;
-  int balance;
+  String paid;
+  RxString balance;
   String custAccId;
-  int bankAccId;
+  String bankAccId;
 
   CheckOutDet(
       {required this.payMthd,
