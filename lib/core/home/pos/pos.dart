@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, unused_field
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
@@ -5,6 +7,8 @@ import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+
+import '../../../utils/functions.dart';
 
 final posCtrl = Get.put(PoSCtrl());
 final invtCtrl = Get.put(InventoryCtrl());
@@ -14,14 +18,26 @@ class Categories extends StatefulWidget {
   const Categories({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _CategoriesState createState() => _CategoriesState();
 }
 
 class _CategoriesState extends State<Categories> {
+  final invtCtrl = Get.put(InventoryCtrl());
+  final ScrollController _scrollctrl = ScrollController();
   @override
   void initState() {
+    invtCtrl.getCategories();
     super.initState();
+    _scrollctrl.addListener(() {
+      if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
+        listAppender(
+            rangeList: invtCtrl.rangeCatList, selectList: invtCtrl.categories);
+      }
+      setState(() {
+        if (_scrollctrl.offset >= 400) {
+        } else {}
+      });
+    });
   }
 
   @override
@@ -43,33 +59,39 @@ class _CategoriesState extends State<Categories> {
           onTap: () {
             posCtrl.addToCatProds(category.id);
           },
-          child: Obx(() => Card(
-              color: posCtrl.isCatSelected(category.id) ? kDarkGreen : kGrey,
-              elevation: 7.0,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.category,
+          child: Obx(() => invtCtrl.showCatLoading.value
+              ? loadingWidget(label: 'Loading Category ...')
+              : invtCtrl.showCatData.value
+                  ? Card(
                       color: posCtrl.isCatSelected(category.id)
-                          ? kLightGreen
-                          : Colors.black,
-                      size: 72,
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text(
-                          category.name,
-                          style: TextStyle(
-                              fontFamily: 'Nunito',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                          ? kDarkGreen
+                          : kGrey,
+                      elevation: 7.0,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.category,
                               color: posCtrl.isCatSelected(category.id)
                                   ? kLightGreen
-                                  : Colors.black),
-                        ))
-                  ])))));
+                                  : Colors.black,
+                              size: 72,
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Text(
+                                  category.name,
+                                  style: TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: posCtrl.isCatSelected(category.id)
+                                          ? kLightGreen
+                                          : Colors.black),
+                                ))
+                          ]))
+                  : noTransactionsWidget(label: 'No Category Found'))));
     }
     return cats;
   }
@@ -80,7 +102,6 @@ class Products extends StatefulWidget {
   const Products({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _ProductsState createState() => _ProductsState();
 }
 
@@ -116,12 +137,19 @@ class _ProductsState extends State<Products> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.shopping_basket,
-                      color: posCtrl.isSelected(product.id)
-                          ? kLightGreen
-                          : Colors.black,
-                      size: 64,
+                    InkWell(
+                      onLongPress: () {
+                        posCtrl.updateCart();
+                      },
+                      child: Container(
+                        child: Icon(
+                          Icons.shopping_basket,
+                          color: posCtrl.isSelected(product.id)
+                              ? kLightGreen
+                              : Colors.black,
+                          size: 64,
+                        ),
+                      ),
                     ),
                     Padding(
                         padding: const EdgeInsets.only(top: 10),
@@ -160,14 +188,13 @@ class Cart extends StatefulWidget {
   const Cart({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _CartState createState() => _CartState();
 }
 
 class _CartState extends State<Cart> {
-  bool _isCreateLoading = false;
-  bool _isCheckoutLoading = false;
-  bool _isCancelLoading = false;
+  final bool _isCreateLoading = false;
+  final bool _isCheckoutLoading = false;
+  final bool _isCancelLoading = false;
 
   final bankingCtrl = Get.put(BankingCtrl());
 
@@ -246,13 +273,46 @@ class _CartState extends State<Cart> {
                                         Padding(
                                             padding: const EdgeInsets.only(
                                                 bottom: 2),
-                                            child: Text(
-                                                'Item No:${cart[index].quantity}',
-                                                style: const TextStyle(
-                                                    fontFamily: 'Nunito',
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black))),
+                                            child: Row(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () async {
+                                                    posCtrl.selectedCartItem
+                                                        .value = cart[index].id;
+                                                    posCtrl.updateCart();
+                                                    Get.dialog(
+                                                        const CartItem());
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.add,
+                                                    color: kDarkGreen,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text('${cart[index].quantity}',
+                                                    style: const TextStyle(
+                                                        fontFamily: 'Nunito',
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black)),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //  var id= posCtrl.catProds ;
+                                                    // posCtrl.addToCart(product.id);
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.remove,
+                                                    color: kDarkGreen,
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
                                         Text(
                                           'Kes.${cart[index].total}',
                                           style: kCardTitle,
@@ -470,6 +530,71 @@ class _CartState extends State<Cart> {
   }
 }
 
+class CheckoutPage extends StatefulWidget {
+  const CheckoutPage({super.key});
+
+  @override
+  _CheckoutPageState createState() => _CheckoutPageState();
+}
+
+class _CheckoutPageState extends State<CheckoutPage> {
+  String _selectedPaymentOption = 'credit_card';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Checkout'),
+      ),
+      body: Column(
+        children: <Widget>[
+          // Payment options radio buttons
+          RadioListTile(
+            title: const Text('Credit Card'),
+            value: 'credit_card',
+            groupValue: _selectedPaymentOption,
+            onChanged: (value) {
+              setState(() {
+                _selectedPaymentOption = value!;
+              });
+            },
+          ),
+          RadioListTile(
+            title: const Text('PayPal'),
+            value: 'paypal',
+            groupValue: _selectedPaymentOption,
+            onChanged: (value) {
+              setState(() {
+                _selectedPaymentOption = value!;
+              });
+            },
+          ),
+          RadioListTile(
+            title: const Text('Apple Pay'),
+            value: 'apple_pay',
+            groupValue: _selectedPaymentOption,
+            onChanged: (value) {
+              setState(() {
+                _selectedPaymentOption = value!;
+              });
+            },
+          ),
+          // Other checkout form fields
+          // ...
+          // Submit button
+          ElevatedButton(
+            onPressed: () {
+              // Send the selected payment option to the server
+              // ...
+            },
+            child: const Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class CartItem extends StatefulWidget {
   static const routeName = "/CartItem";
 
@@ -481,7 +606,7 @@ class CartItem extends StatefulWidget {
 
 class _CartItemState extends State<CartItem> {
   bool _isLoading = false;
-  bool _isRemoveLoading = false;
+  final bool _isRemoveLoading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController unitCtrl = TextEditingController();
   TextEditingController quantityCtrl = TextEditingController();
@@ -586,7 +711,7 @@ class CustomerList extends StatefulWidget {
 }
 
 class _CustomerListState extends State<CustomerList> {
-  bool _isLoading = false;
+  final bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController searchNamectrl = TextEditingController();
 
@@ -653,6 +778,8 @@ class PoSPage extends StatefulWidget {
 }
 
 class _PoSPageState extends State<PoSPage> {
+  TabController? _tabController;
+
   @override
   void initState() {
     super.initState();
@@ -661,6 +788,7 @@ class _PoSPageState extends State<PoSPage> {
   @override
   void dispose() {
     super.dispose();
+    _tabController?.animateTo(0);
     posCtrl.cartSale.cart.clear();
   }
 
