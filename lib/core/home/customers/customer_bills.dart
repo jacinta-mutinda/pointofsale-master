@@ -195,8 +195,8 @@ class _CustomerReceiptsState extends State<CustomerReceipts> {
                                                   },
                                                 )));
                                       },
-                                      itemCount:
-                                          customerCtrl.rangeCustList.length),
+                                      itemCount: customerCtrl
+                                          .rangeCustReceipts.length),
                                 ),
                               ])
                         : noTransactionsWidget(label: 'No Receipts Found'))

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nawiri/core/home/customers/customer_bills.dart';
 import 'package:nawiri/core/home/customers/customer_form.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/theme/global_widgets.dart';
@@ -218,6 +219,10 @@ class _CustomersPageState extends State<CustomersPage> {
                                                       .value = false;
                                                   customersCtrl.custToShow =
                                                       customers[index];
+                                                  customersCtrl
+                                                      .getCustPayments();
+                                                  Get.to(
+                                                      const CustomerReceipts());
                                                 },
                                               )));
                                     },

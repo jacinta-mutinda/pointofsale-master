@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/suppliers/supplier_form.dart';
+import 'package:nawiri/core/home/suppliers/supplier_payments.dart';
 import 'package:nawiri/core/home/suppliers/suppliers_ctrl.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
@@ -217,6 +218,9 @@ class _SupplierPageState extends State<SupplierPage> {
                                                       .value = false;
                                                   supplierCtrl.supToShow =
                                                       suppliers[index];
+                                                  supplierCtrl.getSupPayments();
+                                                  Get.to(
+                                                      const SupplierPayments());
                                                 },
                                               )));
                                     },
