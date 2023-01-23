@@ -150,7 +150,7 @@ class PoSCtrl extends GetxController {
         unitPrice: newCartItem.unitPrice));
     cartSale.total.value = 0.toString();
     for (var item in cartSale.cart) {
-      cartSale.total.value = cartSale.total.value + item.total.value;
+      double.parse(cartSale.total.value = cartSale.total.value + item.total.value);
     }
     Get.back();
   }

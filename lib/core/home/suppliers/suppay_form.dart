@@ -147,7 +147,7 @@ class _SuppPayFormState extends State<SuppPayForm> {
                   priBtn(
                     bgColour: kDarkGreen,
                     txtColour: Colors.white,
-                    label: 'Add Customer Payment',
+                    label: 'Add Supplier Payment',
                     isLoading: _isLoading,
                     function: () async {
                       setState(() {

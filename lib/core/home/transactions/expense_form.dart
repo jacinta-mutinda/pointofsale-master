@@ -20,7 +20,7 @@ class ExpenseForm extends StatefulWidget {
 
 class _ExpenseFormState extends State<ExpenseForm> {
   Expense expData =
-      Expense(id: '', date: '', payto: '', ref: '', desc: '', amount: '');
+      Expense(id: '', date: '', payto: '', ref: '', desc: '', amount: '', branch_id: '');
   final transCtrl = Get.put(TransactionCtrl());
   TextEditingController paytoctrl = TextEditingController();
   TextEditingController refctrl = TextEditingController();

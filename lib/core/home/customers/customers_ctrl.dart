@@ -57,7 +57,7 @@ class CustomerCtrl extends GetxController {
     clearLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '122';
+      branchId.value = '125';
       final response = await http.get(
           Uri.parse('$getCustomersUrl/${branchId.value}'),
           headers: apiHeaders);

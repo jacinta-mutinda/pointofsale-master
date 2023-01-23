@@ -23,10 +23,10 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
   final invtCtrl = Get.put(InventoryCtrl());
+  int index=1;
   final ScrollController _scrollctrl = ScrollController();
   @override
   void initState() {
-    invtCtrl.getCategories();
     super.initState();
     _scrollctrl.addListener(() {
       if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
@@ -232,102 +232,202 @@ class _CartState extends State<Cart> {
             const Padding(
                 padding: EdgeInsets.only(bottom: 15),
                 child: Text('Cart', style: kTitle)),
-            Obx(() => ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  var cart = posCtrl.cartSale.cart;
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3),
-                      child: Card(
-                          color: kGrey,
-                          elevation: 7.0,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ListTile(
-                                  leading: Container(
-                                      width: 40,
-                                      height: 40,
-                                      decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: kDarkGreen),
-                                      child: const Icon(Icons.edit,
-                                          size: 20, color: Colors.white)),
-                                  title: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      child: Text(cart[index].name,
-                                          style: kCardTitle)),
-                                  subtitle: Text(
-                                      'Unit Price: Kes.${cart[index].unitPrice}',
-                                      style: const TextStyle(
-                                          fontFamily: 'Nunito',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black)),
-                                  trailing: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 2),
-                                            child: Row(
-                                              children: [
-                                                InkWell(
-                                                  onTap: () async {
-                                                    posCtrl.selectedCartItem
-                                                        .value = cart[index].id;
-                                                    posCtrl.updateCart();
-                                                    Get.dialog(
-                                                        const CartItem());
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.add,
-                                                    color: kDarkGreen,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text('${cart[index].quantity}',
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Nunito',
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black)),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    //  var id= posCtrl.catProds ;
-                                                    // posCtrl.addToCart(product.id);
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.remove,
-                                                    color: kDarkGreen,
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
-                                        Text(
-                                          'Kes.${cart[index].total}',
-                                          style: kCardTitle,
-                                        )
-                                      ]),
-                                  onTap: () async {
-                                    posCtrl.selectedCartItem.value =
-                                        cart[index].id;
-                                    posCtrl.setCartItem();
-                                    Get.dialog(const CartItem());
-                                  },
-                                )
-                              ])));
-                },
-                itemCount: posCtrl.cartSale.cart.length)),
+            Obx(() => Container(
+              width: 400,
+              height: 200,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    var cart = posCtrl.cartSale.cart;
+
+                    return Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Container(
+                          height: 100,
+                          width: double.infinity,
+                          child: Card(
+                              color: kGrey,
+                              elevation: 7.0,
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+
+                                  children: [
+                                    ListTile(
+                                      leading: Container(
+                                          width: 80,
+                                          height: 40,
+                                          decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: kDarkGreen),
+                                          child: const Icon(Icons.edit,
+                                              size: 20, color: Colors.white)),
+                                      title: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 2),
+                                          child: Text(cart[index].name,
+                                              style: kCardTitle)),
+                                      subtitle: Text(
+                                          'Unit Price: Kes.${cart[index].unitPrice}',
+                                          style: const TextStyle(
+                                              fontFamily: 'Nunito',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black)),
+                                    //   trailing:
+                                    //   Container(
+                                    //     width: 40,
+                                    //     height: 40,
+                                    //     child: Column(
+                                    //         crossAxisAlignment:
+                                    //         CrossAxisAlignment.end,
+                                    //         children: [
+                                    //     Padding(
+                                    //     padding: const EdgeInsets.only(
+                                    //         bottom: 2),
+                                    //     child: Row(
+                                    //         children: [
+                                    //         InkWell(
+                                    //         onTap: () async {
+                                    //   posCtrl.selectedCartItem
+                                    //       .value = cart[index].id;
+                                    //   posCtrl.updateCart();
+                                    //   Get.dialog(
+                                    //   const CartItem());
+                                    //   },
+                                    //     child: const Icon(
+                                    //       Icons.add,
+                                    //       color: kDarkGreen,
+                                    //     ),
+                                    //   ),
+                                    //       const SizedBox(
+                                    //       width: 10,
+                                    //     ),
+                                    //     Text('${cart[index].quantity}',
+                                    //         style: const TextStyle(
+                                    //             fontFamily: 'Nunito',
+                                    //             fontSize: 14,
+                                    //             fontWeight:
+                                    //                 FontWeight.w400,
+                                    //             color: Colors.black)),
+                                    //     const SizedBox(
+                                    //       width: 10,
+                                    //     ),
+                                    //     InkWell(
+                                    //       onTap: () {
+                                    //         //  var id= posCtrl.catProds ;
+                                    //         // posCtrl.addToCart(product.id);
+                                    //       },
+                                    //       child: const Icon(
+                                    //         Icons.remove,
+                                    //         color: kDarkGreen,
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // )),
+                                    // Text(
+                                    //             'Kes.${cart[index].total}',
+                                    //             style: kCardTitle,
+                                    //           )
+                                    //         ]),
+                                    //   ),
+                                      onTap: () async {
+                                        posCtrl.selectedCartItem.value =
+                                            cart[index].id;
+                                        posCtrl.setCartItem();
+                                        Get.dialog(const CartItem());
+                                      },
+
+                                    ),
+                                    // ListTile(
+                                    //   leading: Container(
+                                    //       width: 40,
+                                    //       height: 40,
+                                    //       decoration: const BoxDecoration(
+                                    //           shape: BoxShape.circle,
+                                    //           color: kDarkGreen),
+                                    //       child: const Icon(Icons.edit,
+                                    //           size: 20, color: Colors.white)),
+                                    //   title: Padding(
+                                    //       padding: const EdgeInsets.symmetric(
+                                    //           vertical: 5),
+                                    //       child: Text(cart[index].name,
+                                    //           style: kCardTitle)),
+                                    //   subtitle: Text(
+                                    //       'Unit Price: Kes.${cart[index].unitPrice}',
+                                    //       style: const TextStyle(
+                                    //           fontFamily: 'Nunito',
+                                    //           fontSize: 14,
+                                    //           fontWeight: FontWeight.w400,
+                                    //           color: Colors.black)),
+                                    //   trailing: Container(
+                                    //     width: double.infinity,
+                                    //     height: 40,
+                                    //     child: Column(
+                                    //         crossAxisAlignment:
+                                    //             CrossAxisAlignment.end,
+                                    //         children: [
+                                    //           Padding(
+                                    //               padding: const EdgeInsets.only(
+                                    //                   bottom: 2),
+                                    //               child: Row(
+                                    //                 children: [
+                                    //                   InkWell(
+                                    //                     onTap: () async {
+                                    //                       posCtrl.selectedCartItem
+                                    //                           .value = cart[index].id;
+                                    //                       posCtrl.updateCart();
+                                    //                       Get.dialog(
+                                    //                           const CartItem());
+                                    //                     },
+                                    //                     child: const Icon(
+                                    //                       Icons.add,
+                                    //                       color: kDarkGreen,
+                                    //                     ),
+                                    //                   ),
+                                    //                   const SizedBox(
+                                    //                     width: 10,
+                                    //                   ),
+                                    //                   Text('${cart[index].quantity}',
+                                    //                       style: const TextStyle(
+                                    //                           fontFamily: 'Nunito',
+                                    //                           fontSize: 14,
+                                    //                           fontWeight:
+                                    //                               FontWeight.w400,
+                                    //                           color: Colors.black)),
+                                    //                   const SizedBox(
+                                    //                     width: 10,
+                                    //                   ),
+                                    //                   InkWell(
+                                    //                     onTap: () {
+                                    //                       //  var id= posCtrl.catProds ;
+                                    //                       // posCtrl.addToCart(product.id);
+                                    //                     },
+                                    //                     child: const Icon(
+                                    //                       Icons.remove,
+                                    //                       color: kDarkGreen,
+                                    //                     ),
+                                    //                   ),
+                                    //                 ],
+                                    //               )),
+                                    //           Text(
+                                    //             'Kes.${cart[index].total}',
+                                    //             style: kCardTitle,
+                                    //           )
+                                    //         ]),
+                                    //   ),
+                                    //   onTap: () async {
+                                    //     posCtrl.selectedCartItem.value =
+                                    //         cart[index].id;
+                                    //     posCtrl.setCartItem();
+                                    //     Get.dialog(const CartItem());
+                                    //   },
+                                    // )
+                                  ])),
+                        ));
+                  },
+                  itemCount: posCtrl.cartSale.cart.length),
+            )),
             const Divider(
               color: kDarkGreen,
             ),
@@ -550,8 +650,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         children: <Widget>[
           // Payment options radio buttons
           RadioListTile(
-            title: const Text('Credit Card'),
-            value: 'credit_card',
+            title: const Text('Cash'),
+            value: 'cash',
             groupValue: _selectedPaymentOption,
             onChanged: (value) {
               setState(() {
@@ -560,8 +660,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
             },
           ),
           RadioListTile(
-            title: const Text('PayPal'),
-            value: 'paypal',
+            title: const Text('Mpesa'),
+            value: 'mpesa',
             groupValue: _selectedPaymentOption,
             onChanged: (value) {
               setState(() {
@@ -570,8 +670,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
             },
           ),
           RadioListTile(
-            title: const Text('Apple Pay'),
-            value: 'apple_pay',
+            title: const Text('Card'),
+            value: 'card',
             groupValue: _selectedPaymentOption,
             onChanged: (value) {
               setState(() {
@@ -782,12 +882,13 @@ class _PoSPageState extends State<PoSPage> {
   @override
   void initState() {
     super.initState();
+    _tabController = DefaultTabController.of(context);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _tabController?.animateTo(0);
+    _tabController?.animateTo(1);
     posCtrl.cartSale.cart.clear();
   }
 
@@ -813,6 +914,7 @@ class _PoSPageState extends State<PoSPage> {
                   color: Colors.white,
                 )),
             bottom: TabBar(
+              controller: _tabController,
               indicatorColor: kLightGreen,
               indicatorWeight: 3.0,
               tabs: <Widget>[
@@ -826,6 +928,7 @@ class _PoSPageState extends State<PoSPage> {
           ),
           body: const TabBarView(
             children: <Widget>[Categories(), Products(), Cart()],
+
           ),
         ));
   }

@@ -145,6 +145,7 @@ class Expense {
   String ref;
   String desc;
   String amount;
+  String branch_id;
 
   Expense(
       {required this.id,
@@ -152,7 +153,8 @@ class Expense {
       required this.desc,
       required this.amount,
       required this.ref,
-      required this.payto});
+      required this.payto,
+      required this.branch_id,});
 }
 
 class CustReceipt {

@@ -13,7 +13,7 @@ class TransactionCtrl extends GetxController {
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
   Expense singleExpense =
-      Expense(id: '', date: '', payto: '', ref: '', desc: '', amount: '');
+      Expense(id: '', date: '', payto: '', ref: '', desc: '', amount: '',branch_id: '');
 
   RxList<Expense> expenses = RxList<Expense>();
   RxList<Expense> rangeExpList = RxList<Expense>();
@@ -30,7 +30,7 @@ class TransactionCtrl extends GetxController {
     clearLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '122';
+      branchId.value = '125';
       final response = await http.get(
           Uri.parse('$getExpensesUrl/${branchId.value}'),
           headers: apiHeaders);
@@ -43,7 +43,9 @@ class TransactionCtrl extends GetxController {
               desc: item['pay_description'],
               date: item['pay_date'],
               ref: item['pay_ref'],
-              amount: item['pay_amount']);
+              amount: item['pay_amount'],
+              branch_id: branchId.value,
+          );
           expenses.add(exp);
         }
         filterPaginator();
@@ -63,12 +65,14 @@ class TransactionCtrl extends GetxController {
   // ---------- Add Functions -----------------
 
   addExpense(Expense expData) async {
+    branchId.value = '125';
     var body = jsonEncode({
       'pay_to': expData.payto,
       'pay_description': expData.desc,
       'pay_amount': expData.amount,
       'pay_date': expData.date,
-      'pay_ref': expData.ref
+      'pay_ref': expData.ref,
+      'branch_id':branchId.value
     });
     try {
       var res = await http.post(Uri.parse(addExpenseUrl),

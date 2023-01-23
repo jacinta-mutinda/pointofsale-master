@@ -38,7 +38,7 @@ class InventoryCtrl extends GetxController {
     clearCatLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '57';
+      branchId.value = '125';
       final response = await http.get(
           Uri.parse('$getCategoriesUrl/${branchId.value}'),
           headers: apiHeaders);
@@ -74,7 +74,7 @@ class InventoryCtrl extends GetxController {
 
   addCategory(Category catData) async {
     var body = jsonEncode({
-      'branch_id': '57',
+      'branch_id': '125',
       'category_desc': catData.name,
       'rmargin': catData.retailMg,
       'wmargin': catData.wholesaleMg,
@@ -186,7 +186,7 @@ class InventoryCtrl extends GetxController {
     clearUomLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '57';
+      branchId.value = '125';
       final response = await http
           .get(Uri.parse('$getUoMsUrl/${branchId.value}'), headers: apiHeaders);
       if (response.statusCode == 200) {
@@ -218,7 +218,7 @@ class InventoryCtrl extends GetxController {
 
   addUoM(UoM uomData) async {
     var body = jsonEncode({
-      'branch_id': '57',
+      'branch_id': '125',
       'uom_description': uomData.name,
       'uom_code': uomData.uomCode
     });
@@ -329,7 +329,7 @@ class InventoryCtrl extends GetxController {
     clearProdLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '57';
+      branchId.value = '125';
       final response = await http.get(
           Uri.parse('$getProductsUrl/${branchId.value}'),
           headers: apiHeaders);
@@ -366,7 +366,7 @@ class InventoryCtrl extends GetxController {
 
   addProduct(Product prodData) async {
     var body = jsonEncode({
-      'branch_id': '57',
+      'branch_id': '125',
       'location_product_description': prodData.name,
       'location_productcode': prodData.code,
       'location_product_sp': prodData.retailMg,

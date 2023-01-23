@@ -63,7 +63,7 @@ class SupplierCtrl extends GetxController {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Supplier sup = Supplier(
-              id: item['Supplier_id'],
+              id: item['supplier_id'],
               name: item['supplier_name'],
               item: item['supplier_item'],
               bankacc: item['supplier_bank_acc'],
