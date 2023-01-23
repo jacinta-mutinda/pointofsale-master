@@ -19,18 +19,21 @@ class SuppPayForm extends StatefulWidget {
 }
 
 class _SuppPayFormState extends State<SuppPayForm> {
-  String pageTitle = '';
   SupplierPayment supPayData = SupplierPayment(
-      id: 1,
-      supplierId: 1,
-      quantity: 1,
-      unitPrice: 1,
-      total: 1,
-      date: '2023-01-14');
+      id: '',
+      supId: '',
+      date: '',
+      transtype: '',
+      discount: '',
+      ref: '',
+      comment: '',
+      amount: '');
   final supplierCtrl = Get.put(SupplierCtrl());
-  TextEditingController quantityctrl = TextEditingController();
-  TextEditingController unitpricectrl = TextEditingController();
-  TextEditingController totalctrl = TextEditingController();
+  TextEditingController discountctrl = TextEditingController();
+  TextEditingController transtypectrl = TextEditingController();
+  TextEditingController refctrl = TextEditingController();
+  TextEditingController commentctrl = TextEditingController();
+  TextEditingController amountctrl = TextEditingController();
   TextEditingController datectrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -40,158 +43,132 @@ class _SuppPayFormState extends State<SuppPayForm> {
   @override
   void initState() {
     super.initState();
-    setForm();
   }
 
   @override
   void dispose() {
-    quantityctrl.dispose();
-    unitpricectrl.dispose();
-    totalctrl.dispose();
+    discountctrl.dispose();
     datectrl.dispose();
+    transtypectrl.dispose();
+    amountctrl.dispose();
+    refctrl.dispose();
+    commentctrl.dispose();
     super.dispose();
   }
 
-  setForm() {
-    if (supplierCtrl.isSupPayEdit.value) {
-      pageTitle = 'Edit Supplier Payment';
-      quantityctrl.text = supplierCtrl.oneSupPayments
-          .where((element) => element.id == (supplierCtrl.supPayToEdit.value))
-          .first
-          .quantity
-          .toString();
-      unitpricectrl.text = supplierCtrl.oneSupPayments
-          .where((element) => element.id == (supplierCtrl.supPayToEdit.value))
-          .first
-          .unitPrice
-          .toString();
-      totalctrl.text = supplierCtrl.oneSupPayments
-          .where((element) => element.id == (supplierCtrl.supPayToEdit.value))
-          .first
-          .total
-          .toString();
-      datectrl.text = supplierCtrl.oneSupPayments
-          .where((element) => element.id == (supplierCtrl.supPayToEdit.value))
-          .first
-          .date;
-    } else {
-      pageTitle = 'Add Supplier Payment';
-      quantityctrl.clear();
-      unitpricectrl.clear();
-      totalctrl.clear();
-    }
-  }
-// change customer icon
-
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        // resizeToAvoidBottomInset: true,
-        // appBar: secAppBar(pageTitle: pageTitle),
-        // body: SingleChildScrollView(
-        //     padding: const EdgeInsets.only(bottom: 25, left: 30, right: 30),
-        //     child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.center,
-        //         children: [
-        //           Form(
-        //               key: _formKey,
-        //               child: Column(
-        //                 crossAxisAlignment: CrossAxisAlignment.start,
-        //                 children: <Widget>[
-        //                   Text(
-        //                       'Item Supplied: ${supplierCtrl.suppliers.where((element) => element.id == (supplierCtrl.paysToShow.value)).first.item}',
-        //                       style: kSubTitle),
-        //                   formField(
-        //                       label: 'Quantity',
-        //                       require: true,
-        //                       controller: quantityctrl,
-        //                       type: TextInputType.number,
-        //                       validator: (value) {
-        //                         if (value == null || value.isEmpty) {
-        //                           return 'Please enter the quantity';
-        //                         }
-        //                         return null;
-        //                       }),
-        //                   formField(
-        //                       label: 'Unit Price(in Kes)',
-        //                       require: true,
-        //                       controller: unitpricectrl,
-        //                       type: TextInputType.number,
-        //                       validator: (value) {
-        //                         if (value == null || value.isEmpty) {
-        //                           return 'Please enter the unit price';
-        //                         }
-        //                         return null;
-        //                       }),
-        //                   formField(
-        //                       label: 'Total Cost(in Kes)',
-        //                       require: true,
-        //                       controller: totalctrl,
-        //                       type: TextInputType.number,
-        //                       validator: (value) {
-        //                         if (value == null || value.isEmpty) {
-        //                           return 'Please enter the total cost';
-        //                         }
-        //                         return null;
-        //                       }),
-        //                   dateFormField(
-        //                       label: 'Date of Payment',
-        //                       controller: datectrl,
-        //                       showDate: () async {
-        //                         DateTime? pickedDate = await showDatePicker(
-        //                             context: context,
-        //                             initialDate: DateTime.now(),
-        //                             firstDate: DateTime(2000),
-        //                             lastDate: DateTime.now());
+    return Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: secAppBar(pageTitle: 'Add Supplier Payment'),
+        body: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 25, left: 30, right: 30),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          formDropDownField(
+                              label: 'Transaction Type',
+                              dropdownValue: supplierCtrl.transtyeDrop.value,
+                              dropItems: supplierCtrl.transtypes,
+                              bgcolor: kGrey,
+                              function: (String? newValue) {
+                                setState(() {
+                                  supplierCtrl.transtyeDrop.value = newValue!;
+                                });
+                              }),
+                          dateFormField(
+                              label: 'Date of Payment',
+                              controller: datectrl,
+                              showDate: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now());
 
-        //                         if (pickedDate != null) {
-        //                           String formattedDate =
-        //                               DateFormat('yyyy-MM-dd')
-        //                                   .format(pickedDate);
+                                if (pickedDate != null) {
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(pickedDate);
 
-        //                           setState(() {
-        //                             datectrl.text = formattedDate;
-        //                           });
-        //                         }
-        //                       },
-        //                       validator: (value) {
-        //                         if (value == null || value.isEmpty) {
-        //                           return 'Please enter the date of payment';
-        //                         }
-        //                         return null;
-        //                       })
-        //                 ],
-        //               )),
-        //           priBtn(
-        //             bgColour: kDarkGreen,
-        //             txtColour: Colors.white,
-        //             label: pageTitle,
-        //             isLoading: _isLoading,
-        //             function: () async {
-        //               setState(() {
-        //                 _isLoading = true;
-        //               });
-        //               if (_formKey.currentState!.validate()) {
-        //                 supPayData.quantity = int.parse(quantityctrl.text);
-        //                 supPayData.unitPrice = int.parse(quantityctrl.text);
-        //                 supPayData.total = int.parse(quantityctrl.text);
-        //                 supPayData.supplierId =
-        //                     int.parse(supplierCtrl.paysToShow.value);
-        //                 supPayData.date = datectrl.text;
+                                  setState(() {
+                                    datectrl.text = formattedDate;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the date of payment';
+                                }
+                                return null;
+                              }),
+                          formField(
+                              label: 'Referenec Code',
+                              require: true,
+                              controller: refctrl,
+                              type: TextInputType.name,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the reference code';
+                                }
+                                return null;
+                              }),
+                          formField(
+                              label: 'Discount (in Kes)',
+                              require: true,
+                              controller: discountctrl,
+                              type: TextInputType.number,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the discount given';
+                                }
+                                return null;
+                              }),
+                          formField(
+                              label: 'Amount (in Kes)',
+                              require: true,
+                              controller: amountctrl,
+                              type: TextInputType.number,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter the amount spent";
+                                }
+                                return null;
+                              }),
+                          descFormField(
+                              label: 'Comment', controller: commentctrl)
+                        ],
+                      )),
+                  priBtn(
+                    bgColour: kDarkGreen,
+                    txtColour: Colors.white,
+                    label: 'Add Customer Payment',
+                    isLoading: _isLoading,
+                    function: () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      if (_formKey.currentState!.validate()) {
+                        supPayData.transtype = transtypectrl.text;
+                        supPayData.date = datectrl.text;
+                        supPayData.ref = refctrl.text;
+                        supPayData.comment = commentctrl.text;
+                        supPayData.amount = amountctrl.text;
+                        supPayData.discount = discountctrl.text.toString();
 
-        //                 if (supplierCtrl.isSupPayEdit.value) {
-        //                   supplierCtrl.editSupPay(supPayData);
-        //                 } else {
-        //                   supplierCtrl.addSupPay(supPayData);
-        //                 }
-        //               }
-        //               await Future.delayed(const Duration(seconds: 2));
-        //               setState(() {
-        //                 _isLoading = false;
-        //               });
-        //             },
-        //           )
-        //         ]))
-        );
+                        supplierCtrl.addSupPay(supPayData);
+                      }
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    },
+                  )
+                ])));
   }
 }

@@ -215,13 +215,8 @@ class _SupplierPageState extends State<SupplierPage> {
                                                       true;
                                                   supplierCtrl.fieldsRequired
                                                       .value = false;
-                                                  supplierCtrl.supToEdit.value =
-                                                      suppliers[index].id;
-                                                  supplierCtrl
-                                                          .paysToShow.value =
-                                                      suppliers[index].id;
-                                                  await supplierCtrl
-                                                      .getOneSupPayments();
+                                                  supplierCtrl.supToShow =
+                                                      suppliers[index];
                                                 },
                                               )));
                                     },

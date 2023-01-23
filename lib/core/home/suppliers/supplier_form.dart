@@ -63,30 +63,12 @@ class _SupplierFormState extends State<SupplierForm> {
   setForm() {
     if (supplierCtrl.isSupEdit.value) {
       pageTitle = 'Edit Supplier';
-      namectrl.text = supplierCtrl.suppliers
-          .where((element) => element.id == (supplierCtrl.supToEdit.value))
-          .first
-          .name;
-      bankaccctrl.text = supplierCtrl.suppliers
-          .where((element) => element.id == (supplierCtrl.supToEdit.value))
-          .first
-          .bankacc;
-      cppersonctrl.text = supplierCtrl.suppliers
-          .where((element) => element.id == (supplierCtrl.supToEdit.value))
-          .first
-          .cpperson;
-      itemctrl.text = supplierCtrl.suppliers
-          .where((element) => element.id == (supplierCtrl.supToEdit.value))
-          .first
-          .item;
-      krapinctrl.text = supplierCtrl.suppliers
-          .where((element) => element.id == (supplierCtrl.supToEdit.value))
-          .first
-          .krapin;
-      addressctrl.text = supplierCtrl.suppliers
-          .where((element) => element.id == (supplierCtrl.supToEdit.value))
-          .first
-          .address;
+      namectrl.text = supplierCtrl.supToShow.name;
+      bankaccctrl.text = supplierCtrl.supToShow.bankacc;
+      cppersonctrl.text = supplierCtrl.supToShow.cpperson;
+      itemctrl.text = supplierCtrl.supToShow.item;
+      krapinctrl.text = supplierCtrl.supToShow.krapin;
+      addressctrl.text = supplierCtrl.supToShow.address;
     } else {
       pageTitle = 'Add Supplier';
       namectrl.clear();
