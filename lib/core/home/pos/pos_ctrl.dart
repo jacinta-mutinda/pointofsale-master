@@ -135,6 +135,7 @@ class PoSCtrl extends GetxController {
         quantity: 1.obs,
         unitPrice: 1.obs,
         total: 1.obs);
+    cartLength.value = 0;
     selectedProdIds.clear();
     selectedProds.clear();
     Get.offAll(NavigatorHandler(0));

@@ -43,17 +43,30 @@ class CheckOutDet {
   String payMthd;
   String mpesaRefCode;
   String bankRefCode;
-  String paid;
-  RxString balance;
+  String cashPaid;
+  String bankPaid;
+  String mobilePaid;
+  String onAccPaid;
   String custAccId;
   String bankAccId;
+  String balance;
 
   CheckOutDet(
       {required this.payMthd,
       required this.mpesaRefCode,
       required this.bankRefCode,
-      required this.paid,
-      required this.balance,
+      required this.onAccPaid,
+      required this.cashPaid,
+      required this.bankPaid,
+      required this.mobilePaid,
       required this.custAccId,
-      required this.bankAccId});
+      required this.bankAccId,
+      required this.balance});
+}
+
+class PayMethod {
+  String name;
+  RxBool selected;
+
+  PayMethod({required this.name, required this.selected});
 }

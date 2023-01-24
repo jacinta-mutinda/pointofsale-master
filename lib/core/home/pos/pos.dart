@@ -302,6 +302,7 @@ class _CartState extends State<Cart> {
                   isLoading: _isCheckoutLoading,
                   function: () {
                     Get.to(const CheckoutPage());
+                    Get.dialog(const SelectPayMethod());
                   }),
               priBtn(
                   label: 'Cancel',
