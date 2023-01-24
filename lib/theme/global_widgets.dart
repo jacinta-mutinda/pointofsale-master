@@ -171,7 +171,7 @@ Widget loadingWidget({required String label}) {
       ]));
 }
 
-Widget noTransactionsWidget({required String label}) {
+Widget noItemsWidget({required String label}) {
   return Padding(
       padding: const EdgeInsets.all(70),
       child: Column(children: [
