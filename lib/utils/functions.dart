@@ -58,3 +58,20 @@ Future<String?> get getBranch async {
 get headers {
   return {"Content-Type": "application/json"};
 }
+
+String formatAmount(String amount) {
+  String amountInText = "";
+  int counter = 0;
+  for (int i = (amount.length - 1); i >= 0; i--) {
+    counter++;
+    String str = amount[i];
+    if ((counter % 3) != 0 && i != 0) {
+      amountInText = "$str$amountInText";
+    } else if (i == 0) {
+      amountInText = "$str$amountInText";
+    } else {
+      amountInText = ",$str$amountInText";
+    }
+  }
+  return amountInText.trim();
+}

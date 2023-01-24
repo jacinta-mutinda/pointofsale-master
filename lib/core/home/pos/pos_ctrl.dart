@@ -1,110 +1,51 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nawiri/bottomnav.dart';
-import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
-import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
-import 'package:nawiri/core/home/pos/pos.dart' as pos;
-import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/core/home/pos/pos_models.dart';
 
 final invtCtrl = Get.put(InventoryCtrl());
 final customersCtrl = Get.put(CustomerCtrl());
 
 class PoSCtrl extends GetxController {
-  RxString selectedCustAcc = ''.obs;
-  RxString bankAccDropdown = ''.obs;
-  RxString payMthdDropdown = ''.obs;
-  RxBool showCheckoutForm = false.obs;
-  RxBool isMpesaPay = false.obs;
-  RxBool isCashPay = false.obs;
-  RxBool isBankPay = false.obs;
-  RxBool isOnAccPay = false.obs;
-  RxString selectedCartItem = ''.obs;
-  RxString selectedCustAccId = ''.obs;
-  RxInt selectedBankId = 1.obs;
-  TextEditingController customerctrl = TextEditingController();
-
-  CheckOutDet checkDetData = CheckOutDet(
-      payMthd: '',
-      mpesaRefCode: '',
-      bankRefCode: '',
-      paid: '',
-      balance: ''.obs,
-      custAccId: '',
-      bankAccId: '');
-  List<String> payMthdsStrs = [
-    '',
-    'M-pesa',
-    'Cash',
-    'Bank Account',
-    'On Customer Account'
-  ];
+  RxString selectedCat = ''.obs;
   RxList<Product> catProds = RxList<Product>();
   RxList<String> selectedProdIds = RxList<String>();
   RxList<Product> selectedProds = RxList<Product>();
   RxList<String> selectedCatIds = RxList<String>();
-  RxList<Customer> custList = RxList<Customer>();
-
+  RxList<CartItem> tempCart = RxList<CartItem>();
+  RxInt cartLength = 0.obs;
   CartItem selectedItem = CartItem(
-      id: '', name: '', prodId: '', quantity: '', unitPrice: '', total: ''.obs);
+      id: '',
+      name: '',
+      prodId: '',
+      quantity: 1.obs,
+      unitPrice: 1.obs,
+      total: 1.obs);
   CartItem newCartItem = CartItem(
-      id: '', name: '', prodId: '', quantity: '', unitPrice: '', total: ''.obs);
+      id: '',
+      name: '',
+      prodId: '',
+      quantity: 1.obs,
+      unitPrice: 1.obs,
+      total: 1.obs);
   Sale cartSale = Sale(
       id: '',
       cart: <CartItem>[].obs,
-      total: ''.obs,
+      total: 1.obs,
       payMethod: '',
       custId: '',
       refCode: '',
       date: '',
       paid: false);
 
-  setCheckoutForm() {
-    if (payMthdDropdown.value == 'M-pesa') {
-      isMpesaPay.value = true;
-      isCashPay.value = false;
-      isBankPay.value = false;
-      isOnAccPay.value = false;
-    } else if (payMthdDropdown.value == 'Cash') {
-      isMpesaPay.value = false;
-      isCashPay.value = true;
-      isBankPay.value = false;
-      isOnAccPay.value = false;
-    } else if (payMthdDropdown.value == 'Bank Account') {
-      isMpesaPay.value = false;
-      isCashPay.value = false;
-      isBankPay.value = true;
-      isOnAccPay.value = false;
-    } else {
-      isMpesaPay.value = false;
-      isCashPay.value = false;
-      isBankPay.value = false;
-      isOnAccPay.value = true;
-      custList.clear();
-      for (var cust in customersCtrl.customers) {
-        custList.add(cust);
-      }
-      Get.dialog(const pos.CustomerList());
-    }
-  }
-
-  addToCatProds(String catId) async {
-    if (selectedCatIds.contains(catId)) {
-      selectedCatIds.remove(catId);
-    } else {
-      selectedCatIds.add(catId);
-    }
-    selectedProds.clear();
-    selectedProdIds.clear();
+  setNextTab() {
     catProds.clear();
-    for (var catId in selectedCatIds) {
-      for (var prod in invtCtrl.products) {
-        if (prod.categoryid == catId) {
-          catProds.add(prod);
-        }
+    for (var prod in invtCtrl.products) {
+      if (prod.categoryid == selectedCat.value) {
+        catProds.add(prod);
       }
     }
   }
@@ -113,6 +54,7 @@ class PoSCtrl extends GetxController {
     selectedProds.add(
         invtCtrl.products.where((element) => element.id == (prodId)).first);
     selectedProdIds.add(prodId);
+    cartLength.value = selectedProds.length;
   }
 
   createCart() {
@@ -120,45 +62,52 @@ class PoSCtrl extends GetxController {
     cartSale.date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     var cartItemId = -1;
     for (var prod in selectedProds) {
+      var prodPrice = prod.retailMg.substring(0, prod.retailMg.length - 3);
       cartSale.cart.add(CartItem(
           id: (cartItemId + 1).toString(),
           name: prod.name,
           prodId: prod.id,
-          quantity: 1.toString(),
-          total: (prod.retailMg).obs,
-          unitPrice: (prod.retailMg).toString()));
+          quantity: 1.obs,
+          total: int.parse(prodPrice).obs,
+          unitPrice: int.parse(prodPrice).obs));
       cartItemId++;
     }
-    cartSale.total.value = 0.toString();
+    cartLength.value = cartSale.cart.length;
+    cartSale.total.value = 0;
     for (var item in cartSale.cart) {
       cartSale.total.value = cartSale.total.value + item.total.value;
     }
   }
 
   updateCart() {
-    var prevItem = cartSale.cart
-        .where((element) => element.id == (selectedCartItem.value))
-        .first;
-    cartSale.cart
-        .removeWhere((element) => element.id == (selectedCartItem.value));
+    cartSale.cart.removeWhere((element) => element.id == (selectedItem.id));
     cartSale.cart.add(CartItem(
-        id: selectedCartItem.value,
-        name: prevItem.name,
-        prodId: prevItem.id,
+        id: selectedItem.id,
+        name: selectedItem.name,
+        prodId: selectedItem.prodId,
         quantity: newCartItem.quantity,
         total: newCartItem.total,
         unitPrice: newCartItem.unitPrice));
-    cartSale.total.value = 0.toString();
+    cartSale.total.value = 0;
     for (var item in cartSale.cart) {
-      double.parse(cartSale.total.value = cartSale.total.value + item.total.value);
+      cartSale.total.value = cartSale.total.value + item.total.value;
     }
+    cartLength.value = cartSale.cart.length;
+    update();
     Get.back();
   }
 
-  setCartItem() {
-    selectedItem = cartSale.cart
-        .where((element) => element.id == (selectedCartItem.value))
-        .first;
+  removeCartItem() {
+    selectedProds.removeWhere((element) => element.id == (selectedItem.prodId));
+    selectedProdIds.remove(selectedItem.prodId);
+    cartSale.cart.removeWhere((element) => element.id == (selectedItem.id));
+    cartLength.value = cartSale.cart.length;
+    cartSale.total.value = 0;
+    for (var item in cartSale.cart) {
+      cartSale.total.value = cartSale.total.value + item.total.value;
+    }
+    update();
+    Get.back();
   }
 
   bool isSelected(String prodId) {
@@ -169,93 +118,25 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  bool isCatSelected(String catId) {
-    if (selectedCatIds.contains(catId)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  setBankAcc() {
-    for (BankAccount acc in BankingCtrl().bankAccounts) {
-      if (acc.bankName == bankAccDropdown.value) {
-        selectedBankId.value = int.parse(acc.id);
-      }
-    }
-  }
-
-  setCustAcc() {
-    for (Customer cust in customersCtrl.customers) {
-      if (cust.name == selectedCustAcc.value) {
-        selectedCustAccId.value = cust.id;
-      }
-    }
-    customerctrl.text = selectedCustAcc.value;
-    Get.back();
-  }
-
-  completeSale() {
-    // save form
-    showSnackbar(
-        title: 'Sale Successfully Closed!',
-        path: Icons.check_rounded,
-        subtitle: 'Redirecting to Home Page');
-    Get.offAll(NavigatorHandler(0));
-  }
-
-  checkout() {
-    showCheckoutForm.value = true;
-  }
-
-  createBill() {
-    // add sale to Pending Bills
-    showSnackbar(
-        title: 'Bill added to Pending Bills',
-        path: Icons.check_rounded,
-        subtitle: '');
-    Get.offAll(NavigatorHandler(0));
-  }
-
   cancelSale() {
     cartSale = Sale(
         id: '',
         cart: <CartItem>[].obs,
-        total: 1.toString().obs,
+        total: 1.obs,
         payMethod: '',
         custId: 1.toString(),
         refCode: '',
         date: '',
         paid: false);
-    selectedCartItem = 1.toString().obs;
     selectedItem = CartItem(
-        id: 1.toString(),
+        id: '',
         name: '',
-        prodId: 1.toString(),
-        quantity: 1.toString(),
-        unitPrice: 1.toString(),
-        total: 1.toString().obs);
+        prodId: '',
+        quantity: 1.obs,
+        unitPrice: 1.obs,
+        total: 1.obs);
     selectedProdIds.clear();
     selectedProds.clear();
     Get.offAll(NavigatorHandler(0));
   }
-}
-
-class CheckOutDet {
-  String payMthd;
-  String mpesaRefCode;
-  String bankRefCode;
-  String paid;
-  RxString balance;
-  String custAccId;
-  String bankAccId;
-
-  CheckOutDet(
-      {required this.payMthd,
-      required this.mpesaRefCode,
-      required this.bankRefCode,
-      required this.paid,
-      required this.balance,
-      required this.custAccId,
-      required this.bankAccId});
 }
