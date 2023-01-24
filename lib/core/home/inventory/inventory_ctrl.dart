@@ -45,7 +45,6 @@ class InventoryCtrl extends GetxController {
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
-          print(item);
           Category cat = Category(
               id: item['category_id'],
               name: item['category_desc'],
@@ -112,7 +111,6 @@ class InventoryCtrl extends GetxController {
       var res = await http.patch(Uri.parse(updateCatUrl),
           body: body, headers: headers);
       debugPrint("Got response ${res.statusCode}");
-      // debugPrint(res.body);
       if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded,

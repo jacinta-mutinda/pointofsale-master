@@ -59,7 +59,11 @@ class BankingCtrl extends GetxController {
               cpperson: item['account_manager']);
           bankAccounts.add(bankAcc);
           bankAccStrs.add(item['bank_name']);
+          if (!bankAccStrs.contains(item['bank_name'])) {
+            bankAccStrs.add(item['bank_name']);
+          }
         }
+        bankAccStrs.add(accDropdown.value);
         filterPaginator();
         update();
         return;
