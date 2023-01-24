@@ -223,7 +223,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     itemCount: invtCtrl.rangeProdList.length),
                               ),
                             ])
-                      : noTransactionsWidget(label: 'No products Found'))
+                      : noItemsWidget(label: 'No products Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(

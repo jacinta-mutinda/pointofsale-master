@@ -99,45 +99,6 @@ class Customer {
       required this.creditlimit});
 }
 
-class CartItem {
-  String id;
-  String name;
-  String prodId;
-  String quantity;
-  String unitPrice;
-  RxString total;
-
-  CartItem({
-    required this.id,
-    required this.name,
-    required this.prodId,
-    required this.quantity,
-    required this.unitPrice,
-    required this.total,
-  });
-}
-
-class Sale {
-  String id;
-  RxList<CartItem> cart;
-  RxString total;
-  String payMethod;
-  String refCode;
-  String custId;
-  bool paid;
-  String date;
-
-  Sale(
-      {required this.id,
-      required this.cart,
-      required this.total,
-      required this.payMethod,
-      required this.custId,
-      required this.refCode,
-      required this.date,
-      required this.paid});
-}
-
 class Expense {
   String id;
   String date;

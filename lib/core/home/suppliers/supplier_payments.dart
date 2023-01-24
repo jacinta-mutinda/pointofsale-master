@@ -190,7 +190,7 @@ class _SupplierPaymentsState extends State<SupplierPayments> {
                                           supplierCtrl.ranegSupPayments.length),
                                 ),
                               ])
-                        : noTransactionsWidget(label: 'No Receipts Found'))
+                        : noItemsWidget(label: 'No Receipts Found'))
               ]))),
     );
   }

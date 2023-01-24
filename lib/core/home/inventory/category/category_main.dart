@@ -224,7 +224,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                     itemCount: invtCtrl.rangeCatList.length),
                               ),
                             ])
-                      : noTransactionsWidget(label: 'No categories Found'))
+                      : noItemsWidget(label: 'No categories Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(

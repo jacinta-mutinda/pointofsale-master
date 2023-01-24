@@ -219,7 +219,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                     itemCount: transCtrl.rangeExpList.length),
                               ),
                             ])
-                      : noTransactionsWidget(label: 'No expenses Found'))
+                      : noItemsWidget(label: 'No expenses Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(

@@ -223,7 +223,7 @@ class _UoMsPageState extends State<UoMsPage> {
                                     itemCount: invtCtrl.rangeUomList.length),
                               ),
                             ])
-                      : noTransactionsWidget(
+                      : noItemsWidget(
                           label: 'No Units of Measurement Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn

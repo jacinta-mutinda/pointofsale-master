@@ -228,7 +228,7 @@ class _SupplierPageState extends State<SupplierPage> {
                                         supplierCtrl.rangeSupList.length),
                               ),
                             ])
-                      : noTransactionsWidget(label: 'No Suppliers Found'))
+                      : noItemsWidget(label: 'No Suppliers Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(

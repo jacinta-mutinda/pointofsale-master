@@ -230,7 +230,7 @@ class _CustomersPageState extends State<CustomersPage> {
                                         customersCtrl.rangeCustList.length),
                               ),
                             ])
-                      : noTransactionsWidget(label: 'No Customers Found'))
+                      : noItemsWidget(label: 'No Customers Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(

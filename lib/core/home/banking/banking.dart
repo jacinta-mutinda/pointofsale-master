@@ -227,7 +227,7 @@ class _BankingPageState extends State<BankingPage> {
                                     itemCount: bankingCtrl.rangeAccList.length),
                               ),
                             ])
-                      : noTransactionsWidget(label: 'No accounts Found'))
+                      : noItemsWidget(label: 'No accounts Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(
