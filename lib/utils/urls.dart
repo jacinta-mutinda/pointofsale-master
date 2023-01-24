@@ -47,7 +47,9 @@ const updateSupUrl = '$rootUrl/updateSupplier';
 const addSupPayUrl = '$rootUrl/paySupplier';
 const getSupPayUrl = '$rootUrl/supplierPays';
 
-// Shift Urls --------------------------------------
+// PoS Urls --------------------------------------
+
+const addCheckoutUrl = '$rootUrl/checkout';
 
 // Auth Urls --------------------------------------
 const addCompanyUrl = '$rootUrl/addCompany';
