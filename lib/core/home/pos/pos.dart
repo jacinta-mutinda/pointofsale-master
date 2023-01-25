@@ -131,6 +131,7 @@ class _ProductsState extends State<Products> {
   List<Widget> getProds() {
     List<Widget> prods = [];
     for (var product in posCtrl.catProds) {
+      print(product.id);
       prods.add(GestureDetector(
           onTap: () {
             posCtrl.addToCart(product.id);

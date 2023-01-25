@@ -29,6 +29,11 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    //auth.login("11","1224");
+
+    String a='11';
+    String b='1224';
+    String c=a+b;
     return ScreenLock(
         // correctString: auth.getPassCode(),
         correctString: '000000',
@@ -37,7 +42,7 @@ class LoginState extends State<Login> {
           Get.offAll(() => NavigatorHandler(0));
         },
         maxRetries: 3,
-        retryDelay: const Duration(seconds: 30),
+        retryDelay: const Duration(seconds: 5),
         delayBuilder: (context, delay) => Text(
               'Try again in ${(delay.inMilliseconds / 1000).ceil()} seconds.',
               style: kBlackTxt,

@@ -115,7 +115,7 @@ class CheckoutCtrl extends GetxController {
         "cancelled": 'N',
         "footnote": null,
         "accompaniment_id": null,
-        'branch_id': '125',
+        'branch_id': '122',
         "updated": 'N',
         "linenum": '0',
         "uom_code": cartProd.uomId,
@@ -124,7 +124,8 @@ class CheckoutCtrl extends GetxController {
         "fuel_vat": '0',
         "discount": '0',
         "packaging": '0',
-        "location_product": cartProd.id
+        "location_product":"NaN",
+        "location_product_id": cartProd.id
       });
     }
 // creating the full checkout POST body
@@ -187,6 +188,7 @@ class CheckoutCtrl extends GetxController {
             path: Icons.check_rounded,
             title: "Checkout Successful!",
             subtitle: "Thank you for Shopping with us!");
+        posCtrl.cancelSale();
         await Future.delayed(const Duration(seconds: 2));
         Get.off(() => NavigatorHandler(0));
         return;

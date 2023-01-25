@@ -54,3 +54,4 @@ const addCheckoutUrl = '$rootUrl/checkout';
 // Auth Urls --------------------------------------
 const addCompanyUrl = '$rootUrl/addCompany';
 const signUpUrl = '$rootUrl/join';
+const loginUrl = '$rootUrl/login';

@@ -245,10 +245,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               onAcc = int.parse(onAccAmtCtrl.text);
                             }
                             var paidTotal = cash + bank + onAcc + mobile;
-                            var bal = paidTotal - posCtrl.cartSale.total.value;
+                            var bal = (paidTotal - posCtrl.cartSale.total.value) *-1;
                             if (bal < 0) {
                               setState(() {
-                                balancectrl.text = '- Kes.$bal';
+                                balancectrl.text = 'Kes.$bal';
                               });
                             } else {
                               setState(() {
@@ -258,6 +258,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             return null;
                           }),
                     ]),
+                    Row(
+                      
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+
+
+                          Padding(
+                              // padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: EdgeInsets.only(left: 220),
+                              child:
+                              Text("Total", style: kTitle))
+
+                        ]),
                     priBtn(
                       bgColour: kDarkGreen,
                       txtColour: Colors.white,

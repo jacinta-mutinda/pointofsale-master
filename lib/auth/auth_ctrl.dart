@@ -43,7 +43,42 @@ class AuthCtrl extends GetxController {
     }
   }
 
-  getPassCode() {}
+
+
+  login(String branchId, String pin) async{
+    print('login called');
+    var body = jsonEncode({
+      'branch_id': branchId,
+      'password': pin
+    });
+    try {
+      var res = await http.post(Uri.parse(loginUrl),
+          body: body, headers: headers);
+      // print(res.body);
+      print(res.statusCode);
+      if (res.statusCode == 201) {
+        var resData = json.decode(res.body);
+
+        print(resData);
+        await storeBranchId(resData['user_id'].toString());
+        showSnackbar(
+            path: Icons.check_rounded,
+            title: "Succes!",
+            subtitle: "Login Success");
+
+        return branchId+pin;
+      }
+      else if(res.statusCode==400){
+        showSnackbar(
+            path: Icons.close_rounded,
+            title: "Failed",
+            subtitle: "Login failed");
+      }
+      return 0;
+    } catch (error) {
+      debugPrint("$error");
+    }
+  }
 
 // ----------------------------- SIGN UP -------------------------------------
 
