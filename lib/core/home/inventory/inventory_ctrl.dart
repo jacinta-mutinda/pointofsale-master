@@ -63,7 +63,6 @@ class InventoryCtrl extends GetxController {
       }
       return;
     } catch (error) {
-      debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
           title: "Failed to load categories!",
@@ -110,7 +109,6 @@ class InventoryCtrl extends GetxController {
     try {
       var res = await http.patch(Uri.parse(updateCatUrl),
           body: body, headers: headers);
-      debugPrint("Got response ${res.statusCode}");
       if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded,
@@ -123,7 +121,6 @@ class InventoryCtrl extends GetxController {
       }
       return;
     } catch (error) {
-      debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
           title: "Failed to update category!",
@@ -206,7 +203,6 @@ class InventoryCtrl extends GetxController {
       }
       return;
     } catch (error) {
-      debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
           title: "Failed to load Units of Measurement!",
@@ -223,7 +219,6 @@ class InventoryCtrl extends GetxController {
     try {
       var res =
           await http.post(Uri.parse(addUoMUrl), body: body, headers: headers);
-      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded,
@@ -331,10 +326,8 @@ class InventoryCtrl extends GetxController {
       final response = await http.get(
           Uri.parse('$getProductsUrl/${branchId.value}'),
           headers: apiHeaders);
-      print(response);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
-        print(resData);
         for (var item in resData) {
           Product product = Product(
               id: item['location_product_id'],
@@ -356,7 +349,6 @@ class InventoryCtrl extends GetxController {
       }
       return;
     } catch (error) {
-      debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
           title: "Failed to load products",
@@ -380,7 +372,6 @@ class InventoryCtrl extends GetxController {
     try {
       var res =
           await http.post(Uri.parse(addProductUrl), body: body, headers: {});
-      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded, title: "Product Added!", subtitle: "");
@@ -411,12 +402,9 @@ class InventoryCtrl extends GetxController {
       'categoryId': prodData.categoryid,
       'uomId': prodData.uomId
     });
-    debugPrint(body);
     // try {
     //   var res =
     //       await http.post(Uri.parse(editUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
     //   if (res.statusCode == 201) {
 
     showSnackbar(
@@ -428,7 +416,6 @@ class InventoryCtrl extends GetxController {
     //   }
     //   return;
     // } catch (error) {
-    //   debugPrint("$error");
     //   showSnackbar(
     //       path: Icons.close_rounded,
     //       title: "Failed to update Product!",

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nawiri/core/home/home.dart';
+import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/market/market.dart';
 import 'package:nawiri/core/reports/reports.dart';
 import 'package:nawiri/core/work_period/work_period.dart';
@@ -28,6 +30,12 @@ class _NavigatorHandlerState extends State<NavigatorHandler> {
     const MarketPage(),
     const ReportPage()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Get.put(InventoryCtrl());
+  }
 
   @override
   Widget build(BuildContext context) {

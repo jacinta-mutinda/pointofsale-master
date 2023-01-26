@@ -59,7 +59,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<bool> startApp() async {
-    Get.put(InventoryCtrl());
     return true;
   }
 
