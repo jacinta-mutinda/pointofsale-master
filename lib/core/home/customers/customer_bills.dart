@@ -10,7 +10,6 @@ class CustomerReceipts extends StatefulWidget {
   static const routeName = "/CustomerReceipts";
   const CustomerReceipts({Key? key}) : super(key: key);
 
-
   @override
   // ignore: library_private_types_in_public_api
   _CustomerReceiptsState createState() => _CustomerReceiptsState();
@@ -28,7 +27,7 @@ class _CustomerReceiptsState extends State<CustomerReceipts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: backAppBar(pageTitle: 'custReceipts', actions: <Widget>[]),
+      appBar: backAppBar(pageTitle: 'Customer Receipts', actions: <Widget>[]),
       body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: SizedBox(
@@ -226,7 +225,9 @@ class _SingleReceiptState extends State<SingleReceipt> {
   @override
   Widget build(BuildContext context) {
     return popupScaffold(children: [
-      popupHeader(label: 'Payment Date: ${customerCtrl.singleRec.date}'),
+      popupHeader(
+          label:
+              'Payment Date: ${customerCtrl.singleRec.date.substring(0, 10)}'),
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         labelSpan(
             mainLabel: 'Transaction Type Method',

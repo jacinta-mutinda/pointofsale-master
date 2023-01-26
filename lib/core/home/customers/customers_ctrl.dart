@@ -91,10 +91,10 @@ class CustomerCtrl extends GetxController {
     }
   }
 
-  getCustPayments(String customer_id) async {
+  getCustPayments() async {
     clearRecLists();
     var body = jsonEncode({
-      'customer_id': customer_id,
+      'customer_id': custToShow.id,
     });
     try {
       branchId.value = '122';
@@ -106,18 +106,16 @@ class CustomerCtrl extends GetxController {
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
-
-            CustReceipt rec = CustReceipt(
-                id: item['customer_trans_id'],
-                custId: item['customer'],
-                ref: item['transaction_ref'],
-                date: item['transaction_date'],
-                amount: item['transaction_amount'],
-                discount: item['discount'],
-                transtype: item['trans_type'].toString(),
-                comment: item['transaction_comment']);
-            custReceipts.add(rec);
-
+          CustReceipt rec = CustReceipt(
+              id: item['customer_trans_id'],
+              custId: item['customer'],
+              ref: item['transaction_ref'],
+              date: item['transaction_date'],
+              amount: item['transaction_amount'],
+              discount: item['discount'],
+              transtype: item['trans_type'].toString(),
+              comment: item['transaction_comment']);
+          custReceipts.add(rec);
         }
         filterRecPaginator();
         update();
@@ -179,7 +177,7 @@ class CustomerCtrl extends GetxController {
       "discount": recData.discount,
       "created_by": "",
       "bank_id": '1d4c4e57-aac3-497b-bbb3-f3cae6912577',
-      "trans_by":"",
+      "trans_by": "",
       "trans_type": 10,
       "transtype": recData.transtype
     });
@@ -193,7 +191,7 @@ class CustomerCtrl extends GetxController {
             title: "Customer Payment Added!",
             subtitle: "");
         await Future.delayed(const Duration(seconds: 2));
-        getCustPayments(recData.custId);
+        getCustPayments();
         Get.off(() => const CustomerReceipts());
         return;
       }
