@@ -51,7 +51,6 @@ class CheckoutCtrl extends GetxController {
   List<String> selectedMthds = [];
 
   setCheckoutForm() {
-    print(selectedMthds);
     if (selectedMthds.contains('Mobile Money')) {
       isMpesaPay.value = true;
     } else if (selectedMthds.contains('Cash')) {
@@ -124,7 +123,7 @@ class CheckoutCtrl extends GetxController {
         "fuel_vat": '0',
         "discount": '0',
         "packaging": '0',
-        "location_product":"NaN",
+        "location_product": "NaN",
         "location_product_id": cartProd.id
       });
     }

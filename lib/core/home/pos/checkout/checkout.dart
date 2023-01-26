@@ -4,6 +4,7 @@ import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/utils/functions.dart';
 
 final checkoutCtrl = Get.put(CheckoutCtrl());
 final bankingCtrl = Get.put(BankingCtrl());
@@ -32,6 +33,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
+    checkoutCtrl.selectedMthds.add('Cash');
+    checkoutCtrl.paymethods
+        .where((element) => element.name == 'Cash')
+        .first
+        .selected
+        .value = true;
     checkoutCtrl.setCheckoutForm();
   }
 
@@ -60,13 +67,31 @@ class _CheckoutPageState extends State<CheckoutPage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    const Divider(
+                      color: kDarkGreen,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Total', style: kPageTitle),
+                              Obx(() => Text(
+                                  'Kes.${formatAmount((posCtrl.cartSale.total).toString())}',
+                                  style: kPageTitle))
+                            ])),
+                    const Padding(
+                        padding: EdgeInsets.only(bottom: 25),
+                        child: Divider(
+                          color: kDarkGreen,
+                        )),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Padding(
                               padding: EdgeInsets.symmetric(vertical: 10),
-                              child:
-                                  Text('Checkout details', style: kSubTitle)),
+                              child: Text('Enter Checkout details',
+                                  style: kSubTitle)),
                           smallPriBtn(
                               label: 'Edit Pay Method',
                               txtColour: Colors.white,
@@ -245,7 +270,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               onAcc = int.parse(onAccAmtCtrl.text);
                             }
                             var paidTotal = cash + bank + onAcc + mobile;
-                            var bal = (paidTotal - posCtrl.cartSale.total.value) *-1;
+                            var bal =
+                                (paidTotal - posCtrl.cartSale.total.value) * -1;
                             if (bal < 0) {
                               setState(() {
                                 balancectrl.text = 'Kes.$bal';
@@ -258,19 +284,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             return null;
                           }),
                     ]),
-                    Row(
-
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-
-
-                          Padding(
-                              // padding: EdgeInsets.symmetric(vertical: 10),
-                              padding: EdgeInsets.only(left: 220),
-                              child:
-                              Text("Total", style: kTitle))
-
-                        ]),
                     priBtn(
                       bgColour: kDarkGreen,
                       txtColour: Colors.white,

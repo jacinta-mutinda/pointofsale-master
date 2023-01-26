@@ -2,14 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
-
-import '../../../utils/functions.dart';
+import 'package:nawiri/utils/functions.dart';
 
 final posCtrl = Get.put(PoSCtrl());
 final invtCtrl = Get.put(InventoryCtrl());
@@ -303,7 +301,6 @@ class _CartState extends State<Cart> {
                   isLoading: _isCheckoutLoading,
                   function: () {
                     Get.to(const CheckoutPage());
-                    Get.dialog(const SelectPayMethod());
                   }),
               priBtn(
                   label: 'Cancel',
