@@ -155,8 +155,8 @@ class _SuppPayFormState extends State<SuppPayForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         supPayData.transtype = transtypectrl.text;
-                        supPayData.date = datectrl.text;
                         supPayData.ref = refctrl.text;
+                        supPayData.supId=supplierCtrl.supToShow.id;
                         supPayData.comment = commentctrl.text;
                         supPayData.amount = amountctrl.text;
                         supPayData.discount = discountctrl.text.toString();

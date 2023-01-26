@@ -15,6 +15,8 @@ class BankingCtrl extends GetxController {
   RxString transTypeDropdown = ''.obs;
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
+  RxBool showTransData = false.obs;
+  RxBool showTransLoading = true.obs;
   RxBool fieldsRequired = false.obs;
   RxBool isBankEdit = false.obs;
   RxString bankToEdit = ''.obs;
@@ -30,6 +32,9 @@ class BankingCtrl extends GetxController {
   RxList<BankAccount> rangeAccList = RxList<BankAccount>();
   RxList<BankTransaction> allBankTrans = RxList<BankTransaction>();
   RxList<BankTransaction> accBankTrans = RxList<BankTransaction>();
+  RxList<BankTransaction> rangeBankTrans = RxList<BankTransaction>();
+
+
 
   @override
   void onInit() {
@@ -110,6 +115,42 @@ class BankingCtrl extends GetxController {
           date: '2023-01-14'),
     ];
   }
+  getCustPayments(String bank_id) async {
+    var body = jsonEncode({
+      'bank_id': bank_id,
+    });
+    try {
+      branchId.value = '122';
+
+      final response = await http.post(Uri.parse(getCustReceiptsUrl),
+          body: body, headers: headers);
+      if (response.statusCode == 200) {
+        var resData = json.decode(response.body);
+        for (var item in resData) {
+
+          BankTransaction rec = BankTransaction(
+              id: item['customer_trans_id'],
+              bankId: item['customer'],
+              action: item['transaction_ref'],
+              desc: item['transaction_date'],
+              amount: item['transaction_amount'],
+              date: item['discount']);
+          allBankTrans.add(rec);
+
+        }
+        filterTransPaginator();
+        update();
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to load customers!",
+          subtitle: "Please check your internet connection or try again later");
+    }
+  }
 
   getAccBankTrans() {
     bankPageName.value = '';
@@ -165,19 +206,25 @@ class BankingCtrl extends GetxController {
   }
 
   addBankTrans(BankTransaction bankTransData) async {
-    var body = jsonEncode({
-      'bankId': bankTransData.bankId,
-      'action': bankTransData.action,
-      'desc': bankTransData.desc,
-      'amounr': bankTransData.amount,
-    });
+    var body = jsonEncode(
+      {
+        "bank_id":bankTransData.bankId,
+        "transtype":bankTransData.action,
+        "transaction_amount":bankTransData.amount,
+        "branch_id":122,
+        "created_by":"",
+        "transaction_comment":"",
+        "transaction_ref":"",
+        "till_id": "89727303-30A6-4E20-A6FB-F72566DA070B",
+        "shift_id": "097b6779-fb9b-4c0e-ad6d-5924ac19c3e0"
+      });
     debugPrint(body);
-    // try {
-    //   var res =
-    //       await http.post(Uri.parse(addUrl), body: body, headers: headers);
-    //   debugPrint("Got response ${res.statusCode}");
-    //   debugPrint(res.body);
-    //   if (res.statusCode == 201) {
+    try {
+      var res =
+          await http.post(Uri.parse(addBankAccTransUrl), body: body, headers: headers);
+      debugPrint("Got response ${res.statusCode}");
+      debugPrint(res.body);
+      if (res.statusCode == 201) {
 
     showSnackbar(
         path: Icons.check_rounded,
@@ -186,16 +233,16 @@ class BankingCtrl extends GetxController {
     await Future.delayed(const Duration(seconds: 2));
     Get.off(() => const BankTransPage());
 
-    //     return;
-    //   }
-    //   return;
-    // } catch (error) {
-    //   debugPrint("$error");
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed to add Product!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to add Product!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   // ---------- Edit Functions -----------------
@@ -282,6 +329,16 @@ class BankingCtrl extends GetxController {
     } else {
       showLoading.value = false;
       showData.value = true;
+    }
+  }
+  filterTransPaginator() {
+    listPaginator(rangeList: rangeBankTrans, selectList: allBankTrans);
+    if (rangeBankTrans.isEmpty) {
+      showTransLoading.value = false;
+      showTransData.value = false;
+    } else {
+      showTransLoading.value = false;
+      showTransData.value = true;
     }
   }
 

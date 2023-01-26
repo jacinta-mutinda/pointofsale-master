@@ -174,17 +174,18 @@ class _BankTransFormState extends State<BankTransForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         bankTransData.desc = descctrl.text;
-                        bankTransData.action =
-                            bankingCtrl.transTypeDropdown.value;
-                        bankTransData.bankId = int.parse(bankingCtrl
-                            .bankAccounts
-                            .where((element) =>
-                                element.bankName ==
-                                (bankingCtrl.accDropdown.value))
-                            .first
-                            .id);
+                        bankTransData.action = bankingCtrl.transTypeDropdown.value;
+                        bankTransData.bankId=bankingCtrl.transAccToShow.id as int;
+                        // bankTransData.bankId = int.parse(bankingCtrl
+                        //     .bankAccounts
+                        //     .where((element) =>
+                        //         element.bankName ==
+                        //         (bankingCtrl.accDropdown.value))
+                        //     .first
+                        //     .id);
                         bankTransData.amount = int.parse(amountctrl.text);
                         bankTransData.date = datectrl.text;
+                        print(bankTransData);
 
                         if (bankingCtrl.isBankEdit.value) {
                           bankingCtrl.editBankTrans(bankTransData);

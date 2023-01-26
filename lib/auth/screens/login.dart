@@ -31,12 +31,12 @@ class LoginState extends State<Login> {
   Widget build(BuildContext context) {
     //auth.login("11","1224");
 
-    String a='11';
-    String b='1224';
+    String a='00';
+    String b='0000';
     String c=a+b;
     return ScreenLock(
         // correctString: auth.getPassCode(),
-        correctString: '000000',
+        correctString: c,
         digits: 6,
         didUnlocked: () {
           Get.offAll(() => NavigatorHandler(0));

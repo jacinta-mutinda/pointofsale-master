@@ -10,6 +10,7 @@ class CustomerReceipts extends StatefulWidget {
   static const routeName = "/CustomerReceipts";
   const CustomerReceipts({Key? key}) : super(key: key);
 
+
   @override
   // ignore: library_private_types_in_public_api
   _CustomerReceiptsState createState() => _CustomerReceiptsState();

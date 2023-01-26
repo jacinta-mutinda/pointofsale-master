@@ -218,7 +218,7 @@ class _SupplierPageState extends State<SupplierPage> {
                                                       .value = false;
                                                   supplierCtrl.supToShow =
                                                       suppliers[index];
-                                                  supplierCtrl.getSupPayments();
+                                                  supplierCtrl.getSupPayments(suppliers[index].id);
                                                   Get.to(
                                                       const SupplierPayments());
                                                 },

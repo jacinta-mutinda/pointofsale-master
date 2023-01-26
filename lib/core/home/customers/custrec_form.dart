@@ -153,6 +153,7 @@ class _CustomerReceiptState extends State<CustomerReceipt> {
                       if (_formKey.currentState!.validate()) {
                         recData.transtype = transtypectrl.text;
                         recData.date = datectrl.text;
+                        recData.custId=custCtrl.custToShow.id;
                         recData.ref = refctrl.text;
                         recData.comment = commentctrl.text;
                         recData.amount = amountctrl.text;

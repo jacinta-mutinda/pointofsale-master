@@ -91,29 +91,33 @@ class CustomerCtrl extends GetxController {
     }
   }
 
-  getCustPayments() async {
+  getCustPayments(String customer_id) async {
     clearRecLists();
-    // get branchId from functions.dart
+    var body = jsonEncode({
+      'customer_id': customer_id,
+    });
     try {
       branchId.value = '122';
-      final response = await http.get(
-          Uri.parse('$getCustReceiptsUrl/${branchId.value}'),
-          headers: apiHeaders);
+      // final response = await http.get(
+      //     Uri.parse('$getCustReceiptsUrl/${branchId.value}'),
+      //     headers: apiHeaders);
+      final response = await http.post(Uri.parse(getCustReceiptsUrl),
+          body: body, headers: headers);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
-          if (item['customer'] == custToShow.id) {
+
             CustReceipt rec = CustReceipt(
-                id: item['receipt_id'],
+                id: item['customer_trans_id'],
                 custId: item['customer'],
                 ref: item['transaction_ref'],
-                date: item['date'],
+                date: item['transaction_date'],
                 amount: item['transaction_amount'],
                 discount: item['discount'],
-                transtype: item['trans_type'],
+                transtype: item['trans_type'].toString(),
                 comment: item['transaction_comment']);
             custReceipts.add(rec);
-          }
+
         }
         filterRecPaginator();
         update();
@@ -167,13 +171,19 @@ class CustomerCtrl extends GetxController {
   addCustReceipt(CustReceipt recData) async {
     var body = jsonEncode({
       "branch_id": branchId.value,
+      "transaction_date": DateTime.now().toString(),
       "customer": recData.custId,
       "transaction_ref": recData.ref,
-      "transaction_amount": recData.amount,
+      "transaction_amount": int.parse(recData.amount),
       "transaction_comment": recData.comment,
       "discount": recData.discount,
-      "trans_type": recData.transtype
+      "created_by": "",
+      "bank_id": '1d4c4e57-aac3-497b-bbb3-f3cae6912577',
+      "trans_by":"",
+      "trans_type": 10,
+      "transtype": recData.transtype
     });
+
     try {
       var res = await http
           .post(Uri.parse(addCustReceiptUrl), body: body, headers: {});
@@ -183,7 +193,7 @@ class CustomerCtrl extends GetxController {
             title: "Customer Payment Added!",
             subtitle: "");
         await Future.delayed(const Duration(seconds: 2));
-        getCustPayments();
+        getCustPayments(recData.custId);
         Get.off(() => const CustomerReceipts());
         return;
       }

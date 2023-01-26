@@ -220,7 +220,7 @@ class _CustomersPageState extends State<CustomersPage> {
                                                   customersCtrl.custToShow =
                                                       customers[index];
                                                   customersCtrl
-                                                      .getCustPayments();
+                                                      .getCustPayments(customers[index].id);
                                                   Get.to(
                                                       const CustomerReceipts());
                                                 },

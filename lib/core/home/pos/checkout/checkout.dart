@@ -259,7 +259,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           }),
                     ]),
                     Row(
-                      
+
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
 

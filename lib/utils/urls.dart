@@ -6,7 +6,7 @@ const getCustomersUrl = '$rootUrl/getCustomers';
 const addCustomerUrl = '$rootUrl/addCustomer';
 const updateCustomerUrl = '$rootUrl/updateCustomer';
 
-const getCustReceiptsUrl = '$rootUrl/receipts';
+const getCustReceiptsUrl = '$rootUrl/getReceiptByCustomerID';
 const addCustReceiptUrl = '$rootUrl/Customerreceipt';
 
 // Category Urls --------------------------------------
@@ -32,6 +32,7 @@ const updateUomUrl = '$rootUrl/updateUom';
 const getBankAccsUrl = '$rootUrl/banks';
 const addBankAccUrl = '$rootUrl/addbank';
 const updateBankUrl = '$rootUrl/updateBank';
+const addBankAccTransUrl = '$rootUrl/addBankTransaction';
 
 // Expenses Urls --------------------------------------
 
@@ -45,7 +46,8 @@ const addSupplierUrl = '$rootUrl/add_Supplier';
 const updateSupUrl = '$rootUrl/updateSupplier';
 
 const addSupPayUrl = '$rootUrl/paySupplier';
-const getSupPayUrl = '$rootUrl/supplierPays';
+const getSupPayUrl = '$rootUrl/getTransactionsBySupplierID';
+
 
 // PoS Urls --------------------------------------
 
