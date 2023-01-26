@@ -32,7 +32,9 @@ const updateUomUrl = '$rootUrl/updateUom';
 const getBankAccsUrl = '$rootUrl/banks';
 const addBankAccUrl = '$rootUrl/addbank';
 const updateBankUrl = '$rootUrl/updateBank';
-const addBankAccTransUrl = '$rootUrl/addBankTransaction';
+
+const addBankTransUrl = '$rootUrl/addBankTransaction';
+const getBankTransUrl = '$rootUrl/getBanksTrans';
 
 // Expenses Urls --------------------------------------
 
@@ -47,7 +49,6 @@ const updateSupUrl = '$rootUrl/updateSupplier';
 
 const addSupPayUrl = '$rootUrl/paySupplier';
 const getSupPayUrl = '$rootUrl/getTransactionsBySupplierID';
-
 
 // PoS Urls --------------------------------------
 

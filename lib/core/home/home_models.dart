@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 class BankAccount {
   String id;
   String bankName;
@@ -16,19 +14,21 @@ class BankAccount {
 }
 
 class BankTransaction {
-  int id;
-  int bankId;
-  String action;
-  String desc;
-  int amount;
-  String date;
+  String id;
+  String branchId; // branch_id
+  String refCode; // transaction_ref
+  String bankId; // bank_id
+  String action; // transtype
+  String desc; // transaction_comment
+  String amount; // transaction_amount
 
   BankTransaction(
       {required this.id,
+      required this.refCode,
       required this.bankId,
       required this.action,
       required this.desc,
-      required this.date,
+      required this.branchId,
       required this.amount});
 }
 
@@ -108,14 +108,15 @@ class Expense {
   String amount;
   String branch_id;
 
-  Expense(
-      {required this.id,
-      required this.date,
-      required this.desc,
-      required this.amount,
-      required this.ref,
-      required this.payto,
-      required this.branch_id,});
+  Expense({
+    required this.id,
+    required this.date,
+    required this.desc,
+    required this.amount,
+    required this.ref,
+    required this.payto,
+    required this.branch_id,
+  });
 }
 
 class CustReceipt {
