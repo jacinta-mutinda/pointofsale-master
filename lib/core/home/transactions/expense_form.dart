@@ -140,7 +140,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
                         expData.ref = refctrl.text;
                         expData.desc = descctrl.text;
                         expData.amount = amountctrl.text;
-
                         transCtrl.addExpense(expData);
                       }
                       await Future.delayed(const Duration(seconds: 2));

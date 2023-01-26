@@ -66,19 +66,21 @@ class TransactionCtrl extends GetxController {
 
   addExpense(Expense expData) async {
     branchId.value = '125';
+    print(TimeOfDay.now());
     var body = jsonEncode({
       'pay_to': expData.payto,
       'pay_description': expData.desc,
       'pay_amount': expData.amount,
       'pay_date': expData.date,
+      "pay_time": '17:34:12.593000',
       'pay_ref': expData.ref,
       'branch_id':branchId.value
     });
     try {
       var res = await http.post(Uri.parse(addExpenseUrl),
           body: body, headers: headers);
-      print(res.body);
-      if (res.statusCode == 201) {
+
+      if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded, title: "Expense Added!", subtitle: "");
         await Future.delayed(const Duration(seconds: 2));

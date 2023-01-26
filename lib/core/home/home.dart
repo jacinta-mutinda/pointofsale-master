@@ -22,10 +22,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final auth = Get.put(AuthCtrl());
+  String branch = '';
   bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
+    print(branch);
+    getBranch();
+    print(branch);
+  }
+
+  getBranch() async {
+    var prefs = await SharedPreferences.getInstance();
+    branch = prefs.getString('branchId')!;
   }
 
   @override
@@ -62,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                     iconPath: Icons.inventory_2,
                     label: 'Inventory',
                     goTo: const InventoryPage()),
+
               ])),
         ));
   }
@@ -99,13 +111,6 @@ class _WelcomePromptState extends State<WelcomePrompt> {
   @override
   void initState() {
     super.initState();
-    getBranch();
-  }
-
-  void getBranch() async {
-    var prefs = await SharedPreferences.getInstance();
-    var branch = prefs.getString('branchId');
-    branchId.value = branch!;
   }
 
   @override

@@ -26,6 +26,7 @@ class AuthCtrl extends GetxController {
       address: 'admin@gmail.com',
       phoneno: 0712345678,
       pin: 1234);
+  RxList<User> user = RxList<User>();
 
   get headers {
     return {"Content-Type": "application/json"};
@@ -46,7 +47,7 @@ class AuthCtrl extends GetxController {
 
 
   login(String branchId, String pin) async{
-    print('login called');
+    debugPrint('login called');
     var body = jsonEncode({
       'branch_id': branchId,
       'password': pin
@@ -54,25 +55,24 @@ class AuthCtrl extends GetxController {
     try {
       var res = await http.post(Uri.parse(loginUrl),
           body: body, headers: headers);
-      // print(res.body);
-      print(res.statusCode);
+
       if (res.statusCode == 201) {
         var resData = json.decode(res.body);
-
-        print(resData);
-        await storeBranchId(resData['user_id'].toString());
+        storeBranchId(branchId);
         showSnackbar(
             path: Icons.check_rounded,
             title: "Succes!",
             subtitle: "Login Success");
+        await Future.delayed(const Duration(seconds: 2));
+        Get.off(() => NavigatorHandler(0));
 
-        return branchId+pin;
+        return ;
       }
-      else if(res.statusCode==400){
+      else if(res.statusCode==200){
         showSnackbar(
             path: Icons.close_rounded,
-            title: "Failed",
-            subtitle: "Login failed");
+            title: "Login error",
+            subtitle: "Wrong pin code !");
       }
       return 0;
     } catch (error) {
@@ -80,12 +80,18 @@ class AuthCtrl extends GetxController {
     }
   }
 
-// ----------------------------- SIGN UP -------------------------------------
-
   Future<void> storeBranchId(String branchId) async {
+    print('storeBranch Called');
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString("branchId", branchId);
+    print('branchId stored');
+    var branch = prefs.getString('branchId');
+    print('-----the branch Id is -----');
+    print(branch);
+
   }
+
+// ----------------------------- SIGN UP -------------------------------------
 
   createCompany(List userdata) async {
     var body = jsonEncode({
