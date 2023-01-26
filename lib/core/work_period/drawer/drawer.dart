@@ -56,24 +56,32 @@ class _DrawerPageState extends State<DrawerPage> {
                             DataColumn(label: Text('On Acc.')),
                           ],
                           rows: [
-                            DataRow(cells: [
-                              const DataCell(Text('Sales')),
-                              DataCell(Text(drawerCtrl.saleRow.cashAmt)),
-                              DataCell(Text(drawerCtrl.saleRow.mpesaAmt)),
-                              DataCell(Text(drawerCtrl.saleRow.cardAmt)),
-                              DataCell(Text(drawerCtrl.saleRow.total.value))
+                            const DataRow(cells: [
+                              DataCell(Text('Sales')),
+                              // DataCell(Text(drawerCtrl.saleRow.cashAmt)),
+                              // DataCell(Text(drawerCtrl.saleRow.mpesaAmt)),
+                              // DataCell(Text(drawerCtrl.saleRow.cardAmt)),
+                              // DataCell(Text(drawerCtrl.saleRow.total.value))
+                              DataCell(Text('240')),
+                              DataCell(Text('20')),
+                              DataCell(Text('20')),
+                              DataCell(Text('200'))
                             ]),
-                            DataRow(cells: [
-                              const DataCell(Text('Float')),
-                              DataCell(Text(drawerCtrl.floatRow.cashAmt)),
-                              DataCell(Text(drawerCtrl.floatRow.mpesaAmt)),
-                              DataCell(Text(drawerCtrl.saleRow.cardAmt)),
-                              DataCell(Text(drawerCtrl.floatRow.total.value)),
+                            const DataRow(cells: [
+                              DataCell(Text('Float')),
+                              // DataCell(Text(drawerCtrl.floatRow.cashAmt)),
+                              // DataCell(Text(drawerCtrl.floatRow.mpesaAmt)),
+                              // DataCell(Text(drawerCtrl.saleRow.cardAmt)),
+                              // DataCell(Text(drawerCtrl.floatRow.total.value)),
+                              DataCell(Text('240')),
+                              DataCell(Text('20')),
+                              DataCell(Text('20')),
+                              DataCell(Text('200'))
                             ]),
                             DataRow(
                                 color: MaterialStateColor.resolveWith(
                                     (states) => kLightGreen),
-                                cells: [
+                                cells: const [
                                   DataCell(Text('Total')),
                                   DataCell(Text('240')),
                                   DataCell(Text('20')),
