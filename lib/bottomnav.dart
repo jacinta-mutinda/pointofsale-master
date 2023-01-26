@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/home.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/market/market.dart';
@@ -35,6 +36,7 @@ class _NavigatorHandlerState extends State<NavigatorHandler> {
   void initState() {
     super.initState();
     Get.put(InventoryCtrl());
+    Get.put(CustomerCtrl());
   }
 
   @override

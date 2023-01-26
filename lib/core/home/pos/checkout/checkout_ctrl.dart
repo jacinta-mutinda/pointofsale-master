@@ -9,6 +9,7 @@ import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
+import 'package:nawiri/core/home/pos/checkout/checkout.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
@@ -45,8 +46,8 @@ class CheckoutCtrl extends GetxController {
   List<PayMethod> paymethods = [
     PayMethod(name: 'Bank Account', selected: false.obs),
     PayMethod(name: 'Cash', selected: false.obs),
-    PayMethod(name: 'Mobile Money', selected: false.obs)
-    // PayMethod(name: 'Customer Account', selected: false.obs)
+    PayMethod(name: 'Mobile Money', selected: false.obs),
+    PayMethod(name: 'Customer Account', selected: false.obs)
   ];
   List<String> selectedMthds = [];
 
@@ -57,25 +58,24 @@ class CheckoutCtrl extends GetxController {
       isCashPay.value = true;
     } else if (selectedMthds.contains('Bank Account')) {
       isBankPay.value = true;
-      // } else if (selectedMthds.contains('Customer Account')) {
-      //   isOnAccPay.value = true;
+    } else if (selectedMthds.contains('Customer Account')) {
+      isOnAccPay.value = true;
+      custList.clear();
+      for (var cust in customersCtrl.customers) {
+        custList.add(cust);
+      }
+      Get.dialog(const CustomerList());
     } else if (!selectedMthds.contains('Mobile Money')) {
       isMpesaPay.value = false;
     } else if (!selectedMthds.contains('Cash')) {
       isCashPay.value = false;
     } else if (!selectedMthds.contains('Bank Account')) {
       isBankPay.value = false;
-      // } else if (!selectedMthds.contains('Customer Account')) {
-      //   isOnAccPay.value = false;
+    } else if (!selectedMthds.contains('Customer Account')) {
+      isOnAccPay.value = false;
     }
     update();
   }
-
-  // custList.clear();
-  // for (var cust in customersCtrl.customers) {
-  //   custList.add(cust);
-  // }
-  // Get.dialog(const CustomerList());
 
   setBankAcc() {
     for (BankAccount acc in BankingCtrl().bankAccounts) {

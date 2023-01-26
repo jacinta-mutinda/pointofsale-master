@@ -397,10 +397,12 @@ class CustomerList extends StatefulWidget {
   const CustomerList({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomerListState createState() => _CustomerListState();
 }
 
 class _CustomerListState extends State<CustomerList> {
+  // ignore: unused_field
   final bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController searchNamectrl = TextEditingController();
