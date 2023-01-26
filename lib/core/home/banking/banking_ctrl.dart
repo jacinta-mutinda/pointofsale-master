@@ -92,20 +92,30 @@ class BankingCtrl extends GetxController {
           body: body, headers: headers);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
-        for (var item in resData) {
-          BankTransaction trans = BankTransaction(
-              id: item['transaction_id'],
-              refCode: item['trans_ref'],
-              bankId: accToShow.id,
-              action: item['transtype'],
-              desc: item['trans_comment'],
-              branchId: item['branch_id'].toString(),
-              amount: item['trans_amount']);
-          accBankTrans.add(trans);
+        print(resData);
+        if (resData is List<dynamic>) {
+          print('has stuff');
+          for (var item in resData) {
+            BankTransaction trans = BankTransaction(
+                id: item['transaction_id'],
+                refCode: item['trans_ref'],
+                bankId: accToShow.id,
+                action: item['transtype'],
+                desc: item['trans_comment'],
+                branchId: item['branch_id'].toString(),
+                amount: item['trans_amount']);
+            accBankTrans.add(trans);
+            filterTransPaginator();
+            update();
+            return;
+          }
+        } else {
+          print('has no stuff');
+          accBankTrans.clear();
+          filterTransPaginator();
+          update();
+          return;
         }
-        filterTransPaginator();
-        update();
-        return;
       }
       return;
     } catch (error) {
