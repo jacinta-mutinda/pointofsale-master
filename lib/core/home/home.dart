@@ -29,14 +29,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    print(branch);
-    getBranch();
-    print(branch);
-  }
-
-  getBranch() async {
-    var prefs = await SharedPreferences.getInstance();
-    branch = prefs.getString('branchId')!;
   }
 
   @override
@@ -73,7 +65,6 @@ class _HomePageState extends State<HomePage> {
                     iconPath: Icons.inventory_2,
                     label: 'Inventory',
                     goTo: const InventoryPage()),
-
               ])),
         ));
   }

@@ -34,45 +34,31 @@ class AuthCtrl extends GetxController {
 
   // ----------------------------- SIGN IN -------------------------------------
 
-  get getBranchId async {
-    var prefs = await SharedPreferences.getInstance();
-    var branchId = prefs.getString('branchId');
-    if (branchId != null) {
-      return branchId;
-    } else {
-      return null;
-    }
-  }
-
-
-
-  login(String branchId, String pin) async{
+  login(String branchId, String pin) async {
     debugPrint('login called');
-    var body = jsonEncode({
-      'branch_id': branchId,
-      'password': pin
-    });
+    var body = jsonEncode({'branch_id': branchId, 'password': pin});
     try {
-      var res = await http.post(Uri.parse(loginUrl),
-          body: body, headers: headers);
+      var res =
+          await http.post(Uri.parse(loginUrl), body: body, headers: headers);
 
       if (res.statusCode == 201) {
         var resData = json.decode(res.body);
         storeBranchId(branchId);
         showSnackbar(
             path: Icons.check_rounded,
-            title: "Succes!",
-            subtitle: "Login Success");
+            title: "Successful Login!",
+            subtitle: "Welcome Back");
         await Future.delayed(const Duration(seconds: 2));
         Get.off(() => NavigatorHandler(0));
-
-        return ;
-      }
-      else if(res.statusCode==200){
+        var prefs = await SharedPreferences.getInstance();
+        var hasBranchKey = prefs.containsKey('branchId');
+        print(hasBranchKey);
+        return;
+      } else if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.close_rounded,
             title: "Login error",
-            subtitle: "Wrong pin code !");
+            subtitle: "Please enter the correct branch and pin code");
       }
       return 0;
     } catch (error) {
@@ -81,14 +67,8 @@ class AuthCtrl extends GetxController {
   }
 
   Future<void> storeBranchId(String branchId) async {
-    print('storeBranch Called');
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString("branchId", branchId);
-    print('branchId stored');
-    var branch = prefs.getString('branchId');
-    print('-----the branch Id is -----');
-    print(branch);
-
   }
 
 // ----------------------------- SIGN UP -------------------------------------

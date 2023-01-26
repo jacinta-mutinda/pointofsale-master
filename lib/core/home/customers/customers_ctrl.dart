@@ -8,6 +8,7 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:nawiri/utils/urls.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerCtrl extends GetxController {
   RxString transtyeDrop = ''.obs;
@@ -48,7 +49,13 @@ class CustomerCtrl extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    setBranchId();
     getCustomers();
+  }
+
+  setBranchId() async {
+    var prefs = await SharedPreferences.getInstance();
+    branchId.value = prefs.getString('branchId') ?? '00';
   }
 
   // ---------- Get Functions -----------------
@@ -57,7 +64,6 @@ class CustomerCtrl extends GetxController {
     clearLists();
     // get branchId from functions.dart
     try {
-      branchId.value = '125';
       final response = await http.get(
           Uri.parse('$getCustomersUrl/${branchId.value}'),
           headers: apiHeaders);
@@ -98,9 +104,6 @@ class CustomerCtrl extends GetxController {
     });
     try {
       branchId.value = '122';
-      // final response = await http.get(
-      //     Uri.parse('$getCustReceiptsUrl/${branchId.value}'),
-      //     headers: apiHeaders);
       final response = await http.post(Uri.parse(getCustReceiptsUrl),
           body: body, headers: headers);
       if (response.statusCode == 200) {
