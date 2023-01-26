@@ -57,7 +57,7 @@ class _ShiftPageState extends State<ShiftPage> {
       body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             const Padding(
                 padding: EdgeInsets.only(top: 20, bottom: 10),
                 child: Text('Enter Shift Details', style: kTitle)),
@@ -113,7 +113,7 @@ class _ShiftPageState extends State<ShiftPage> {
                               return null;
                             }),
                         descFormField(
-                            label: 'Desription', controller: descctrl),
+                            label: 'Description', controller: descctrl),
                         formField(
                             label: 'Opening Float (in Kes)',
                             require: true,
@@ -170,7 +170,7 @@ class _ShiftPageState extends State<ShiftPage> {
                 : Form(
                     key: _formKey,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         formDropDownField(
                             label: 'Bank Account',

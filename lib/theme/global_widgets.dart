@@ -380,7 +380,7 @@ Widget popupHeader({label}) {
             label,
             style: const TextStyle(
                 fontFamily: 'Nunito',
-                fontSize: 22,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: kDarkGreen),
           ),
