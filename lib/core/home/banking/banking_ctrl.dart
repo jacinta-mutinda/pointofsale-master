@@ -92,9 +92,7 @@ class BankingCtrl extends GetxController {
           body: body, headers: headers);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
-        print(resData);
         if (resData is List<dynamic>) {
-          print('has stuff');
           for (var item in resData) {
             BankTransaction trans = BankTransaction(
                 id: item['transaction_id'],
@@ -110,7 +108,6 @@ class BankingCtrl extends GetxController {
             return;
           }
         } else {
-          print('has no stuff');
           accBankTrans.clear();
           filterTransPaginator();
           update();

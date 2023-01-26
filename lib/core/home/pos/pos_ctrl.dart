@@ -4,10 +4,12 @@ import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
+import 'package:nawiri/core/home/pos/checkout/checkout_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_models.dart';
 
 final invtCtrl = Get.put(InventoryCtrl());
 final customersCtrl = Get.put(CustomerCtrl());
+final checkoutCtrl = Get.put(CheckoutCtrl());
 
 class PoSCtrl extends GetxController {
   RxString selectedCat = ''.obs;
@@ -138,6 +140,7 @@ class PoSCtrl extends GetxController {
     cartLength.value = 0;
     selectedProdIds.clear();
     selectedProds.clear();
+    checkoutCtrl.reset();
     Get.offAll(NavigatorHandler(0));
   }
 }

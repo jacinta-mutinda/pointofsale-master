@@ -163,7 +163,7 @@ class CheckoutCtrl extends GetxController {
         "staff": "",
         "till": "",
         "shift": "",
-        "customer": checkDetData.custAccId
+        "customer": selectedCustAccId.value
       },
       "RD": rd,
       "RP": {
