@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:nawiri/core/work_period/drawer/drawer_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
@@ -12,6 +14,9 @@ class DrawerPage extends StatefulWidget {
 }
 
 class _DrawerPageState extends State<DrawerPage> {
+  final drawerCtrl = Get.put(DrawerCtrl());
+  final ScrollController _scrollctrl = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -28,52 +33,55 @@ class _DrawerPageState extends State<DrawerPage> {
             const Padding(
                 padding: EdgeInsets.only(top: 20, bottom: 10),
                 child: Text('Income', style: kTitle)),
-            SizedBox(
-              width: 600,
-              child: DataTable(
-                sortColumnIndex: 0,
-                sortAscending: true,
-                showCheckboxColumn: true,
-                headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromARGB(179, 223, 212, 212)),
-                dividerThickness: 3,
-                dataRowColor: MaterialStateColor.resolveWith(
-                    (Set<MaterialState> states) =>
-                        states.contains(MaterialState.selected)
-                            ? Colors.green
-                            : Colors.white),
-                columns: const [
-                  DataColumn(label: Text('Income')),
-                  DataColumn(label: Text('Cash')),
-                  DataColumn(label: Text('Mpesa')),
-                  DataColumn(label: Text('Card')),
-                  DataColumn(label: Text('On Acc.')),
-                ],
-                rows: const [
-                  DataRow(cells: [
-                    DataCell(Text('Shift sales')),
-                    DataCell(Text('200')),
-                    DataCell(Text('2000')),
-                    DataCell(Text('200')),
-                    DataCell(Text('20')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('Float')),
-                    DataCell(Text('240')),
-                    DataCell(Text('2000')),
-                    DataCell(Text('20')),
-                    DataCell(Text('200')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('Total')),
-                    DataCell(Text('240')),
-                    DataCell(Text('2000')),
-                    DataCell(Text('20')),
-                    DataCell(Text('200')),
-                  ]),
-                ],
-              ),
-            ),
+            Scrollbar(
+                thumbVisibility: true,
+                thickness: 5,
+                controller: _scrollctrl,
+                radius: const Radius.circular(20),
+                scrollbarOrientation: ScrollbarOrientation.bottom,
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _scrollctrl,
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: DataTable(
+                          headingRowColor:
+                              MaterialStateColor.resolveWith((states) => kGrey),
+                          dividerThickness: 3,
+                          columns: const [
+                            DataColumn(label: Text('Income')),
+                            DataColumn(label: Text('Cash')),
+                            DataColumn(label: Text('M-pesa')),
+                            DataColumn(label: Text('Card')),
+                            DataColumn(label: Text('On Acc.')),
+                          ],
+                          rows: [
+                            DataRow(cells: [
+                              const DataCell(Text('Sales')),
+                              DataCell(Text(drawerCtrl.saleRow.cashAmt)),
+                              DataCell(Text(drawerCtrl.saleRow.mpesaAmt)),
+                              DataCell(Text(drawerCtrl.saleRow.cardAmt)),
+                              DataCell(Text(drawerCtrl.saleRow.total.value))
+                            ]),
+                            DataRow(cells: [
+                              const DataCell(Text('Float')),
+                              DataCell(Text(drawerCtrl.floatRow.cashAmt)),
+                              DataCell(Text(drawerCtrl.floatRow.mpesaAmt)),
+                              DataCell(Text(drawerCtrl.saleRow.cardAmt)),
+                              DataCell(Text(drawerCtrl.floatRow.total.value)),
+                            ]),
+                            DataRow(
+                                color: MaterialStateColor.resolveWith(
+                                    (states) => kLightGreen),
+                                cells: [
+                                  DataCell(Text('Total')),
+                                  DataCell(Text('240')),
+                                  DataCell(Text('20')),
+                                  DataCell(Text('20')),
+                                  DataCell(Text('200')),
+                                ]),
+                          ],
+                        )))),
             const SizedBox(
               height: 10,
             ),

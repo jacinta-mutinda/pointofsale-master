@@ -58,3 +58,7 @@ const addCheckoutUrl = '$rootUrl/checkout';
 const addCompanyUrl = '$rootUrl/addCompany';
 const signUpUrl = '$rootUrl/join';
 const loginUrl = '$rootUrl/login';
+
+// Drawer Urls
+const getShiftSalesUrl = '$rootUrl/getSalesByShifts';
+const getShiftFloat = '$rootUrl/getFloatsByShifts';
