@@ -49,24 +49,13 @@ class _BankAccFormState extends State<BankAccForm> {
   setForm() {
     if (bankingCtrl.isBankEdit.value) {
       pageTitle = 'Edit Bank Account';
-      namectrl.text = bankingCtrl.bankAccounts
-          .where((element) => element.id == (bankingCtrl.bankToEdit.value))
-          .first
-          .bankName;
-      accnoctrl.text = bankingCtrl.bankAccounts
-          .where((element) => element.id == (bankingCtrl.bankToEdit.value))
-          .first
-          .accno
-          .toString();
-      cppersonctrl.text = bankingCtrl.bankAccounts
-          .where((element) => element.id == (bankingCtrl.bankToEdit.value))
-          .first
-          .cpperson
-          .toString();
-      branchctrl.text = bankingCtrl.bankAccounts
-          .where((element) => element.id == (bankingCtrl.bankToEdit.value))
-          .first
-          .branchName;
+      var selectedAcc = bankingCtrl.bankAccounts
+          .where((element) => element.id == (bankingCtrl.accToShow.id))
+          .first;
+      namectrl.text = selectedAcc.bankName;
+      accnoctrl.text = selectedAcc.accno;
+      cppersonctrl.text = selectedAcc.cpperson;
+      branchctrl.text = selectedAcc.branchName;
     } else {
       pageTitle = 'Add Bank Account';
       namectrl.clear();

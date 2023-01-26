@@ -19,13 +19,18 @@ class BankTransForm extends StatefulWidget {
 }
 
 class _BankTransFormState extends State<BankTransForm> {
-  String pageTitle = '';
-  BankTransaction bankTransData = BankTransaction(
-      id: 1, action: '', bankId: 1, desc: '', amount: 1, date: '2023-01-14');
+  BankTransaction transData = BankTransaction(
+      id: '',
+      refCode: '',
+      bankId: '',
+      action: '',
+      desc: '',
+      branchId: '',
+      amount: '');
   final bankingCtrl = Get.put(BankingCtrl());
   TextEditingController descctrl = TextEditingController();
   TextEditingController amountctrl = TextEditingController();
-  TextEditingController datectrl = TextEditingController();
+  TextEditingController refcodectrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -34,60 +39,21 @@ class _BankTransFormState extends State<BankTransForm> {
   @override
   void initState() {
     super.initState();
-    setForm();
   }
 
   @override
   void dispose() {
     descctrl.dispose();
     amountctrl.dispose();
-    datectrl.dispose();
+    refcodectrl.dispose();
     super.dispose();
-  }
-
-  setForm() {
-    if (bankingCtrl.isTransEdit.value) {
-      pageTitle = 'Edit Bank Transaction';
-      descctrl.text = bankingCtrl.accBankTrans
-          .where((element) => element.id == (bankingCtrl.transToEdit.value))
-          .first
-          .desc;
-      bankingCtrl.accDropdown.value = bankingCtrl.bankAccounts
-          .where((element) =>
-              element.id ==
-              (bankingCtrl.accBankTrans
-                  .where((element) =>
-                      element.id == (bankingCtrl.transToEdit.value))
-                  .first
-                  .bankId))
-          .first
-          .bankName;
-      bankingCtrl.transTypeDropdown.value = bankingCtrl.accBankTrans
-          .where((element) => element.id == (bankingCtrl.transToEdit.value))
-          .first
-          .action
-          .toString();
-      amountctrl.text = bankingCtrl.accBankTrans
-          .where((element) => element.id == (bankingCtrl.transToEdit.value))
-          .first
-          .amount
-          .toString();
-      datectrl.text = bankingCtrl.accBankTrans
-          .where((element) => element.id == (bankingCtrl.transToEdit.value))
-          .first
-          .date;
-    } else {
-      pageTitle = 'Add Bank Transaction';
-      descctrl.clear();
-      amountctrl.clear();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: secAppBar(pageTitle: pageTitle),
+        appBar: secAppBar(pageTitle: 'Add Bank Transaction'),
         body: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 25, left: 30, right: 30),
             child: Column(
@@ -98,18 +64,6 @@ class _BankTransFormState extends State<BankTransForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Obx(() => !bankingCtrl.isTransEdit.value
-                              ? formDropDownField(
-                                  label: 'Bank Account',
-                                  dropdownValue: bankingCtrl.accDropdown.value,
-                                  dropItems: bankingCtrl.bankAccStrs,
-                                  bgcolor: kGrey,
-                                  function: (String? newValue) {
-                                    setState(() {
-                                      bankingCtrl.accDropdown.value = newValue!;
-                                    });
-                                  })
-                              : const SizedBox()),
                           formDropDownField(
                               label: 'Transaction Type',
                               dropdownValue:
@@ -123,6 +77,19 @@ class _BankTransFormState extends State<BankTransForm> {
                                 });
                               }),
                           formField(
+                              label: 'Reference Code',
+                              require: true,
+                              controller: refcodectrl,
+                              type: TextInputType.name,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the transaction reference code';
+                                }
+                                return null;
+                              }),
+                          descFormField(
+                              label: 'Description', controller: descctrl),
+                          formField(
                               label: 'Amount(in Kes)',
                               require: true,
                               controller: amountctrl,
@@ -133,65 +100,22 @@ class _BankTransFormState extends State<BankTransForm> {
                                 }
                                 return null;
                               }),
-                          descFormField(
-                              label: 'Description', controller: descctrl),
-                          dateFormField(
-                              label: 'Date of Payment',
-                              controller: datectrl,
-                              showDate: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2000),
-                                    lastDate: DateTime.now());
-
-                                if (pickedDate != null) {
-                                  String formattedDate =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(pickedDate);
-
-                                  setState(() {
-                                    datectrl.text = formattedDate;
-                                  });
-                                }
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the date of payment';
-                                }
-                                return null;
-                              })
                         ],
                       )),
                   priBtn(
                     bgColour: kDarkGreen,
                     txtColour: Colors.white,
-                    label: pageTitle,
+                    label: 'Add Transaction',
                     isLoading: _isLoading,
                     function: () async {
                       setState(() {
                         _isLoading = true;
                       });
                       if (_formKey.currentState!.validate()) {
-                        bankTransData.desc = descctrl.text;
-                        bankTransData.action = bankingCtrl.transTypeDropdown.value;
-                        bankTransData.bankId=bankingCtrl.transAccToShow.id as int;
-                        // bankTransData.bankId = int.parse(bankingCtrl
-                        //     .bankAccounts
-                        //     .where((element) =>
-                        //         element.bankName ==
-                        //         (bankingCtrl.accDropdown.value))
-                        //     .first
-                        //     .id);
-                        bankTransData.amount = int.parse(amountctrl.text);
-                        bankTransData.date = datectrl.text;
-                        print(bankTransData);
-
-                        if (bankingCtrl.isBankEdit.value) {
-                          bankingCtrl.editBankTrans(bankTransData);
-                        } else {
-                          bankingCtrl.addBankTrans(bankTransData);
-                        }
+                        transData.amount = amountctrl.text;
+                        transData.desc = descctrl.text;
+                        transData.refCode = refcodectrl.text;
+                        bankingCtrl.addBankTrans(transData);
                       }
                       await Future.delayed(const Duration(seconds: 2));
                       setState(() {

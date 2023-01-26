@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/banking/banking_form.dart';
+import 'package:nawiri/core/home/banking/banking_transactions.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/utils/functions.dart';
@@ -214,13 +215,14 @@ class _BankingPageState extends State<BankingPage> {
                                                 onTap: () async {
                                                   bankingCtrl.isBankEdit.value =
                                                       true;
-                                                  bankingCtrl.bankToEdit.value =
-                                                      accounts[index].id;
+                                                  bankingCtrl.fieldsRequired
+                                                      .value = false;
+                                                  bankingCtrl.accToShow =
+                                                      accounts[index];
+
                                                   bankingCtrl
-                                                          .transToShow.value =
-                                                      accounts[index].id;
-                                                  await bankingCtrl
-                                                      .getAccBankTrans();
+                                                      .getBankTransactions();
+                                                  Get.to(const BankTransPage());
                                                 },
                                               )));
                                     },
