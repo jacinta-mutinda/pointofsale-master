@@ -113,9 +113,9 @@ class _SupplierFormState extends State<SupplierForm> {
                               controller: itemctrl,
                               type: TextInputType.name,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the item supplied';
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return 'Please enter the item supplied';
+                                // }
                                 return null;
                               }),
                           formField(
@@ -124,9 +124,9 @@ class _SupplierFormState extends State<SupplierForm> {
                               controller: bankaccctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the account number';
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return 'Please enter the account number';
+                                // }
                                 return null;
                               }),
                           formField(
@@ -135,9 +135,9 @@ class _SupplierFormState extends State<SupplierForm> {
                               controller: krapinctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter the supplier's KRA pin";
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return "Please enter the supplier's KRA pin";
+                                // }
                                 return null;
                               }),
                           formField(
@@ -146,9 +146,9 @@ class _SupplierFormState extends State<SupplierForm> {
                               controller: addressctrl,
                               type: TextInputType.name,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter the supplier's address";
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return "Please enter the supplier's address";
+                                // }
                                 return null;
                               }),
                           formField(
@@ -171,12 +171,12 @@ class _SupplierFormState extends State<SupplierForm> {
                               controller: cppersonctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter the contact person's Phone Number";
-                                }
-                                if (value.length != 10) {
-                                  return 'Please enter a 10-digit phone number';
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return "Please enter the contact person's Phone Number";
+                                // }
+                                // if (value.length != 10) {
+                                //   return 'Please enter a 10-digit phone number';
+                                // }
                                 return null;
                               }),
                         ],

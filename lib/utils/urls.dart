@@ -62,3 +62,8 @@ const loginUrl = '$rootUrl/login';
 // Drawer Urls
 const getShiftSalesUrl = '$rootUrl/getSalesByShifts';
 const getShiftFloat = '$rootUrl/getFloatsByShifts';
+
+// Shift Urls --------------------------------------
+
+const createShiftUrl = '$rootUrl/createShift';
+const closeShiftUrl = '$rootUrl/closeShift';

@@ -4,7 +4,7 @@ class Shift {
   String desc;
   String time;
   int float;
-  bool dayShift;
+  String dayShift;
 
   Shift(
       {required this.id,

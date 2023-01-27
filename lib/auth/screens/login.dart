@@ -4,6 +4,8 @@ import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
+import 'company_det.dart';
+
 class Login extends StatefulWidget {
   static const routeName = "/login";
 
@@ -80,6 +82,13 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
           )),
           buildNumberPad(),
+          const SizedBox(
+            height: 10.0,
+          ),
+          buildRegLink(),
+          const SizedBox(
+            height: 10.0,
+          ),
         ],
       ),
     );
@@ -202,15 +211,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           pinSixController.text;
                       auth.login(branch, pin);
 
-                      // formKey.currentState?.validate();
-                      // print(currentPin[0]+currentPin[1]);
-                      // print(currentPin);
-                      // Navigator.push(
-                      //
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) =>  const HomePage(),
-                      //     ));
+
                     })
               ],
             )
@@ -318,6 +319,7 @@ class _OtpScreenState extends State<OtpScreen> {
             child: Image.asset('assets/images/nawiri-logo.png',
                 width: 100, height: 100, fit: BoxFit.fill)),
         const Text("Enter your Nawiri Passcode", style: kSubTitle),
+
       ],
     );
   }
@@ -340,6 +342,19 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
           ),
         )
+      ],
+    );
+  }
+  buildRegLink() {
+    return Column(
+      children: [
+        textSpan(
+            mainLabel: "Don't have an account? ",
+            childLabel: 'Register',
+            function: () {
+              Get.to(const CompanyDetails());
+            })
+
       ],
     );
   }

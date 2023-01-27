@@ -10,11 +10,14 @@ import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout.dart';
+import 'package:nawiri/core/home/pos/checkout/pdf_invoice_api.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:nawiri/utils/urls.dart';
+
+import '../../../../utils/file_handle_api.dart';
 
 final customersCtrl = Get.put(CustomerCtrl());
 final posCtrl = Get.put(PoSCtrl());
@@ -187,9 +190,12 @@ class CheckoutCtrl extends GetxController {
             path: Icons.check_rounded,
             title: "Checkout Successful!",
             subtitle: "Thank you for Shopping with us!");
-        posCtrl.cancelSale();
-        await Future.delayed(const Duration(seconds: 2));
-        Get.off(() => NavigatorHandler(0));
+        fetchReceipt();
+
+
+        // posCtrl.cancelSale();
+        // await Future.delayed(const Duration(seconds: 2));
+        // Get.off(() => NavigatorHandler(0));
         return;
       }
       return;
@@ -215,5 +221,12 @@ class CheckoutCtrl extends GetxController {
     selectedCustAccId = ''.obs;
     selectedBankId = 1.obs;
     update();
+  }
+  fetchReceipt() async {
+    // generate pdf file
+    final pdfFile = await PdfInvoiceApi.generate();
+
+    // opening the pdf file
+    FileHandleApi.openFile(pdfFile);
   }
 }

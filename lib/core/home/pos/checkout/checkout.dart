@@ -271,7 +271,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             }
                             var paidTotal = cash + bank + onAcc + mobile;
                             var bal =
-                                (paidTotal - posCtrl.cartSale.total.value) * -1;
+                                (posCtrl.cartSale.total.value - paidTotal) * -1;
                             if (bal < 0) {
                               setState(() {
                                 balancectrl.text = 'Kes.$bal';

@@ -20,6 +20,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   TextEditingController usernamectrl = TextEditingController();
   TextEditingController emailctrl = TextEditingController();
   TextEditingController phonectrl = TextEditingController();
+  TextEditingController refctrl = TextEditingController();
   TextEditingController passctrl = TextEditingController();
   TextEditingController confirmpassctrl = TextEditingController();
   final RegExp phoneNo = RegExp(r"^\+?0[0-9]{10}$");
@@ -103,6 +104,14 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                 if (value.length != 10) {
                                   return 'Please enter your 10-digit phone number';
                                 }
+                                return null;
+                              }),
+                          formField(
+                              label: 'Refered by',
+                              require: true,
+                              controller: refctrl,
+                              type: TextInputType.number,
+                              validator: (value) {
                                 return null;
                               }),
                           passwordField(
