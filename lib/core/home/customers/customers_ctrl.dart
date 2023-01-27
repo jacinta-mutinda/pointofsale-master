@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerCtrl extends GetxController {
   RxString transtyeDrop = ''.obs;
-  RxString branchId = ''.obs;
+  String? branchId;
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
   RxBool showRecData = false.obs;
@@ -54,18 +54,16 @@ class CustomerCtrl extends GetxController {
   }
 
   setBranchId() async {
-    var prefs = await SharedPreferences.getInstance();
-    branchId.value = prefs.getString('branchId') ?? '00';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    branchId = prefs.getString('branchId');
   }
 
   // ---------- Get Functions -----------------
 
   getCustomers() async {
     clearLists();
-    // get branchId from functions.dart
     try {
-      final response = await http.get(
-          Uri.parse('$getCustomersUrl/${branchId.value}'),
+      final response = await http.get(Uri.parse('$getCustomersUrl/$branchId'),
           headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
@@ -103,7 +101,6 @@ class CustomerCtrl extends GetxController {
       'customer_id': custToShow.id,
     });
     try {
-      branchId.value = '122';
       final response = await http.post(Uri.parse(getCustReceiptsUrl),
           body: body, headers: headers);
       if (response.statusCode == 200) {
@@ -138,7 +135,7 @@ class CustomerCtrl extends GetxController {
 
   addCustomer(Customer custData) async {
     var body = jsonEncode({
-      "branch_id": branchId.value,
+      "branch_id": branchId,
       "customer_name": custData.name,
       "customer_running_bal": custData.runningBal,
       "customer_bank_acc": custData.bankacc,
@@ -171,7 +168,7 @@ class CustomerCtrl extends GetxController {
 
   addCustReceipt(CustReceipt recData) async {
     var body = jsonEncode({
-      "branch_id": branchId.value,
+      "branch_id": branchId,
       "transaction_date": DateTime.now().toString(),
       "customer": recData.custId,
       "transaction_ref": recData.ref,
@@ -212,7 +209,7 @@ class CustomerCtrl extends GetxController {
   editCustomer(Customer custData) async {
     var body = jsonEncode({
       "customer_id": custToShow.id,
-      "branch_id": branchId.value,
+      "branch_id": branchId,
       "customer_name": custData.name,
       "customer_running_bal": custData.runningBal,
       "customer_bank_acc": custData.bankacc,
