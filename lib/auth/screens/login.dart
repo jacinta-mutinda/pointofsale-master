@@ -27,14 +27,9 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(color: Colors.white),
-            child: OtpScreen(),
-          ),
-        ));
+    return Scaffold(
+      body: OtpScreen(),
+    );
   }
 }
 
@@ -65,7 +60,6 @@ class _OtpScreenState extends State<OtpScreen> {
     return SafeArea(
       child: Column(
         children: <Widget>[
-          buildExitButton(),
           Expanded(
               child: Container(
             alignment: const Alignment(0, 0.5),
@@ -75,20 +69,13 @@ class _OtpScreenState extends State<OtpScreen> {
               children: <Widget>[
                 buildSecurityText(),
                 const SizedBox(
-                  height: 40.0,
+                  height: 20.0,
                 ),
                 buildPinRow(),
               ],
             ),
           )),
-          buildNumberPad(),
-          const SizedBox(
-            height: 10.0,
-          ),
-          buildRegLink(),
-          const SizedBox(
-            height: 10.0,
-          ),
+          buildNumberPad()
         ],
       ),
     );
@@ -98,13 +85,11 @@ class _OtpScreenState extends State<OtpScreen> {
     return Expanded(
         child: Container(
       alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 32.0),
+      child: SizedBox(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 KeyboardNumber(
                     n: 1,
@@ -127,7 +112,7 @@ class _OtpScreenState extends State<OtpScreen> {
               height: 10.0,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 KeyboardNumber(
                     n: 4,
@@ -150,7 +135,7 @@ class _OtpScreenState extends State<OtpScreen> {
               height: 10.0,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 KeyboardNumber(
                     n: 7,
@@ -173,23 +158,20 @@ class _OtpScreenState extends State<OtpScreen> {
               height: 10.0,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
-                  width: 60.0,
-                  child: MaterialButton(
-                    height: 60.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(60.0),
-                    ),
-                    onPressed: () {
-                      clearPin();
-                    },
-                    child: const Icon(
-                      Icons.backspace_outlined,
-                      color: kLightGreen,
-                    ),
-                    //color: Colors.black12,
+                MaterialButton(
+                  height: 60.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(60.0),
+                  ),
+                  onPressed: () {
+                    clearPin();
+                  },
+                  child: const Icon(
+                    size: 40,
+                    Icons.backspace_outlined,
+                    color: kLightGreen,
                   ),
                 ),
                 KeyboardNumber(
@@ -197,12 +179,13 @@ class _OtpScreenState extends State<OtpScreen> {
                     onPressed: () {
                       pinIndexSetup("0");
                     }),
-                smallPriBtn(
-                    label: 'Log In',
-                    txtColour: Colors.white,
-                    bgColour: kDarkGreen,
-                    isLoading: _isLoading,
-                    function: () {
+                Container(
+                  width: 70,
+                  height: 70,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {
                       var branch =
                           pinOneController.text + pinTwoController.text;
                       var pin = pinThreeController.text +
@@ -210,11 +193,38 @@ class _OtpScreenState extends State<OtpScreen> {
                           pinFiveController.text +
                           pinSixController.text;
                       auth.login(branch, pin);
-
-
-                    })
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 70),
+                      backgroundColor: kDarkGreen,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                    child: (_isLoading)
+                        ? const SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 1.5,
+                            ))
+                        : const Text('Log In',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Nunito',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700)),
+                  ),
+                )
               ],
-            )
+            ),
+            textSpan(
+                mainLabel: "Don't have an account? ",
+                childLabel: 'Register',
+                function: () {
+                  Get.to(const CompanyDetails());
+                })
           ],
         ),
       ),
@@ -319,42 +329,6 @@ class _OtpScreenState extends State<OtpScreen> {
             child: Image.asset('assets/images/nawiri-logo.png',
                 width: 100, height: 100, fit: BoxFit.fill)),
         const Text("Enter your Nawiri Passcode", style: kSubTitle),
-
-      ],
-    );
-  }
-
-  buildExitButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: MaterialButton(
-            onPressed: () {},
-            height: 50.0,
-            minWidth: 50.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0)),
-            child: const Icon(
-              Icons.clear,
-              color: Colors.white,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-  buildRegLink() {
-    return Column(
-      children: [
-        textSpan(
-            mainLabel: "Don't have an account? ",
-            childLabel: 'Register',
-            function: () {
-              Get.to(const CompanyDetails());
-            })
-
       ],
     );
   }
@@ -377,6 +351,7 @@ class PINNumber extends StatelessWidget {
         child: SizedBox(
       width: 50.0,
       child: TextFormField(
+        keyboardType: TextInputType.none,
         controller: textEditingController,
         enabled: true,
         obscureText: true,
@@ -425,6 +400,7 @@ class KeyboardNumber extends StatelessWidget {
     return Container(
       width: 50.0,
       height: 50.0,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration:
           const BoxDecoration(shape: BoxShape.circle, color: kDarkGreen),
       alignment: Alignment.center,
