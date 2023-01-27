@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/home.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
+import 'package:nawiri/core/home/pos/pos_ctrl.dart';
+import 'package:nawiri/core/home/suppliers/suppliers_ctrl.dart';
+import 'package:nawiri/core/home/transactions/transactions_ctrl.dart';
 import 'package:nawiri/core/market/market.dart';
 import 'package:nawiri/core/reports/reports.dart';
 import 'package:nawiri/core/work_period/work_period.dart';
@@ -37,6 +41,10 @@ class _NavigatorHandlerState extends State<NavigatorHandler> {
     super.initState();
     Get.put(InventoryCtrl());
     Get.put(CustomerCtrl());
+    Get.put(SupplierCtrl());
+    Get.put(BankingCtrl());
+    Get.put(TransactionCtrl());
+    Get.put(PoSCtrl());
   }
 
   @override

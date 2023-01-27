@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:nawiri/core/home/customers/customer_bills.dart';
 import 'package:nawiri/core/home/customers/customer_form.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
-import 'package:nawiri/core/home/pos/checkout/checkout_ctrl.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/utils/functions.dart';
