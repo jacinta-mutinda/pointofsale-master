@@ -42,13 +42,17 @@ class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            padding: const EdgeInsets.all(15),
-            child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 7.0,
-                mainAxisSpacing: 8.0,
-                children: getCats())));
+        body: invtCtrl.categories.isEmpty
+            ? noItemsWidget(
+                label:
+                    'No categories to display! Please add categories in Inventory')
+            : Container(
+                padding: const EdgeInsets.all(15),
+                child: GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 7.0,
+                    mainAxisSpacing: 8.0,
+                    children: getCats())));
   }
 
   List<Widget> getCats() {
@@ -129,10 +133,17 @@ class _ProductsState extends State<Products> {
   List<Widget> getProds() {
     List<Widget> prods = [];
     for (var product in posCtrl.catProds) {
-      print(product.id);
       prods.add(GestureDetector(
           onTap: () {
             posCtrl.addToCart(product.id);
+          },
+          onDoubleTap: () {
+            posCtrl.prodToChange = product;
+            Get.dialog(const CartItem());
+          },
+          onLongPress: () {
+            posCtrl.prodToChange = product;
+            Get.dialog(const CartItem());
           },
           child: Obx(() => Card(
               color: posCtrl.isSelected(product.id) ? kDarkGreen : kGrey,
@@ -141,17 +152,12 @@ class _ProductsState extends State<Products> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                      onLongPress: () {
-                        posCtrl.updateCart();
-                      },
-                      child: Icon(
-                        Icons.shopping_basket,
-                        color: posCtrl.isSelected(product.id)
-                            ? kLightGreen
-                            : Colors.black,
-                        size: 64,
-                      ),
+                    Icon(
+                      Icons.shopping_basket,
+                      color: posCtrl.isSelected(product.id)
+                          ? kLightGreen
+                          : Colors.black,
+                      size: 64,
                     ),
                     Padding(
                         padding: const EdgeInsets.only(top: 10),
@@ -228,46 +234,49 @@ class _CartState extends State<Cart> {
                           child:
                               Column(mainAxisSize: MainAxisSize.min, children: [
                             ListTile(
-                              title: Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(cart[index].name,
-                                      style: const TextStyle(
-                                          fontFamily: 'Nunito',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: kDarkGreen))),
-                              subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Quantity: ${cart[index].quantity}',
-                                        style: kBlackTxt),
-                                    Text(
-                                        'Unit Price: Kes.${formatAmount((cart[index].unitPrice).toString())}',
-                                        style: kBlackTxt)
-                                  ]),
-                              trailing: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                        width: 25,
-                                        height: 25,
-                                        margin:
-                                            const EdgeInsets.only(bottom: 7),
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: kLightGreen),
-                                        child: const Icon(Icons.edit,
-                                            size: 15, color: Colors.white)),
-                                    Text(
-                                      'Total: Kes.${formatAmount((cart[index].total).toString())}',
-                                      style: kTotalTxt,
-                                    )
-                                  ]),
-                              onTap: () async {
-                                posCtrl.selectedItem = cart[index];
-                                Get.dialog(const CartItem());
-                              },
-                            ),
+                                title: Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Text(cart[index].name,
+                                        style: const TextStyle(
+                                            fontFamily: 'Nunito',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: kDarkGreen))),
+                                subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Quantity: ${cart[index].quantity}',
+                                          style: kBlackTxt),
+                                      Text(
+                                          'Unit Price: Kes.${formatAmount((cart[index].unitPrice).toString())}',
+                                          style: kBlackTxt)
+                                    ]),
+                                trailing: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      GestureDetector(
+                                          onTap: () {
+                                            posCtrl.selectedItem = cart[index];
+                                            posCtrl.removeCartItem();
+                                          },
+                                          child: Container(
+                                              width: 25,
+                                              height: 25,
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 7),
+                                              decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: kPrimaryRed),
+                                              child: const Icon(
+                                                  Icons.remove_circle,
+                                                  size: 15,
+                                                  color: Colors.white))),
+                                      Text(
+                                        'Total: Kes.${formatAmount((cart[index].total).toString())}',
+                                        style: kTotalTxt,
+                                      )
+                                    ])),
                           ])),
                     );
                   },
@@ -309,6 +318,7 @@ class _CartState extends State<Cart> {
                   isLoading: _isCancelLoading,
                   function: () {
                     posCtrl.cancelSale();
+                    DefaultTabController.of(context)!.animateTo(0);
                   })
             ])
           ])),
@@ -335,8 +345,8 @@ class _CartItemState extends State<CartItem> {
   @override
   void initState() {
     super.initState();
-    unitCtrl.text = posCtrl.selectedItem.unitPrice.value.toString();
-    quantityCtrl.text = posCtrl.selectedItem.quantity.value.toString();
+    unitCtrl.text = posCtrl.prodToChange.retailMg;
+    quantityCtrl.text = '1';
   }
 
   @override
@@ -379,29 +389,17 @@ class _CartItemState extends State<CartItem> {
               priBtn(
                 bgColour: kDarkGreen,
                 txtColour: Colors.white,
-                label: 'Update Item',
+                label: 'Add To Cart',
                 isLoading: _isLoading,
                 function: () async {
                   if (_formKey.currentState!.validate()) {
-                    posCtrl.newCartItem.quantity.value =
-                        int.parse(quantityCtrl.text);
-                    posCtrl.newCartItem.unitPrice.value =
-                        int.parse(unitCtrl.text);
-                    posCtrl.newCartItem.total.value =
-                        (int.parse(quantityCtrl.text) *
-                            int.parse(unitCtrl.text));
-                    posCtrl.updateCart();
+                    posCtrl.prodToChange.cartQuantity = quantityCtrl.text;
+                    posCtrl.prodToChange.retailMg = unitCtrl.text;
+                    posCtrl.addChangedItem();
+                    Get.back();
                   }
                 },
-              ),
-              priBtn(
-                  label: 'Remove Item',
-                  txtColour: Colors.white,
-                  bgColour: kPrimaryRed,
-                  isLoading: _isRemoveLoading,
-                  function: () {
-                    posCtrl.removeCartItem();
-                  })
+              )
             ]))
       ])
     ]);

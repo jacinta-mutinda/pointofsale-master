@@ -56,6 +56,44 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.dispose();
   }
 
+  void setBalance() {
+    var bank = 0;
+    var onAcc = 0;
+    var mobile = 0;
+    var cash = 0;
+    if (cashAmtCtrl.text.isEmpty) {
+      cash = 0;
+    } else {
+      cash = int.parse(cashAmtCtrl.text);
+    }
+    if (bankAmtCtrl.text.isEmpty) {
+      bank = 0;
+    } else {
+      bank = int.parse(bankAmtCtrl.text);
+    }
+    if (mobileAmtCtrl.text.isEmpty) {
+      mobile = 0;
+    } else {
+      mobile = int.parse(mobileAmtCtrl.text);
+    }
+    if (onAccAmtCtrl.text.isEmpty) {
+      onAcc = 0;
+    } else {
+      onAcc = int.parse(onAccAmtCtrl.text);
+    }
+    var paidTotal = cash + bank + onAcc + mobile;
+    var bal = (paidTotal - posCtrl.cartSale.total.value) * -1;
+    if (bal < 0) {
+      setState(() {
+        balancectrl.text = 'Kes.$bal';
+      });
+    } else {
+      setState(() {
+        balancectrl.text = 'Kes.$bal';
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -138,6 +176,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter the amount paid';
                                     }
+                                    setBalance();
                                     return null;
                                   }),
                               const Padding(
@@ -160,6 +199,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         if (value == null || value.isEmpty) {
                                           return 'Please enter the amount paid';
                                         }
+                                        setBalance();
                                         return null;
                                       }),
                                   const Padding(
@@ -192,6 +232,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter the amount paid';
                                     }
+                                    setBalance();
                                     return null;
                                   }),
                               const Padding(
@@ -229,6 +270,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter the amount paid';
                                     }
+                                    setBalance();
                                     return null;
                                   }),
                               const Padding(
@@ -245,42 +287,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           readonly: true,
                           type: TextInputType.number,
                           validator: (value) {
-                            var bank = 0;
-                            var onAcc = 0;
-                            var mobile = 0;
-                            var cash = 0;
-                            if (cashAmtCtrl.text.isEmpty) {
-                              cash = 0;
-                            } else {
-                              cash = int.parse(cashAmtCtrl.text);
-                            }
-                            if (bankAmtCtrl.text.isEmpty) {
-                              bank = 0;
-                            } else {
-                              bank = int.parse(bankAmtCtrl.text);
-                            }
-                            if (mobileAmtCtrl.text.isEmpty) {
-                              mobile = 0;
-                            } else {
-                              mobile = int.parse(mobileAmtCtrl.text);
-                            }
-                            if (onAccAmtCtrl.text.isEmpty) {
-                              onAcc = 0;
-                            } else {
-                              onAcc = int.parse(onAccAmtCtrl.text);
-                            }
-                            var paidTotal = cash + bank + onAcc + mobile;
-                            var bal =
-                                (posCtrl.cartSale.total.value - paidTotal) * -1;
-                            if (bal < 0) {
-                              setState(() {
-                                balancectrl.text = 'Kes.$bal';
-                              });
-                            } else {
-                              setState(() {
-                                balancectrl.text = 'Kes.$bal';
-                              });
-                            }
                             return null;
                           }),
                     ]),

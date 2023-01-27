@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
@@ -17,7 +16,20 @@ class PoSCtrl extends GetxController {
   RxList<String> selectedProdIds = RxList<String>();
   RxList<Product> selectedProds = RxList<Product>();
   RxList<String> selectedCatIds = RxList<String>();
-  RxList<CartItem> tempCart = RxList<CartItem>();
+  RxBool isProdChange = false.obs;
+  Product prodToChange = Product(
+      id: '',
+      cartQuantity: '',
+      name: '',
+      desc: '',
+      code: '',
+      retailMg: '',
+      wholesaleMg: '',
+      buyingPrice: '',
+      categoryid: '',
+      uomId: '',
+      blockingneg: '',
+      active: '');
   RxInt cartLength = 0.obs;
   CartItem selectedItem = CartItem(
       id: '',
@@ -53,10 +65,48 @@ class PoSCtrl extends GetxController {
   }
 
   addToCart(String prodId) {
-    selectedProds.add(
-        invtCtrl.products.where((element) => element.id == (prodId)).first);
-    selectedProdIds.add(prodId);
+    if (selectedProdIds.contains(prodId)) {
+      selectedProds.remove(
+          invtCtrl.products.where((element) => element.id == (prodId)).first);
+      selectedProdIds.remove(prodId);
+    } else {
+      selectedProds.add(
+          invtCtrl.products.where((element) => element.id == (prodId)).first);
+      selectedProdIds.add(prodId);
+    }
     cartLength.value = selectedProds.length;
+  }
+
+  addChangedItem() {
+    Product prodToAdd = Product(
+        cartQuantity: prodToChange.cartQuantity,
+        id: prodToChange.id,
+        name: prodToChange.name,
+        desc: prodToChange.desc,
+        code: prodToChange.code,
+        retailMg: prodToChange.retailMg,
+        wholesaleMg: prodToChange.wholesaleMg,
+        buyingPrice: prodToChange.buyingPrice,
+        categoryid: prodToChange.categoryid,
+        uomId: prodToChange.uomId,
+        blockingneg: prodToChange.blockingneg,
+        active: prodToChange.active);
+    selectedProds.add(prodToAdd);
+    selectedProdIds.add(prodToAdd.id);
+    cartLength.value++;
+    prodToChange = Product(
+        cartQuantity: '',
+        id: '',
+        name: '',
+        desc: '',
+        code: '',
+        retailMg: '',
+        wholesaleMg: '',
+        buyingPrice: '',
+        categoryid: '',
+        uomId: '',
+        blockingneg: '',
+        active: '');
   }
 
   createCart() {
@@ -69,9 +119,9 @@ class PoSCtrl extends GetxController {
           id: (cartItemId + 1).toString(),
           name: prod.name,
           prodId: prod.id,
-          quantity: 1.obs,
-          total: int.parse(prodPrice).obs,
-          unitPrice: int.parse(prodPrice).obs));
+          quantity: int.parse(prod.cartQuantity).obs,
+          unitPrice: int.parse(prodPrice).obs,
+          total: (int.parse(prodPrice) * int.parse(prod.cartQuantity)).obs));
       cartItemId++;
     }
     cartLength.value = cartSale.cart.length;
@@ -81,23 +131,22 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  updateCart() {
-    cartSale.cart.removeWhere((element) => element.id == (selectedItem.id));
-    cartSale.cart.add(CartItem(
-        id: selectedItem.id,
-        name: selectedItem.name,
-        prodId: selectedItem.prodId,
-        quantity: newCartItem.quantity,
-        total: newCartItem.total,
-        unitPrice: newCartItem.unitPrice));
-    cartSale.total.value = 0;
-    for (var item in cartSale.cart) {
-      cartSale.total.value = cartSale.total.value + item.total.value;
-    }
-    cartLength.value = cartSale.cart.length;
-    update();
-    Get.back();
-  }
+  // updateCart() {
+  //   cartSale.cart.removeWhere((element) => element.id == (selectedItem.id));
+  //   cartSale.cart.add(CartItem(
+  //       id: selectedItem.id,
+  //       name: selectedItem.name,
+  //       prodId: selectedItem.prodId,
+  //       quantity: newCartItem.quantity,
+  //       total: newCartItem.total,
+  //       unitPrice: newCartItem.unitPrice));
+  //   cartSale.total.value = 0;
+  //   for (var item in cartSale.cart) {
+  //     cartSale.total.value = cartSale.total.value + item.total.value;
+  //   }
+  //   cartLength.value = cartSale.cart.length;
+  //   update();
+  // }
 
   removeCartItem() {
     selectedProds.removeWhere((element) => element.id == (selectedItem.prodId));
@@ -109,7 +158,6 @@ class PoSCtrl extends GetxController {
       cartSale.total.value = cartSale.total.value + item.total.value;
     }
     update();
-    Get.back();
   }
 
   bool isSelected(String prodId) {
@@ -141,6 +189,5 @@ class PoSCtrl extends GetxController {
     selectedProdIds.clear();
     selectedProds.clear();
     checkoutCtrl.reset();
-    Get.offAll(NavigatorHandler(0));
   }
 }

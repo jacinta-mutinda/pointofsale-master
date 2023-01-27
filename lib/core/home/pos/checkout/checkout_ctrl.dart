@@ -3,21 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/home_models.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout.dart';
-import 'package:nawiri/core/home/pos/checkout/pdf_invoice_api.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:nawiri/utils/urls.dart';
-
-import '../../../../utils/file_handle_api.dart';
 
 final customersCtrl = Get.put(CustomerCtrl());
 final posCtrl = Get.put(PoSCtrl());
@@ -192,7 +188,6 @@ class CheckoutCtrl extends GetxController {
             subtitle: "Thank you for Shopping with us!");
         fetchReceipt();
 
-
         // posCtrl.cancelSale();
         // await Future.delayed(const Duration(seconds: 2));
         // Get.off(() => NavigatorHandler(0));
@@ -222,11 +217,12 @@ class CheckoutCtrl extends GetxController {
     selectedBankId = 1.obs;
     update();
   }
-  fetchReceipt() async {
-    // generate pdf file
-    final pdfFile = await PdfInvoiceApi.generate();
 
-    // opening the pdf file
-    FileHandleApi.openFile(pdfFile);
+  fetchReceipt() async {
+    //   // generate pdf file
+    //   final pdfFile = await PdfInvoiceApi.generate();
+
+    //   // opening the pdf file
+    //   FileHandleApi.openFile(pdfFile);
   }
 }

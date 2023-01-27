@@ -330,6 +330,7 @@ class InventoryCtrl extends GetxController {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Product product = Product(
+              cartQuantity: '1',
               id: item['location_product_id'],
               name: item['location_product_description'],
               desc: item['location_product_description'],

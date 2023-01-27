@@ -25,9 +25,11 @@ class Product {
   String uomId;
   String blockingneg;
   String active;
+  String cartQuantity;
 
   Product(
       {required this.id,
+      required this.cartQuantity,
       required this.name,
       required this.desc,
       required this.code,

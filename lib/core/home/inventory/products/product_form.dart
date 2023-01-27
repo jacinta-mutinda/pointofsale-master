@@ -23,6 +23,7 @@ class _ProductFormState extends State<ProductForm> {
   String pageTitle = '';
   Product prodData = Product(
       id: '',
+      cartQuantity: '',
       name: '',
       desc: '',
       categoryid: '',
