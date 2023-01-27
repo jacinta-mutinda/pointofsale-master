@@ -27,6 +27,7 @@ class _SupplierPageState extends State<SupplierPage> {
   @override
   void initState() {
     super.initState();
+    supplierCtrl.getSuppliers();
     _scrollctrl.addListener(() {
       if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
         listAppender(
@@ -218,7 +219,8 @@ class _SupplierPageState extends State<SupplierPage> {
                                                       .value = false;
                                                   supplierCtrl.supToShow =
                                                       suppliers[index];
-                                                  supplierCtrl.getSupPayments(suppliers[index].id);
+                                                  supplierCtrl.getSupPayments(
+                                                      suppliers[index].id);
                                                   Get.to(
                                                       const SupplierPayments());
                                                 },

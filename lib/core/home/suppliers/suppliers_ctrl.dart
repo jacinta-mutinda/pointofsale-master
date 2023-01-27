@@ -8,10 +8,11 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:nawiri/utils/urls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SupplierCtrl extends GetxController {
   RxString transtyeDrop = ''.obs;
-  RxString branchId = ''.obs;
+  String? branchId;
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
   RxBool showPayData = false.obs;
@@ -46,18 +47,21 @@ class SupplierCtrl extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    setBranchId();
     getSuppliers();
+  }
+
+  setBranchId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    branchId = prefs.getString('branchId');
   }
 
   // ---------- Get Functions -----------------
 
   getSuppliers() async {
     clearLists();
-    // get branchId from functions.dart
     try {
-      branchId.value = '122';
-      final response = await http.get(
-          Uri.parse('$getSupplierUrl/${branchId.value}'),
+      final response = await http.get(Uri.parse('$getSupplierUrl/$branchId'),
           headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
@@ -87,61 +91,17 @@ class SupplierCtrl extends GetxController {
     }
   }
 
-  // getSupPayments() async {
-  //   clearPayLists();
-  //   // get branchId from functions.dart
-  //   try {
-  //     branchId.value = '122';
-  //     final response = await http.get(
-  //         Uri.parse('$getSupPayUrl/${branchId.value}'),
-  //         headers: apiHeaders);
-  //     print(response.body);
-  //     if (response.statusCode == 200) {
-  //       var resData = json.decode(response.body);
-  //       for (var item in resData) {
-  //         if (item['supPay'] == supToShow.id) {
-  //           SupplierPayment supPay = SupplierPayment(
-  //               id: item['receipt_id'],
-  //               supId: item['supplier'],
-  //               ref: item['transaction_ref'],
-  //               date: item['date'],
-  //               amount: item['transaction_amount'],
-  //               discount: item['discount'],
-  //               transtype: item['trans_type'],
-  //               comment: item['transaction_comment']);
-  //           supPayments.add(supPay);
-  //         }
-  //       }
-  //       filterSupPayPaginator();
-  //       update();
-  //       return;
-  //     }
-  //     return;
-  //   } catch (error) {
-  //     debugPrint("$error");
-  //     showSnackbar(
-  //         path: Icons.close_rounded,
-  //         title: "Failed to load customers!",
-  //         subtitle: "Please check your internet connection or try again later");
-  //   }
-  // }
-  getSupPayments(String supplier_id) async {
+  getSupPayments(String supplierId) async {
     clearPayLists();
     var body = jsonEncode({
-      'supplier_id': supplier_id,
+      'supplier_id': supplierId,
     });
     try {
-      branchId.value = '122';
-      // final response = await http.get(
-      //     Uri.parse('$getCustReceiptsUrl/${branchId.value}'),
-      //     headers: apiHeaders);
       final response = await http.post(Uri.parse(getSupPayUrl),
           body: body, headers: headers);
-      print(response.body);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
-
           SupplierPayment supplierPayment = SupplierPayment(
               id: item['supplier_trans_id'],
               supId: item['supplier'],
@@ -153,7 +113,6 @@ class SupplierCtrl extends GetxController {
               transtype: item['supplier_trans_id'],
               comment: item['transaction_comment']);
           supPayments.add(supplierPayment);
-
         }
         filterSupPayPaginator();
         update();
@@ -169,13 +128,12 @@ class SupplierCtrl extends GetxController {
     }
   }
 
-
   // ---------- Add Functions -----------------
 
   addSupplier(Supplier supData) async {
     var body = jsonEncode({
       'supplier_name': supData.name,
-      'branch_id': 122,
+      'branch_id': branchId,
       'supplier_running_bal': 0,
       'supplier_item': supData.item,
       'supplier_bank_acc': supData.bankacc,
@@ -187,7 +145,6 @@ class SupplierCtrl extends GetxController {
     try {
       var res = await http.post(Uri.parse(addSupplierUrl),
           body: body, headers: headers);
-      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded, title: "Supplier Added!", subtitle: "");
@@ -207,20 +164,20 @@ class SupplierCtrl extends GetxController {
 
   addSupPay(SupplierPayment supPayData) async {
     var body = jsonEncode({
-      "branch_id": branchId.value,
+      "branch_id": branchId,
       "supplier": supPayData.supId,
-      "bank_id":"1d4c4e57-aac3-497b-bbb3-f3cae6912577",
+      "bank_id": "1d4c4e57-aac3-497b-bbb3-f3cae6912577",
       "transaction_ref": supPayData.ref,
       "transaction_amount": int.parse(supPayData.amount),
       "transaction_comment": supPayData.comment,
       "discount": supPayData.discount,
       "transtype": supPayData.transtype,
       "trans_type": 10,
-      "created_by":""
+      "created_by": ""
     });
     try {
       var res =
-      await http.post(Uri.parse(addSupPayUrl), body: body, headers: {});
+          await http.post(Uri.parse(addSupPayUrl), body: body, headers: {});
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded,

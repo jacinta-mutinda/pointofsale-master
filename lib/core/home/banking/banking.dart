@@ -27,6 +27,7 @@ class _BankingPageState extends State<BankingPage> {
   @override
   void initState() {
     super.initState();
+    bankingCtrl.getBanks();
     _scrollctrl.addListener(() {
       if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
         listAppender(

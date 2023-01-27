@@ -27,6 +27,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
   @override
   void initState() {
     super.initState();
+    transCtrl.getExpesnses();
     _scrollctrl.addListener(() {
       if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
         listAppender(

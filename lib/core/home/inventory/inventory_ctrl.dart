@@ -10,16 +10,23 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:nawiri/utils/urls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InventoryCtrl extends GetxController {
-  RxString branchId = ''.obs;
+  String? branchId;
 
   @override
   void onInit() {
     super.onInit();
+    setBranchId();
     getCategories();
     getUoMs();
     getProducts();
+  }
+
+  setBranchId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    branchId = prefs.getString('branchId');
   }
 
   // ---------------------------------- Category Variables & Functions -----------------------------------------------
@@ -36,11 +43,8 @@ class InventoryCtrl extends GetxController {
 
   getCategories() async {
     clearCatLists();
-    // get branchId from functions.dart
     try {
-      branchId.value = '122';
-      final response = await http.get(
-          Uri.parse('$getCategoriesUrl/${branchId.value}'),
+      final response = await http.get(Uri.parse('$getCategoriesUrl/$branchId'),
           headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
@@ -72,7 +76,7 @@ class InventoryCtrl extends GetxController {
 
   addCategory(Category catData) async {
     var body = jsonEncode({
-      'branch_id': '122',
+      'branch_id': branchId,
       'category_desc': catData.name,
       'rmargin': catData.retailMg,
       'wmargin': catData.wholesaleMg,
@@ -179,11 +183,9 @@ class InventoryCtrl extends GetxController {
 
   getUoMs() async {
     clearUomLists();
-    // get branchId from functions.dart
     try {
-      branchId.value = '122';
-      final response = await http
-          .get(Uri.parse('$getUoMsUrl/${branchId.value}'), headers: apiHeaders);
+      final response = await http.get(Uri.parse('$getUoMsUrl/$branchId'),
+          headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
@@ -212,7 +214,7 @@ class InventoryCtrl extends GetxController {
 
   addUoM(UoM uomData) async {
     var body = jsonEncode({
-      'branch_id': '122',
+      'branch_id': branchId,
       'uom_description': uomData.name,
       'uom_code': uomData.uomCode
     });
@@ -320,11 +322,8 @@ class InventoryCtrl extends GetxController {
 
   getProducts() async {
     clearProdLists();
-    // get branchId from functions.dart
     try {
-      branchId.value = '122';
-      final response = await http.get(
-          Uri.parse('$getProductsUrl/${branchId.value}'),
+      final response = await http.get(Uri.parse('$getProductsUrl/$branchId'),
           headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
@@ -359,7 +358,7 @@ class InventoryCtrl extends GetxController {
 
   addProduct(Product prodData) async {
     var body = jsonEncode({
-      'branch_id': '122',
+      'branch_id': branchId,
       'location_product_description': prodData.name,
       'location_productcode': prodData.code,
       'location_product_sp': prodData.retailMg,

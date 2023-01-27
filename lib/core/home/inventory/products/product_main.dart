@@ -26,6 +26,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   void initState() {
     super.initState();
+    invtCtrl.getProducts();
     _scrollctrl.addListener(() {
       if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
         listAppender(

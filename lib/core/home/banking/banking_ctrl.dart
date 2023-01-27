@@ -8,9 +8,10 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:nawiri/utils/urls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BankingCtrl extends GetxController {
-  RxString branchId = ''.obs;
+  String? branchId;
   RxString transTypeDropdown = ''.obs;
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
@@ -39,18 +40,21 @@ class BankingCtrl extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    setBranchId();
     getBanks();
+  }
+
+  setBranchId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    branchId = prefs.getString('branchId');
   }
 
   // ---------- Get Functions -----------------
 
   getBanks() async {
     clearLists();
-    // get branchId from functions.dart
     try {
-      branchId.value = '122';
-      final response = await http.get(
-          Uri.parse('$getBankAccsUrl/${branchId.value}'),
+      final response = await http.get(Uri.parse('$getBankAccsUrl/$branchId'),
           headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
@@ -133,7 +137,7 @@ class BankingCtrl extends GetxController {
       'bank_acc_no': bankAccData.accno,
       'account_details': bankAccData.branchName,
       'account_manager': bankAccData.cpperson,
-      'branch_id': '122'
+      'branch_id': branchId
     });
     try {
       var res =
@@ -163,7 +167,7 @@ class BankingCtrl extends GetxController {
       "bank_id": accToShow.id,
       "transtype": transTypeDropdown.value,
       "transaction_amount": bankTransData.amount,
-      "branch_id": 122,
+      "branch_id": branchId,
       "created_by": "",
       "transaction_comment": bankTransData.desc,
       "transaction_ref": bankTransData.refCode,
@@ -202,7 +206,7 @@ class BankingCtrl extends GetxController {
       'bank_acc_no': bankAccData.accno,
       'account_details': bankAccData.branchName,
       'account_manager': bankAccData.cpperson,
-      'branch_id': '122',
+      'branch_id': branchId
     });
     try {
       var res = await http.patch(Uri.parse(updateBankUrl),

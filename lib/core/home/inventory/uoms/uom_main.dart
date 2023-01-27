@@ -26,6 +26,7 @@ class _UoMsPageState extends State<UoMsPage> {
   @override
   void initState() {
     super.initState();
+    invtCtrl.getUoMs();
     _scrollctrl.addListener(() {
       if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
         listAppender(
@@ -223,8 +224,7 @@ class _UoMsPageState extends State<UoMsPage> {
                                     itemCount: invtCtrl.rangeUomList.length),
                               ),
                             ])
-                      : noItemsWidget(
-                          label: 'No Units of Measurement Found'))
+                      : noItemsWidget(label: 'No Units of Measurement Found'))
             ]))),
         floatingActionButton: _showBackToTopBtn
             ? FloatingActionButton(

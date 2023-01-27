@@ -7,13 +7,20 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:nawiri/utils/urls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TransactionCtrl extends GetxController {
-  RxString branchId = ''.obs;
+  String? branchId;
   RxBool showData = false.obs;
   RxBool showLoading = true.obs;
-  Expense singleExpense =
-      Expense(id: '', date: '', payto: '', ref: '', desc: '', amount: '',branch_id: '');
+  Expense singleExpense = Expense(
+      id: '',
+      date: '',
+      payto: '',
+      ref: '',
+      desc: '',
+      amount: '',
+      branch_id: '');
 
   RxList<Expense> expenses = RxList<Expense>();
   RxList<Expense> rangeExpList = RxList<Expense>();
@@ -21,30 +28,33 @@ class TransactionCtrl extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    setBranchId();
     getExpesnses();
+  }
+
+  setBranchId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    branchId = prefs.getString('branchId');
   }
 
   // ---------- Get Functions -----------------
 
   getExpesnses() async {
     clearLists();
-    // get branchId from functions.dart
     try {
-      branchId.value = '125';
-      final response = await http.get(
-          Uri.parse('$getExpensesUrl/${branchId.value}'),
+      final response = await http.get(Uri.parse('$getExpensesUrl/$branchId'),
           headers: apiHeaders);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Expense exp = Expense(
-              id: item['pay_id'],
-              payto: item['pay_to'],
-              desc: item['pay_description'],
-              date: item['pay_date'],
-              ref: item['pay_ref'],
-              amount: item['pay_amount'],
-              branch_id: branchId.value,
+            id: item['pay_id'],
+            payto: item['pay_to'],
+            desc: item['pay_description'],
+            date: item['pay_date'],
+            ref: item['pay_ref'],
+            amount: item['pay_amount'],
+            branch_id: branchId!,
           );
           expenses.add(exp);
         }
@@ -65,7 +75,6 @@ class TransactionCtrl extends GetxController {
   // ---------- Add Functions -----------------
 
   addExpense(Expense expData) async {
-    branchId.value = '125';
     print(TimeOfDay.now());
     var body = jsonEncode({
       'pay_to': expData.payto,
@@ -74,7 +83,7 @@ class TransactionCtrl extends GetxController {
       'pay_date': expData.date,
       "pay_time": '17:34:12.593000',
       'pay_ref': expData.ref,
-      'branch_id':branchId.value
+      'branch_id': branchId
     });
     try {
       var res = await http.post(Uri.parse(addExpenseUrl),
