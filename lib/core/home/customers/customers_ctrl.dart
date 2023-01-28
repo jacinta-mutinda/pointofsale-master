@@ -38,6 +38,7 @@ class CustomerCtrl extends GetxController {
       cpperson: '',
       creditlimit: '',
       totalCredit: '',
+      active: '',
       runningBal: '');
 
   List<String> transtypes = ['', 'Cash', 'M-pesa', 'Bank'];
@@ -69,16 +70,17 @@ class CustomerCtrl extends GetxController {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Customer cust = Customer(
-              id: item['customer_id'],
-              name: item['customer_name'],
-              phoneno: item['customer_phone_no'],
-              bankacc: item['customer_bank_acc'],
-              krapin: item['pin_number'],
-              address: item['customer_address'],
-              cpperson: item['customer_contact_person'],
-              creditlimit: item['customer_credit_limit'],
-              runningBal: item['customer_running_bal'],
-              totalCredit: item['customer_total_credit']);
+              id: item['customer_id'].toString(),
+              name: item['customer_name'].toString(),
+              phoneno: item['customer_phone_no'].toString(),
+              bankacc: item['customer_bank_acc'].toString(),
+              krapin: item['pin_number'].toString(),
+              address: item['customer_address'].toString(),
+              cpperson: item['customer_contact_person'].toString(),
+              creditlimit: item['customer_credit_limit'].toString(),
+              runningBal: item['customer_running_bal'].toString(),
+              active: item['active'].toString(),
+              totalCredit: item['customer_total_credit'].toString());
           customers.add(cust);
         }
         filterPaginator();
@@ -140,6 +142,7 @@ class CustomerCtrl extends GetxController {
       "customer_running_bal": custData.runningBal,
       "customer_bank_acc": custData.bankacc,
       "customer_phone_no": custData.phoneno,
+      "active": 'Y',
       "customer_address": custData.address,
       "customer_contact_person": custData.cpperson,
       "customer_credit_limit": custData.creditlimit,
@@ -148,7 +151,7 @@ class CustomerCtrl extends GetxController {
     });
     try {
       var res =
-          await http.post(Uri.parse(addCustomerUrl), body: body, headers: {});
+      await http.post(Uri.parse(addCustomerUrl), body: body, headers: {});
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded, title: "Customer Added!", subtitle: "");

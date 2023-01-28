@@ -67,16 +67,14 @@ class _DrawerPageState extends State<DrawerPage> {
                               DataCell(Text('20')),
                               DataCell(Text('200'))
                             ]),
-                            const DataRow(cells: [
+                             DataRow(cells: [
                               DataCell(Text('Float')),
-                              // DataCell(Text(drawerCtrl.floatRow.cashAmt)),
-                              // DataCell(Text(drawerCtrl.floatRow.mpesaAmt)),
-                              // DataCell(Text(drawerCtrl.saleRow.cardAmt)),
-                              // DataCell(Text(drawerCtrl.floatRow.total.value)),
-                              DataCell(Text('240')),
+                                DataCell(Text(drawerCtrl.floatRow. cashAmount?? '')),
+                              DataCell(Text(drawerCtrl.floatRow.mobileAmount?? '')),
+                              DataCell(Text(drawerCtrl.floatRow.payAmount ?? '')),
                               DataCell(Text('20')),
-                              DataCell(Text('20')),
-                              DataCell(Text('200'))
+                              
+                             
                             ]),
                             DataRow(
                                 color: MaterialStateColor.resolveWith(

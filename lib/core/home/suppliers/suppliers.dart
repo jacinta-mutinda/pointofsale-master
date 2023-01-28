@@ -197,7 +197,7 @@ class _SupplierPageState extends State<SupplierPage> {
                                                         suppliers[index].name,
                                                         style: kCardTitle)),
                                                 subtitle: Text(
-                                                    suppliers[index].cpperson,
+                                                    suppliers[index].phoneno,
                                                     style: kCardTitle),
                                                 trailing: Container(
                                                     width: 40,

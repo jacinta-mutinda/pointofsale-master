@@ -55,7 +55,7 @@ class _SupplierPaymentsState extends State<SupplierPayments> {
                       mainLabel: 'Name',
                       childLabel: supplierCtrl.supToShow.name),
                   labelSpan(
-                      mainLabel: 'Item Supplied',
+                      mainLabel: 'Running balance',
                       childLabel: supplierCtrl.supToShow.item),
                   labelSpan(
                       mainLabel: 'Bank Account No',

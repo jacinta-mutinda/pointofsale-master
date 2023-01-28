@@ -103,16 +103,21 @@ class InventoryCtrl extends GetxController {
   }
 
   editCategory(Category catData) async {
-    var body = jsonEncode({
-      'Category_id': catToEdit.value,
+    var body = {
+      'category_id': catToEdit.value,
       'category_desc': catData.name,
-      'Rmargin': catData.retailMg,
+      'rmargin': catData.retailMg,
       'wmargin': catData.wholesaleMg,
-      'Show_in_pos': catData.showInPos,
-    });
+      'show_in_pos': catData.showInPos,
+    };
     try {
       var res = await http.patch(Uri.parse(updateCatUrl),
-          body: body, headers: headers);
+        body: body, headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },);
+      debugPrint("Got response ${res.statusCode}");
+      print(catToEdit.value);
+
       if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded,
@@ -125,6 +130,7 @@ class InventoryCtrl extends GetxController {
       }
       return;
     } catch (error) {
+      debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
           title: "Failed to update category!",
@@ -241,15 +247,18 @@ class InventoryCtrl extends GetxController {
   }
 
   editUOM(UoM uomData) async {
-    var body = jsonEncode({
+    var body = {
       'uom-id': uoMToEdit.value,
       'uom_description': uomData.name,
       'uom_code': uomData.uomCode
-    });
-    debugPrint(body);
+    };
+
+
     try {
       var res = await http.patch(Uri.parse(updateUomUrl),
-          body: body, headers: headers);
+        body: body, headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },);
       debugPrint("Got response ${res.statusCode}");
       // debugPrint(res.body);
       if (res.statusCode == 200) {
@@ -330,17 +339,17 @@ class InventoryCtrl extends GetxController {
         for (var item in resData) {
           Product product = Product(
               cartQuantity: '1',
-              id: item['location_product_id'],
-              name: item['location_product_description'],
-              desc: item['location_product_description'],
-              code: item['location_productcode'],
-              retailMg: item['location_product_sp'],
-              wholesaleMg: item['location_product_sp1'],
-              buyingPrice: item['location_product_sp'],
-              categoryid: item['category_id'],
-              uomId: item['uom_code'],
-              blockingneg: item['blockneg'],
-              active: item['active']);
+              id: item['location_product_id'].toString(),
+              name: item['location_product_description'].toString(),
+              desc: item['location_product_description'].toString(),
+              code: item['location_productcode'].toString(),
+              retailMg: item['location_product_sp'].toString(),
+              wholesaleMg: item['location_product_sp1'].toString(),
+              buyingPrice: item['location_product_sp'].toString(),
+              categoryid: item['category_id'].toString(),
+              uomId: item['uom_code'].toString(),
+              blockingneg: item['blockneg'].toString(),
+              active: item['active'].toString());
           products.add(product);
         }
         filterProdPaginator();
@@ -359,9 +368,10 @@ class InventoryCtrl extends GetxController {
   addProduct(Product prodData) async {
     var body = jsonEncode({
       'branch_id': branchId,
-      'location_product_description': prodData.name,
       'location_productcode': prodData.code,
+      'location_product_description': prodData.name,
       'location_product_sp': prodData.retailMg,
+      'location_product_quantity':0,
       'location_product_sp1': prodData.wholesaleMg,
       'category_id': prodData.categoryid,
       'product_bp': prodData.buyingPrice,
@@ -371,7 +381,8 @@ class InventoryCtrl extends GetxController {
     });
     try {
       var res =
-          await http.post(Uri.parse(addProductUrl), body: body, headers: {});
+      await http.post(Uri.parse(addProductUrl), body: body, headers: {});
+      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded, title: "Product Added!", subtitle: "");
@@ -390,37 +401,45 @@ class InventoryCtrl extends GetxController {
   }
 
   editProduct(Product prodData) async {
-    var body = jsonEncode({
-      'name': prodData.name,
-      'desc': prodData.desc,
-      'retailMg': prodData.retailMg,
-      'wholesaleMg': prodData.wholesaleMg,
-      'code': prodData.code,
-      'buyingPrice': prodData.buyingPrice,
-      'blockingneg': prodData.blockingneg,
+    var body = {
+      'branch_id': branchId,
+      'location_productcode': prodData.code,
+      'location_product_description': prodData.name,
+      'location_product_sp': prodData.retailMg,
+      'location_product_quantity':0,
+      'location_product_sp1': prodData.wholesaleMg,
+      'category_id': prodData.categoryid,
+      'product_bp': prodData.buyingPrice,
+      'blockneg': prodData.blockingneg,
       'active': prodData.active,
-      'categoryId': prodData.categoryid,
-      'uomId': prodData.uomId
-    });
-    // try {
-    //   var res =
-    //       await http.post(Uri.parse(editUrl), body: body, headers: headers);
-    //   if (res.statusCode == 201) {
+      'uom_code': prodData.uomId
+    };
 
-    showSnackbar(
-        path: Icons.check_rounded, title: "Product Updated!", subtitle: "");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const ProductsPage());
-
-    //     return;
-    //   }
-    //   return;
-    // } catch (error) {
-    //   showSnackbar(
-    //       path: Icons.close_rounded,
-    //       title: "Failed to update Product!",
-    //       subtitle: "Please check your internet connection or try again later");
-    // }
+    try {
+      var res = await http.patch(Uri.parse(updateProdUrl),
+        body: body, headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },);
+      debugPrint("Got response ${res.statusCode}");
+      // debugPrint(res.body);
+      if (res.statusCode == 200) {
+        showSnackbar(
+            path: Icons.check_rounded,
+            title: "Unit of Measurement Updated!",
+            subtitle: "");
+        await Future.delayed(const Duration(seconds: 2));
+        getUoMs();
+        Get.off(() => const UoMsPage());
+        return;
+      }
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to update Unit of Measurement!",
+          subtitle: "Please check your internet connection or try again later");
+    }
   }
 
   filterProdPaginator() {

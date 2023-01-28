@@ -137,9 +137,7 @@ class _ShiftPageState extends State<ShiftPage> {
                           shiftData.desc = descctrl.text;
                           shiftData.float = int.parse(floatctrl.text);
                           shiftData.dayShift = 'Y';
-
                           shiftCtrl.startShift(shiftData);
-
                         }
                         await Future.delayed(const Duration(seconds: 2));
                         setState(() {

@@ -32,7 +32,6 @@ class _SupplierFormState extends State<SupplierForm> {
   final supplierCtrl = Get.put(SupplierCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController bankaccctrl = TextEditingController();
-  TextEditingController itemctrl = TextEditingController();
   TextEditingController krapinctrl = TextEditingController();
   TextEditingController addressctrl = TextEditingController();
   TextEditingController phonenoctrl = TextEditingController();
@@ -54,7 +53,6 @@ class _SupplierFormState extends State<SupplierForm> {
     phonenoctrl.dispose();
     krapinctrl.dispose();
     bankaccctrl.dispose();
-    itemctrl.dispose();
     cppersonctrl.dispose();
     addressctrl.dispose();
     super.dispose();
@@ -66,7 +64,7 @@ class _SupplierFormState extends State<SupplierForm> {
       namectrl.text = supplierCtrl.supToShow.name;
       bankaccctrl.text = supplierCtrl.supToShow.bankacc;
       cppersonctrl.text = supplierCtrl.supToShow.cpperson;
-      itemctrl.text = supplierCtrl.supToShow.item;
+
       krapinctrl.text = supplierCtrl.supToShow.krapin;
       addressctrl.text = supplierCtrl.supToShow.address;
     } else {
@@ -74,7 +72,6 @@ class _SupplierFormState extends State<SupplierForm> {
       namectrl.clear();
       phonenoctrl.clear();
       bankaccctrl.clear();
-      itemctrl.clear();
       cppersonctrl.clear();
       addressctrl.clear();
       krapinctrl.clear();
@@ -105,17 +102,6 @@ class _SupplierFormState extends State<SupplierForm> {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter the supplier name';
                                 }
-                                return null;
-                              }),
-                          formField(
-                              label: 'Item',
-                              require: supplierCtrl.fieldsRequired.value,
-                              controller: itemctrl,
-                              type: TextInputType.name,
-                              validator: (value) {
-                                // if (value == null || value.isEmpty) {
-                                //   return 'Please enter the item supplied';
-                                // }
                                 return null;
                               }),
                           formField(
@@ -192,7 +178,6 @@ class _SupplierFormState extends State<SupplierForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         supData.name = namectrl.text;
-                        supData.item = itemctrl.text;
                         supData.address = addressctrl.text;
                         supData.bankacc = bankaccctrl.text;
                         supData.cpperson = cppersonctrl.text;

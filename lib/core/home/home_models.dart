@@ -84,19 +84,21 @@ class Customer {
   String krapin;
   String address;
   String cpperson;
+  String active;
   String creditlimit;
 
   Customer(
       {required this.id,
-      required this.name,
-      required this.runningBal,
-      required this.totalCredit,
-      required this.phoneno,
-      required this.bankacc,
-      required this.krapin,
-      required this.address,
-      required this.cpperson,
-      required this.creditlimit});
+        required this.name,
+        required this.runningBal,
+        required this.totalCredit,
+        required this.phoneno,
+        required this.bankacc,
+        required this.krapin,
+        required this.address,
+        required this.cpperson,
+        required this.active,
+        required this.creditlimit});
 }
 
 class Expense {

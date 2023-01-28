@@ -10,10 +10,16 @@ import 'package:nawiri/utils/urls.dart';
 
 class DrawerCtrl extends GetxController {
   RxString shiftId = ''.obs;
+
   ShiftSale saleRow =
       ShiftSale(id: '', cashAmt: '', mpesaAmt: '', cardAmt: '', total: '0'.obs);
   ShiftFloat floatRow = ShiftFloat(
-      id: '', cashAmt: '', mpesaAmt: '', cardAmt: '', total: '0'.obs);
+       payRef: '', 
+              payDate: '', 
+              payAmount: '',
+               cashAmount: '', 
+               mobileAmount: '',
+               payDescription: '',);
 
   @override
   void onInit() {
@@ -69,7 +75,12 @@ class DrawerCtrl extends GetxController {
 
   getShiftFloats() async {
     floatRow = ShiftFloat(
-        id: '', cashAmt: '', mpesaAmt: '', cardAmt: '', total: '0'.obs);
+         payRef: '', 
+              payDate: '', 
+              payAmount: '',
+               cashAmount: '', 
+               mobileAmount: '',
+               payDescription: '',);
     var body = jsonEncode({
       'shift_id': shiftId.value,
     });
@@ -80,18 +91,23 @@ class DrawerCtrl extends GetxController {
         var resData = json.decode(response.body);
         if (resData is List<dynamic>) {
           for (var item in resData) {
-            floatRow.id = item['id'];
-            floatRow.cashAmt = item['cash'];
-            floatRow.mpesaAmt = item['mpesa'];
-            floatRow.cardAmt = item['card'];
-            floatRow.total.value = (int.parse(floatRow.cardAmt) +
-                    int.parse(floatRow.mpesaAmt) +
-                    int.parse(floatRow.cashAmt))
-                .toString();
+            floatRow.payRef = item['payRef'];
+            floatRow.cashAmount = item['cashAmount'];
+            floatRow.mobileAmount = item['mobileAmount'];
+            floatRow.payAmount = item['payAmount'];
+            // floatRow.total.value = (int.parse(floatRow.payAmount ?? '') +
+            //         int.parse(floatRow.mobileAmount?? '') +
+            //         int.parse(floatRow.cashAmount?? ''))
+            //     .toString();
           }
         } else {
           floatRow = ShiftFloat(
-              id: '', cashAmt: '', mpesaAmt: '', cardAmt: '', total: '0'.obs);
+              payRef: '', 
+              payDate: '', 
+              payAmount: '',
+               cashAmount: '', 
+               mobileAmount: '',
+               payDescription: '',);
         }
         update();
         return;

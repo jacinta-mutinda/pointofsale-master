@@ -130,10 +130,7 @@ class _ProductFormState extends State<ProductForm> {
                                   }
                                   return null;
                                 }),
-                            descFormField(
-                              label: 'Description',
-                              controller: descctrl,
-                            ),
+
                             formDropDownField(
                                 label: 'Category',
                                 dropdownValue: invtCtrl.catDropdown.value,
@@ -155,35 +152,13 @@ class _ProductFormState extends State<ProductForm> {
                                   });
                                 }),
                             formField(
-                                label: 'Product Code',
+                                label: 'Scan Code',
                                 require: true,
                                 controller: codectrl,
                                 type: TextInputType.number,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter the product code';
-                                  }
-                                  return null;
-                                }),
-                            formField(
-                                label: 'Retail Margin (in Kes)',
-                                require: true,
-                                controller: retailMgctrl,
-                                type: TextInputType.number,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the retail margin';
-                                  }
-                                  return null;
-                                }),
-                            formField(
-                                label: 'Wholesale Margin (in Kes)',
-                                require: true,
-                                controller: wholesaleMgctrl,
-                                type: TextInputType.number,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the wholesale margin';
                                   }
                                   return null;
                                 }),
@@ -198,6 +173,29 @@ class _ProductFormState extends State<ProductForm> {
                                   }
                                   return null;
                                 }),
+                            formField(
+                                label: 'Retail Margin (in %)',
+                                require: true,
+                                controller: retailMgctrl,
+                                type: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the retail margin';
+                                  }
+                                  return null;
+                                }),
+                            formField(
+                                label: 'Wholesale Margin (in %)',
+                                require: true,
+                                controller: wholesaleMgctrl,
+                                type: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the wholesale margin';
+                                  }
+                                  return null;
+                                }),
+
                             CheckboxListTile(
                               title: const Text('Block Negative',
                                   style: TextStyle(
@@ -242,16 +240,16 @@ class _ProductFormState extends State<ProductForm> {
                       });
                       if (_formKey.currentState!.validate()) {
                         prodData.name = namectrl.text;
-                        prodData.desc = descctrl.text;
                         prodData.code = codectrl.text;
+                        prodData.buyingPrice=buyingPricectrl.text;
                         prodData.categoryid = invtCtrl.categories
                             .where((element) =>
-                                element.name == (invtCtrl.catDropdown.value))
+                        element.name == (invtCtrl.catDropdown.value))
                             .first
                             .id;
                         prodData.uomId = invtCtrl.uoms
                             .where((element) =>
-                                element.name == (invtCtrl.uomDropdown.value))
+                        element.name == (invtCtrl.uomDropdown.value))
                             .first
                             .id;
                         prodData.retailMg = retailMgctrl.text;

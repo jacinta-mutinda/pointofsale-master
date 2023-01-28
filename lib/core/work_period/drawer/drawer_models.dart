@@ -16,16 +16,18 @@ class ShiftSale {
 }
 
 class ShiftFloat {
-  String id;
-  String cashAmt;
-  String mpesaAmt;
-  String cardAmt;
-  RxString total;
+  String? payRef;
+  String? payDate;
+  String? payAmount;
+  String? cashAmount;
+  String? mobileAmount;
+  String? payDescription;
 
-  ShiftFloat(
-      {required this.id,
-      required this.cashAmt,
-      required this.mpesaAmt,
-      required this.cardAmt,
-      required this.total});
+  ShiftFloat(  
+      {this.payRef,
+      this.payDate,
+       this.payAmount,
+      this.cashAmount,
+      this.mobileAmount,
+      this.payDescription});
 }

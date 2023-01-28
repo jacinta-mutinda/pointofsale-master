@@ -67,14 +67,14 @@ class SupplierCtrl extends GetxController {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Supplier sup = Supplier(
-              id: item['supplier_id'],
-              name: item['supplier_name'],
-              item: item['supplier_item'],
-              bankacc: item['supplier_bank_acc'],
-              krapin: item['supplier_pin'],
-              address: item['supplier_address'],
-              cpperson: item['supplier_contact_person'],
-              phoneno: item['supplier_phone_no']);
+              id: item['supplier_id'].toString(),
+              name: item['supplier_name'].toString(),
+              item: item['supplier_running_bal'].toString(),
+              bankacc: item['supplier_bank_acc'].toString(),
+              krapin: item['supplier_pin'].toString(),
+              address: item['supplier_address'].toString(),
+              cpperson: item['supplier_contact_person'].toString(),
+              phoneno: item['supplier_phone_no'].toString());
           suppliers.add(sup);
         }
         filterPaginator();
@@ -139,12 +139,13 @@ class SupplierCtrl extends GetxController {
       'supplier_bank_acc': supData.bankacc,
       'supplier_pin': supData.krapin,
       'supplier_address': supData.address,
-      'supplier_phone_no': supData.cpperson,
+      'supplier_phone_no': supData.phoneno,
       'supplier_contact_person': supData.cpperson,
     });
     try {
       var res = await http.post(Uri.parse(addSupplierUrl),
           body: body, headers: headers);
+      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded, title: "Supplier Added!", subtitle: "");

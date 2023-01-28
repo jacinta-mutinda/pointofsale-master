@@ -99,13 +99,13 @@ class BankingCtrl extends GetxController {
         if (resData is List<dynamic>) {
           for (var item in resData) {
             BankTransaction trans = BankTransaction(
-                id: item['transaction_id'],
-                refCode: item['trans_ref'],
+                id: item['transaction_id'].toString(),
+                refCode: item['trans_ref'].toString(),
                 bankId: accToShow.id,
-                action: item['transtype'],
-                desc: item['trans_comment'],
+                action: item['transtype'].toString(),
+                desc: item['trans_comment'].toString(),
                 branchId: item['branch_id'].toString(),
-                amount: item['trans_amount']);
+                amount: item['trans_amount'].toString());
             accBankTrans.add(trans);
             filterTransPaginator();
             update();

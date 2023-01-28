@@ -19,17 +19,19 @@ class CustomerForm extends StatefulWidget {
 
 class _CustomerFormState extends State<CustomerForm> {
   String pageTitle = '';
+  bool activeValue = false;
   Customer custData = Customer(
-      id: '',
-      name: '',
-      phoneno: '',
-      bankacc: '',
-      krapin: '',
-      address: '',
-      cpperson: '',
-      creditlimit: '',
-      totalCredit: '',
-      runningBal: '');
+    id: '',
+    name: '',
+    phoneno: '',
+    bankacc: '',
+    krapin: '',
+    address: '',
+    cpperson: '',
+    creditlimit: '',
+    totalCredit: '',
+    active: '',
+    runningBal: '',);
   final customerCtrl = Get.put(CustomerCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController phonectrl = TextEditingController();
@@ -123,9 +125,9 @@ class _CustomerFormState extends State<CustomerForm> {
                               controller: bankaccctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the account number';
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return 'Please enter the account number';
+                                // }
                                 return null;
                               }),
                           formField(
@@ -134,9 +136,9 @@ class _CustomerFormState extends State<CustomerForm> {
                               controller: krapinctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter the customer's KRA pin";
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return "Please enter the customer's KRA pin";
+                                // }
                                 return null;
                               }),
                           formField(
@@ -159,12 +161,12 @@ class _CustomerFormState extends State<CustomerForm> {
                               controller: cppersonctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the Contact Person Phone Number';
-                                }
-                                if (value.length != 10) {
-                                  return 'Please enter a 10-digit phone number';
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return 'Please enter the Contact Person Phone Number';
+                                // }
+                                // if (value.length != 10) {
+                                //   return 'Please enter a 10-digit phone number';
+                                // }
                                 return null;
                               }),
                           formField(
@@ -173,9 +175,9 @@ class _CustomerFormState extends State<CustomerForm> {
                               controller: runbalctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter the customer's current running balance";
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return "Please enter the customer's current running balance";
+                                // }
                                 return null;
                               }),
                           formField(
@@ -184,9 +186,9 @@ class _CustomerFormState extends State<CustomerForm> {
                               controller: totalcreditctrl,
                               type: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter the customer's current credit total";
-                                }
+                                // if (value == null || value.isEmpty) {
+                                //   return "Please enter the customer's current credit total";
+                                // }
                                 return null;
                               }),
                           formField(
@@ -199,7 +201,23 @@ class _CustomerFormState extends State<CustomerForm> {
                                   return "Please enter the customer's credit limit";
                                 }
                                 return null;
-                              })
+                              }),
+                          CheckboxListTile(
+                            title: const Text('Active',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'Nunito',
+                                    fontWeight: FontWeight.w500,
+                                    color: kDarkGreen)),
+                            checkColor: kDarkGreen,
+                            activeColor: kLightGreen,
+                            value: activeValue,
+                            onChanged: (value) {
+                              setState(() {
+                                activeValue = value!;
+                              });
+                            },
+                          )
                         ],
                       )),
                   priBtn(

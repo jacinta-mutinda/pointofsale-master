@@ -48,12 +48,12 @@ class TransactionCtrl extends GetxController {
         var resData = json.decode(response.body);
         for (var item in resData) {
           Expense exp = Expense(
-            id: item['pay_id'],
-            payto: item['pay_to'],
-            desc: item['pay_description'],
-            date: item['pay_date'],
-            ref: item['pay_ref'],
-            amount: item['pay_amount'],
+            id: item['pay_id'].toString(),
+            payto: item['pay_to'].toString(),
+            desc: item['pay_description'].toString(),
+            date: item['pay_date'].toString(),
+            ref: item['pay_ref'].toString(),
+            amount: item['pay_amount'].toString(),
             branch_id: branchId!,
           );
           expenses.add(exp);
