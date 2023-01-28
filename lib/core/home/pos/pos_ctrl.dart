@@ -267,7 +267,7 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  cancelSale() {
+  clearSale() {
     cartSale = Sale(
         id: '',
         cart: <CartItem>[].obs,

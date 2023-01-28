@@ -180,17 +180,13 @@ class CheckoutCtrl extends GetxController {
     try {
       var res = await http.post(Uri.parse(addCheckoutUrl),
           body: body, headers: apiHeaders);
-      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded,
             title: "Checkout Successful!",
             subtitle: "Thank you for Shopping with us!");
         fetchReceipt();
-
-        // posCtrl.cancelSale();
-        // await Future.delayed(const Duration(seconds: 2));
-        // Get.off(() => NavigatorHandler(0));
+        posCtrl.clearSale();
         return;
       }
       return;

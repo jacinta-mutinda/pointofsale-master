@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
@@ -328,6 +329,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         setState(() {
                           _isLoading = false;
                         });
+                        Get.off(NavigatorHandler(0));
                       },
                     )
                   ]))),

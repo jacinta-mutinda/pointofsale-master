@@ -305,7 +305,7 @@ class _CartState extends State<Cart> {
                   bgColour: kPrimaryRed,
                   isLoading: _isCancelLoading,
                   function: () {
-                    posCtrl.cancelSale();
+                    posCtrl.clearSale();
                     DefaultTabController.of(context)!.animateTo(0);
                   })
             ])
