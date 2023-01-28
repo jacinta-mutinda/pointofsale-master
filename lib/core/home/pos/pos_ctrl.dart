@@ -23,6 +23,9 @@ class PoSCtrl extends GetxController {
   RxList<String> selectedProdIds = RxList<String>();
   RxList<Product> selectedProds = RxList<Product>();
   RxList<String> selectedCatIds = RxList<String>();
+  RxBool showCatsLoading = true.obs;
+  RxBool showCatsData = false.obs;
+  RxBool catHasProds = true.obs;
   RxBool isProdChange = false.obs;
   Product prodToChange = Product(
       id: '',
@@ -96,6 +99,14 @@ class PoSCtrl extends GetxController {
           }
         }
       }
+      getProducts();
+      if (posCats.isEmpty) {
+        showCatsLoading.value = false;
+        showCatsData.value = false;
+      } else {
+        showCatsLoading.value = false;
+        showCatsData.value = true;
+      }
       update();
       return;
     } catch (error) {
@@ -129,7 +140,6 @@ class PoSCtrl extends GetxController {
           posProds.add(product);
         }
       }
-      update();
       return;
     } catch (error) {
       showSnackbar(
@@ -145,6 +155,11 @@ class PoSCtrl extends GetxController {
       if (prod.categoryid == selectedCat.value) {
         catProds.add(prod);
       }
+    }
+    if (catProds.isEmpty) {
+      catHasProds.value = false;
+    } else {
+      catHasProds.value = true;
     }
   }
 

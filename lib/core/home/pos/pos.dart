@@ -30,17 +30,19 @@ class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Obx(() => posCtrl.posCats.isEmpty
-            ? noItemsWidget(
-                label:
-                    'No categories to display! Please add categories in Inventory')
-            : Container(
-                padding: const EdgeInsets.all(15),
-                child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 7.0,
-                    mainAxisSpacing: 8.0,
-                    children: getCats()))));
+        body: Obx(() => posCtrl.showCatsLoading.value
+            ? loadingWidget(label: 'Loading PoS Categories...')
+            : posCtrl.showCatsData.value
+                ? Container(
+                    padding: const EdgeInsets.all(15),
+                    child: GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 7.0,
+                        mainAxisSpacing: 8.0,
+                        children: getCats()))
+                : noItemsWidget(
+                    label:
+                        'No categories found! Please add categories in Inventory')));
   }
 
   List<Widget> getCats() {
@@ -103,13 +105,17 @@ class _ProductsState extends State<Products> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            padding: const EdgeInsets.all(15),
-            child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 7.0,
-                mainAxisSpacing: 8.0,
-                children: getProds())));
+        body: posCtrl.catHasProds.value
+            ? Container(
+                padding: const EdgeInsets.all(15),
+                child: GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 7.0,
+                    mainAxisSpacing: 8.0,
+                    children: getProds()))
+            : noItemsWidget(
+                label:
+                    'No products found! Please add products to this catgeory in Inventory'));
   }
 
   List<Widget> getProds() {
@@ -404,7 +410,6 @@ class _PoSPageState extends State<PoSPage> {
   void initState() {
     super.initState();
     posCtrl.getCategories();
-    posCtrl.getProducts();
     _tabController = DefaultTabController.of(context);
   }
 
