@@ -10,7 +10,6 @@ import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 
 final posCtrl = Get.put(PoSCtrl());
-final invtCtrl = Get.put(InventoryCtrl());
 
 class Categories extends StatefulWidget {
   static const routeName = "/categories";
@@ -21,28 +20,17 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  final invtCtrl = Get.put(InventoryCtrl());
   int index = 1;
-  final ScrollController _scrollctrl = ScrollController();
+
   @override
   void initState() {
     super.initState();
-    _scrollctrl.addListener(() {
-      if (_scrollctrl.position.pixels == _scrollctrl.position.maxScrollExtent) {
-        listAppender(
-            rangeList: invtCtrl.rangeCatList, selectList: invtCtrl.categories);
-      }
-      setState(() {
-        if (_scrollctrl.offset >= 400) {
-        } else {}
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: invtCtrl.categories.isEmpty
+        body: Obx(() => posCtrl.posCats.isEmpty
             ? noItemsWidget(
                 label:
                     'No categories to display! Please add categories in Inventory')
@@ -52,53 +40,47 @@ class _CategoriesState extends State<Categories> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 7.0,
                     mainAxisSpacing: 8.0,
-                    children: getCats())));
+                    children: getCats()))));
   }
 
   List<Widget> getCats() {
     List<Widget> cats = [];
-    for (var category in invtCtrl.categories) {
+    for (var category in posCtrl.posCats) {
       cats.add(GestureDetector(
           onTap: () {
             posCtrl.selectedCat.value = category.id;
             posCtrl.setNextTab();
             DefaultTabController.of(context)!.animateTo(1);
           },
-          child: Obx(() => invtCtrl.showCatLoading.value
-              ? loadingWidget(label: 'Loading Category ...')
-              : invtCtrl.showCatData.value
-                  ? Card(
+          child: Obx(() => Card(
+              color:
+                  category.id == posCtrl.selectedCat.value ? kDarkGreen : kGrey,
+              elevation: 7.0,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.category,
                       color: category.id == posCtrl.selectedCat.value
-                          ? kDarkGreen
-                          : kGrey,
-                      elevation: 7.0,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.category,
+                          ? kLightGreen
+                          : Colors.black,
+                      size: 64,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          category.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
                               color: category.id == posCtrl.selectedCat.value
                                   ? kLightGreen
-                                  : Colors.black,
-                              size: 64,
-                            ),
-                            Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Text(
-                                  category.name,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Nunito',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: category.id ==
-                                              posCtrl.selectedCat.value
-                                          ? kLightGreen
-                                          : Colors.black),
-                                ))
-                          ]))
-                  : noItemsWidget(label: 'No Category Found'))));
+                                  : Colors.black),
+                        ))
+                  ])))));
     }
     return cats;
   }
@@ -421,13 +403,16 @@ class _PoSPageState extends State<PoSPage> {
   @override
   void initState() {
     super.initState();
+    posCtrl.getCategories();
+    posCtrl.getProducts();
     _tabController = DefaultTabController.of(context);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _tabController?.animateTo(1);
+    posCtrl.clearLists();
+    _tabController?.animateTo(0);
     posCtrl.cartSale.cart.clear();
   }
 

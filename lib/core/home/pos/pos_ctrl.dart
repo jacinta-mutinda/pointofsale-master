@@ -1,16 +1,23 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
-import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_models.dart';
+import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/utils/functions.dart';
+import 'package:nawiri/utils/urls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-final invtCtrl = Get.put(InventoryCtrl());
 final customersCtrl = Get.put(CustomerCtrl());
 final checkoutCtrl = Get.put(CheckoutCtrl());
 
 class PoSCtrl extends GetxController {
+  String? branchId;
   RxString selectedCat = ''.obs;
   RxList<Product> catProds = RxList<Product>();
   RxList<String> selectedProdIds = RxList<String>();
@@ -55,9 +62,86 @@ class PoSCtrl extends GetxController {
       date: '',
       paid: false);
 
+  RxList<Category> posCats = RxList<Category>();
+  RxList<Product> posProds = RxList<Product>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    setBranchId();
+    getCategories();
+    getProducts();
+  }
+
+  setBranchId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    branchId = prefs.getString('branchId');
+  }
+
+  getCategories() async {
+    try {
+      final response = await http.get(Uri.parse('$getCategoriesUrl/$branchId'),
+          headers: apiHeaders);
+      if (response.statusCode == 200) {
+        var resData = json.decode(response.body);
+        for (var item in resData) {
+          if (item['show_in_pos'] == 'Y') {
+            Category cat = Category(
+                id: item['category_id'],
+                name: item['category_desc'],
+                retailMg: item['rmargin'],
+                wholesaleMg: item['wmargin'],
+                showInPos: item['show_in_pos']);
+            posCats.add(cat);
+          }
+        }
+      }
+      update();
+      return;
+    } catch (error) {
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to load categories!",
+          subtitle: "Please check your internet connection or try again later");
+    }
+  }
+
+  getProducts() async {
+    try {
+      final response = await http.get(Uri.parse('$getProductsUrl/$branchId'),
+          headers: apiHeaders);
+      if (response.statusCode == 200) {
+        var resData = json.decode(response.body);
+        for (var item in resData) {
+          Product product = Product(
+              cartQuantity: '1',
+              id: item['location_product_id'],
+              name: item['location_product_description'],
+              desc: item['location_product_description'],
+              code: item['location_productcode'],
+              retailMg: item['location_product_sp'],
+              wholesaleMg: item['location_product_sp1'],
+              buyingPrice: item['location_product_sp'],
+              categoryid: item['category_id'],
+              uomId: item['uom_code'],
+              blockingneg: item['blockneg'],
+              active: item['active']);
+          posProds.add(product);
+        }
+      }
+      update();
+      return;
+    } catch (error) {
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to load products",
+          subtitle: "Please check your internet connection or try again later");
+    }
+  }
+
   setNextTab() {
     catProds.clear();
-    for (var prod in invtCtrl.products) {
+    for (var prod in posProds) {
       if (prod.categoryid == selectedCat.value) {
         catProds.add(prod);
       }
@@ -66,12 +150,12 @@ class PoSCtrl extends GetxController {
 
   addToCart(String prodId) {
     if (selectedProdIds.contains(prodId)) {
-      selectedProds.remove(
-          invtCtrl.products.where((element) => element.id == (prodId)).first);
+      selectedProds
+          .remove(posProds.where((element) => element.id == (prodId)).first);
       selectedProdIds.remove(prodId);
     } else {
-      selectedProds.add(
-          invtCtrl.products.where((element) => element.id == (prodId)).first);
+      selectedProds
+          .add(posProds.where((element) => element.id == (prodId)).first);
       selectedProdIds.add(prodId);
     }
     cartLength.value = selectedProds.length;
@@ -189,5 +273,10 @@ class PoSCtrl extends GetxController {
     selectedProdIds.clear();
     selectedProds.clear();
     checkoutCtrl.reset();
+  }
+
+  clearLists() {
+    posCats.clear();
+    posProds.clear();
   }
 }

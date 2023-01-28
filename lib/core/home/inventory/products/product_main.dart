@@ -191,7 +191,9 @@ class _ProductsPageState extends State<ProductsPage> {
                                                     padding: const EdgeInsets
                                                         .symmetric(vertical: 5),
                                                     child: Text(
-                                                        products[index].name,
+                                                        products[index]
+                                                            .name
+                                                            .toString(),
                                                         style: kCardTitle)),
                                                 subtitle: Text(
                                                     'Kes.${products[index].retailMg}',
