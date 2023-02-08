@@ -1,26 +1,30 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:intl/intl.dart';
-import 'package:nawiri/core/reports/report_ctrl.dart';
+import 'package:nawiri/core/reports/report_models.dart';
+import 'package:nawiri/core/reports/reports.dart';
+import 'package:nawiri/core/reports/supplier_transaction/suppliertransaction_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:nawiri/utils/urls.dart';
 
-final reportCtrl = Get.put(ReportCtrl());
+class SupplierTransactionReport extends StatefulWidget{
+  const SupplierTransactionReport({super.key});
 
-class SingleReport extends StatefulWidget {
-  static const routeName = "/singlereport";
-  const SingleReport({Key? key}) : super(key: key);
-
-  @override
+   @override
   // ignore: library_private_types_in_public_api
-  _SingleReportState createState() => _SingleReportState();
+  _SupplierTransactionReportState createState() => _SupplierTransactionReportState();
 }
 
-class _SingleReportState extends State<SingleReport> {
+class _SupplierTransactionReportState extends State<SupplierTransactionReport> {
   bool _isLoading = false;
   TextEditingController startDateCtrl = TextEditingController();
   TextEditingController endDateCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  // final suppliertransactionCtrl = Get.put(SupplierTransactionReportCtrl());
 
   @override
   void initState() {
@@ -33,12 +37,13 @@ class _SingleReportState extends State<SingleReport> {
     endDateCtrl.dispose();
     super.dispose();
   }
+  List<DataRow> apiRows = [];
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: mainAppBar(pageTitle: 'Reports'),
-        drawer: mainDrawer(),
         body: SingleChildScrollView(
             padding: const EdgeInsets.all(15),
             child:
@@ -118,28 +123,58 @@ class _SingleReportState extends State<SingleReport> {
                       )
                     ],
                   )),
-              Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Text(reportCtrl.reportTitle.value, style: kTitle)),
-              SizedBox(
-                width: 600,
-                child: DataTable(
-                  sortColumnIndex: 0,
-                  sortAscending: true,
-                  showCheckboxColumn: true,
-                  headingRowColor: MaterialStateColor.resolveWith(
-                      (states) => const Color.fromARGB(179, 223, 212, 212)),
-                  dividerThickness: 3,
-                  dataRowColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) =>
-                          states.contains(MaterialState.selected)
-                              ? Colors.green
-                              : Colors.white),
-                  columns: reportCtrl.cols,
-                  rows: reportCtrl.rows,
-                ),
-              ),
-              Padding(
+              const Padding(
+                  padding: EdgeInsets.only(top: 20, bottom: 10),
+                  child: Text('Supplier Transaction', style: kTitle)),
+               FutureBuilder<List>(
+                future:getSupplierTransactionReports(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List myList = snapshot.data!;
+            print('FFFFFFFFFFFFFFFFFFFF');
+            print(myList.runtimeType);
+            print(myList);
+            print('FFFFFFFFFFFFFFFFFFFF');
+          
+            return Column(
+              children: [
+                SizedBox(
+                        width: 600,
+                        child: DataTable(
+                          sortColumnIndex: 0,
+                          sortAscending: true,
+                          showCheckboxColumn: true,
+                          headingRowColor: MaterialStateColor.resolveWith(
+                              (states) => const Color.fromARGB(179, 223, 212, 212)),
+                          dividerThickness: 3,
+                          dataRowColor: MaterialStateColor.resolveWith(
+                              (Set<MaterialState> states) =>
+                                  states.contains(MaterialState.selected)
+                                      ? Colors.green
+                                      : Colors.white),
+                          columns: const [
+                            DataColumn(label: Text('Supplier')),
+                            DataColumn(label: Text('Product')),
+                            DataColumn(label: Text('Amount')),
+                            DataColumn(label: Text('Status')),
+                          ],
+                          rows:  myList
+                            .map((saleRow) =>
+                            DataRow(cells: [
+                              DataCell(Text("${saleRow['transaction_ref']}")),
+                               DataCell(Text("${saleRow['transaction_ref']}")),
+                               DataCell(Text("${saleRow['transaction_amount']}")),
+                             DataCell(Text("${saleRow['transaction_comment']}"))
+                          
+                            ]
+                            )
+                            ).toList()
+                            ),
+                
+  
+   
+                    ),
+                    Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: priBtn(
                       label: 'Download',
@@ -147,9 +182,27 @@ class _SingleReportState extends State<SingleReport> {
                       bgColour: kDarkGreen,
                       isLoading: _isLoading,
                       function: () {}))
-            ])));
+              ],
+            );
   }
-}
+   return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const <Widget>[
+                CircularProgressIndicator(
+                  color: kDarkGreen
+                ),
+                SizedBox(height: 20),
+                Text('This may take some time..')
+              ],
+            ),
+          );
+  })
+                ]
+            )
+            ));
+  }
+ 
 
 Widget smallDateField(
     {required label,
@@ -206,4 +259,7 @@ Widget smallDateField(
           ),
         )
       ]));
+}
+
+ 
 }

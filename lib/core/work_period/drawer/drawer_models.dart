@@ -15,19 +15,40 @@ class ShiftSale {
       required this.total});
 }
 
-class ShiftFloat {
-  String? payRef;
-  String? payDate;
-  String? payAmount;
-  String? cashAmount;
-  String? mobileAmount;
-  String? payDescription;
 
-  ShiftFloat(  
-      {this.payRef,
-      this.payDate,
-       this.payAmount,
-      this.cashAmount,
-      this.mobileAmount,
-      this.payDescription});
+class ShiftFloat {
+    String payRef;
+  String payTo;
+  String payAmount;
+  String cashAmount;
+  String mobileAmount;
+  RxString payDescription;
+
+  ShiftFloat(
+      {required this.payRef,
+      required this.payTo,
+      required this.payAmount,
+      required  this.cashAmount,
+      required this.mobileAmount,
+      required this.payDescription});
 }
+
+class Shiftexpense {
+  String payRef;
+  String payTo;
+  String payAmount;
+  String cashAmount;
+  String mobileAmount;
+  RxString payDescription;
+
+  Shiftexpense(
+      {required this.payRef,
+      required this.payTo,
+      required this.payAmount,
+      required this.cashAmount,
+      required this.mobileAmount,
+      required this.payDescription, 
+    });
+
+  
+      }

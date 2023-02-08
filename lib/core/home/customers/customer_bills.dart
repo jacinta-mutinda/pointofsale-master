@@ -56,27 +56,27 @@ class _CustomerReceiptsState extends State<CustomerReceipts> {
                   labelSpan(
                       mainLabel: 'Phone Number',
                       childLabel: customerCtrl.custToShow.phoneno),
-                  labelSpan(
-                      mainLabel: 'Bank Account No',
-                      childLabel: customerCtrl.custToShow.bankacc),
-                  labelSpan(
-                      mainLabel: 'KRA Pin',
-                      childLabel: customerCtrl.custToShow.krapin),
-                  labelSpan(
-                      mainLabel: 'Address',
-                      childLabel: customerCtrl.custToShow.address),
+                  // labelSpan(
+                  //     mainLabel: 'Bank Account No',
+                  //     childLabel: customerCtrl.custToShow.bankacc),
+                  // labelSpan(
+                  //     mainLabel: 'KRA Pin',
+                  //     childLabel: customerCtrl.custToShow.krapin),
+                  // labelSpan(
+                  //     mainLabel: 'Address',
+                  //     childLabel: customerCtrl.custToShow.address),
                   labelSpan(
                       mainLabel: 'Contact Person Phone',
                       childLabel: customerCtrl.custToShow.cpperson),
                   labelSpan(
-                      mainLabel: 'Running Balance',
+                      mainLabel: 'Account Balance',
                       childLabel: 'Kes.${customerCtrl.custToShow.runningBal}'),
-                  labelSpan(
-                      mainLabel: 'Total Credit',
-                      childLabel: 'Kes.${customerCtrl.custToShow.totalCredit}'),
-                  labelSpan(
-                      mainLabel: 'Credit Limit',
-                      childLabel: 'Kes.${customerCtrl.custToShow.creditlimit}'),
+                  // labelSpan(
+                  //     mainLabel: 'Total Credit',
+                  //     childLabel: 'Kes.${customerCtrl.custToShow.totalCredit}'),
+                  // labelSpan(
+                  //     mainLabel: 'Credit Limit',
+                  //     childLabel: 'Kes.${customerCtrl.custToShow.creditlimit}'),
                 ]),
                 Padding(
                     padding: const EdgeInsets.only(top: 20),
@@ -240,6 +240,9 @@ class _SingleReceiptState extends State<SingleReceipt> {
         labelSpan(
             mainLabel: 'Discount',
             childLabel: 'Kes${customerCtrl.singleRec.discount}'),
+        labelSpan(
+            mainLabel: 'Account Balance',
+            childLabel: 'Kes.${customerCtrl.custToShow.runningBal}'),
         labelSpan(
             mainLabel: 'Total',
             childLabel: 'Kes${customerCtrl.singleRec.amount}'),

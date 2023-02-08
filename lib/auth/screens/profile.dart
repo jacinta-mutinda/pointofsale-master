@@ -4,6 +4,8 @@ import 'package:nawiri/auth/auth_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
+import '../../core/home/home_models.dart';
+
 class ProfilePage extends StatefulWidget {
   static const routeName = "/profile";
   const ProfilePage({Key? key}) : super(key: key);
@@ -36,16 +38,31 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    usernamectrl.text = auth.profile.username;
-    emailctrl.text = auth.profile.address;
-    addressctrl.text = auth.profile.busaddress;
-    busphonectrl.text = auth.profile.phoneno.toString();
-    passctrl.text = auth.profile.pin.toString();
-    busnamectrl.text = auth.profile.busname;
-    locctrl.text = auth.profile.location;
-    phonectrl.text = auth.profile.phone.toString();
-    tillnoctrl.text = auth.profile.till.toString();
-    taglinectrl.text = auth.profile.recFooter;
+    auth.userDetails();
+    if (auth.userList.length > 0) {
+      busnamectrl.text = auth.userList[0].busname;
+      usernamectrl.text = auth.userList[0].username;
+      emailctrl.text = auth.userList[0].address;
+      addressctrl.text = auth.userList[0].busaddress;
+      busphonectrl.text = auth.userList[0].phoneno.toString();
+      passctrl.text = auth.userList[0].pin.toString();
+      locctrl.text = auth.userList[0].location;
+      phonectrl.text = auth.userList[0].phone.toString();
+      tillnoctrl.text = auth.userList[0].till.toString();
+      taglinectrl.text = auth.userList[0].recFooter;
+    }
+    print(busnamectrl.text);
+
+    // usernamectrl.text = auth.profile.username;
+    // emailctrl.text = auth.profile.address;
+    // addressctrl.text = auth.profile.busaddress;
+    // busphonectrl.text = auth.profile.phoneno.toString();
+    // passctrl.text = auth.profile.pin.toString();
+    // busnamectrl.text = auth.profile.busname;
+    // locctrl.text = auth.profile.location;
+    // phonectrl.text = auth.profile.phone.toString();
+    // tillnoctrl.text = auth.profile.till.toString();
+    // taglinectrl.text = auth.profile.recFooter;
   }
 
   @override
@@ -83,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: secAppBar(pageTitle: 'Create Account'),
+        appBar: secAppBar(pageTitle: 'Profile'),
         body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
             child: Column(

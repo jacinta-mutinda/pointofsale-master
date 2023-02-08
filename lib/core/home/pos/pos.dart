@@ -2,9 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout.dart';
+import 'package:nawiri/core/home/pos/checkout/checkout_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
+import 'package:nawiri/core/work_period/shift/shift.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
@@ -405,60 +408,105 @@ class PoSPage extends StatefulWidget {
 
 class _PoSPageState extends State<PoSPage> {
   TabController? _tabController;
-
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
+    posCtrl.checkShiftStarted();
+    invtCtrl.getProducts();
     posCtrl.getCategories();
+    bankingCtrl.getBanks();
     _tabController = DefaultTabController.of(context);
   }
 
   @override
   void dispose() {
     super.dispose();
-    posCtrl.clearLists();
     _tabController?.animateTo(0);
     posCtrl.cartSale.cart.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 3,
-            toolbarHeight: 80,
-            backgroundColor: kDarkGreen,
-            title: const Text('Point of Sale', style: kAppBarTitle),
-            centerTitle: true,
-            leading: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  iconSize: 25,
-                  color: Colors.white,
-                )),
-            bottom: TabBar(
-              controller: _tabController,
-              indicatorColor: kLightGreen,
-              indicatorWeight: 3.0,
-              tabs: <Widget>[
-                Tab(child: tabitem(label: "Categories", path: Icons.category)),
-                Tab(
-                    child: tabitem(
-                        label: "Products", path: Icons.shopping_basket)),
-                Tab(child: tabitem(label: "Cart", path: Icons.shopping_cart))
-              ],
-            ),
-          ),
-          body: const TabBarView(
-            children: <Widget>[Categories(), Products(), Cart()],
-          ),
-        ));
+    return posCtrl.shiftStarted.value
+        ? DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 3,
+                toolbarHeight: 80,
+                backgroundColor: kDarkGreen,
+                title: const Text('Point of Sale', style: kAppBarTitle),
+                centerTitle: true,
+                leading: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: const Icon(Icons.arrow_back),
+                      iconSize: 25,
+                      color: Colors.white,
+                    )),
+                bottom: TabBar(
+                  controller: _tabController,
+                  indicatorColor: kLightGreen,
+                  indicatorWeight: 3.0,
+                  tabs: <Widget>[
+                    Tab(
+                        child:
+                            tabitem(label: "Categories", path: Icons.category)),
+                    Tab(
+                        child: tabitem(
+                            label: "Products", path: Icons.shopping_basket)),
+                    Tab(
+                        child:
+                            tabitem(label: "Cart", path: Icons.shopping_cart))
+                  ],
+                ),
+              ),
+              body: const TabBarView(
+                children: <Widget>[Categories(), Products(), Cart()],
+              ),
+            ))
+        : Scaffold(
+            appBar: AppBar(
+                elevation: 3,
+                toolbarHeight: 80,
+                backgroundColor: kDarkGreen,
+                title: const Text('Point of Sale', style: kAppBarTitle),
+                centerTitle: true,
+                leading: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: const Icon(Icons.arrow_back),
+                      iconSize: 25,
+                      color: Colors.white,
+                    ))),
+            body: Padding(
+                padding: const EdgeInsets.all(70),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "You're yet to start a shift! Please start a shift in order to make sales",
+                        textAlign: TextAlign.center,
+                        style: kSubTitle,
+                      ),
+                      Lottie.asset('assets/images/closed-store.json'),
+                      priBtn(
+                          label: 'Start Shift',
+                          txtColour: Colors.white,
+                          bgColour: kDarkGreen,
+                          isLoading: _isLoading,
+                          function: () {
+                            Get.to(const ShiftPage());
+                          })
+                    ])));
   }
 }
 

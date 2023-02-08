@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/work_period/drawer/drawer_models.dart';
@@ -10,16 +9,28 @@ import 'package:nawiri/utils/urls.dart';
 
 class DrawerCtrl extends GetxController {
   RxString shiftId = ''.obs;
-
-  ShiftSale saleRow =
-      ShiftSale(id: '', cashAmt: '', mpesaAmt: '', cardAmt: '', total: '0'.obs);
+  ShiftSale saleRow = ShiftSale(
+      id: '',
+      cashAmt: '0.0',
+      mpesaAmt: '0.0',
+      cardAmt: '0.0',
+      total: '0.0'.obs);
   ShiftFloat floatRow = ShiftFloat(
-       payRef: '', 
-              payDate: '', 
-              payAmount: '',
-               cashAmount: '', 
-               mobileAmount: '',
-               payDescription: '',);
+    payRef: '',
+    payTo: '',
+    payAmount: '',
+    cashAmount: '',
+    mobileAmount: '',
+    payDescription: ''.obs
+  );
+  Shiftexpense expenseRow = Shiftexpense(
+    payRef: '',
+    payTo: '',
+    payAmount: '',
+    cashAmount: '',
+    mobileAmount: '',
+    payDescription: ''.obs);
+  
 
   @override
   void onInit() {
@@ -27,6 +38,7 @@ class DrawerCtrl extends GetxController {
     getShiftId();
     getShiftSales();
     getShiftFloats();
+    getShiftExpenses();
   }
 
   getShiftId() {
@@ -35,34 +47,29 @@ class DrawerCtrl extends GetxController {
 
   getShiftSales() async {
     saleRow = ShiftSale(
-        id: '', cashAmt: '', mpesaAmt: '', cardAmt: '', total: '0'.obs);
+        id: '',
+        cashAmt: '0.0',
+        mpesaAmt: '0.0',
+        cardAmt: '0.0',
+        total: '0.0'.obs);
     var body = jsonEncode({
       'shift_id': shiftId.value,
     });
     try {
       final response = await http.post(Uri.parse(getShiftSalesUrl),
           body: body, headers: headers);
-      print(response.body);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
-        if (resData is List<dynamic>) {
-          for (var item in resData) {
-            saleRow.id = item['id'];
-            saleRow.cashAmt = item['cash'];
-            saleRow.mpesaAmt = item['mpesa'];
-            saleRow.cardAmt = item['card'];
-            saleRow.total.value = (int.parse(saleRow.cardAmt) +
-                    int.parse(saleRow.mpesaAmt) +
-                    int.parse(saleRow.cashAmt))
-                .toString();
-          }
-        } else {
-          saleRow = ShiftSale(
-              id: '', cashAmt: '', mpesaAmt: '', cardAmt: '', total: '0'.obs);
+        
+        if (resData is Map) {
+          saleRow.id = resData['id'].toString();
+          saleRow.cashAmt = resData['cash'].toString();
+          saleRow.mpesaAmt = resData['mpesa'].toString();
+          saleRow.cardAmt = resData['bank'].toString();
+          saleRow.total.value = resData['total'].toString();
         }
-        update();
-        return;
       }
+      update();
       return;
     } catch (error) {
       debugPrint("$error");
@@ -75,39 +82,30 @@ class DrawerCtrl extends GetxController {
 
   getShiftFloats() async {
     floatRow = ShiftFloat(
-         payRef: '', 
-              payDate: '', 
-              payAmount: '',
-               cashAmount: '', 
-               mobileAmount: '',
-               payDescription: '',);
+      payRef: '',
+      payTo: '',
+      payAmount: '0.0',
+      cashAmount: '0.0',
+      mobileAmount: '0.0',
+      payDescription: ''.obs
+    );
     var body = jsonEncode({
-      'shift_id': shiftId.value,
+      'shift_id': 153,
     });
     try {
-      final response = await http.post(Uri.parse(getShiftSalesUrl),
-          body: body, headers: headers);
+      final response =
+          await http.post(Uri.parse(getShiftFloatUrl), body: body, headers: headers);
+      print(response.body);
       if (response.statusCode == 200) {
         var resData = json.decode(response.body);
-        if (resData is List<dynamic>) {
-          for (var item in resData) {
-            floatRow.payRef = item['payRef'];
-            floatRow.cashAmount = item['cashAmount'];
-            floatRow.mobileAmount = item['mobileAmount'];
-            floatRow.payAmount = item['payAmount'];
-            // floatRow.total.value = (int.parse(floatRow.payAmount ?? '') +
-            //         int.parse(floatRow.mobileAmount?? '') +
-            //         int.parse(floatRow.cashAmount?? ''))
-            //     .toString();
-          }
-        } else {
-          floatRow = ShiftFloat(
-              payRef: '', 
-              payDate: '', 
-              payAmount: '',
-               cashAmount: '', 
-               mobileAmount: '',
-               payDescription: '',);
+        print(resData);
+        if (resData is Map) {
+          floatRow.payRef = resData['pay_ref'].toString();
+          floatRow.payTo = resData['pay_to'];
+          floatRow.cashAmount = resData['cash_amount'].toString();
+          floatRow.mobileAmount = resData['mobile_amount'].toString();
+          floatRow.payAmount = resData['pay_amount'].toString();
+          floatRow.payDescription.value = resData['pay_description'].toString();
         }
         update();
         return;
@@ -122,3 +120,45 @@ class DrawerCtrl extends GetxController {
     }
   }
 }
+
+ getShiftExpenses() async {
+    var expenseRow = Shiftexpense(
+        payRef: '',
+    payTo: '',
+    payAmount: '',
+    cashAmount: '',
+    mobileAmount: '',
+    payDescription: ''.obs);
+ 
+    var body = jsonEncode({
+      'shift_id': 654,
+    });
+    try {
+      final response = await http.get(Uri.parse(getShiftExpensesUrl),
+           headers: headers);
+           print(response.body);
+      if (response.statusCode == 200) {
+        var resData = json.decode(response.body);
+       print(resData);
+        if (resData is Map) {
+          expenseRow.payRef = resData['pay_ref'];
+          expenseRow.cashAmount = resData['cash_amount'].toString();
+          expenseRow.mobileAmount = resData['mobile_amount'].toString();
+          expenseRow.payAmount = resData['pay_amount'].toString();
+          
+        }}
+        
+      // update();
+      return;
+    } catch (error) {
+      debugPrint("$error");
+      showSnackbar(
+          path: Icons.close_rounded,
+          title: "Failed to load cash drawer expenses details!",
+          subtitle: "Please check your internet connection or try again later");
+    }
+  }
+  
+  
+  
+  

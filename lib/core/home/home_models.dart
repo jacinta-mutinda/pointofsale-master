@@ -4,13 +4,15 @@ class BankAccount {
   String accno;
   String branchName; // account_details
   String cpperson; //account_manager
+  String running_bal;
 
   BankAccount(
       {required this.id,
       required this.bankName,
       required this.accno,
       required this.branchName,
-      required this.cpperson});
+      required this.cpperson,
+      required this.running_bal});
 }
 
 class BankTransaction {

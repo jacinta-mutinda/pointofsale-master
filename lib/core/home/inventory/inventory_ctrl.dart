@@ -111,10 +111,13 @@ class InventoryCtrl extends GetxController {
       'show_in_pos': catData.showInPos,
     };
     try {
-      var res = await http.patch(Uri.parse(updateCatUrl),
-        body: body, headers: {
+      var res = await http.patch(
+        Uri.parse(updateCatUrl),
+        body: body,
+        headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-        },);
+        },
+      );
       debugPrint("Got response ${res.statusCode}");
       print(catToEdit.value);
 
@@ -227,6 +230,7 @@ class InventoryCtrl extends GetxController {
     try {
       var res =
           await http.post(Uri.parse(addUoMUrl), body: body, headers: headers);
+      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded,
@@ -253,12 +257,14 @@ class InventoryCtrl extends GetxController {
       'uom_code': uomData.uomCode
     };
 
-
     try {
-      var res = await http.patch(Uri.parse(updateUomUrl),
-        body: body, headers: {
+      var res = await http.patch(
+        Uri.parse(updateUomUrl),
+        body: body,
+        headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-        },);
+        },
+      );
       debugPrint("Got response ${res.statusCode}");
       // debugPrint(res.body);
       if (res.statusCode == 200) {
@@ -354,6 +360,7 @@ class InventoryCtrl extends GetxController {
         }
         filterProdPaginator();
         update();
+        print(products.length);
         return;
       }
       return;
@@ -368,10 +375,10 @@ class InventoryCtrl extends GetxController {
   addProduct(Product prodData) async {
     var body = jsonEncode({
       'branch_id': branchId,
-      'location_productcode': prodData.code,
+      'location_product_scancode': prodData.code,
       'location_product_description': prodData.name,
       'location_product_sp': prodData.retailMg,
-      'location_product_quantity':0,
+      'location_product_quantity': 0,
       'location_product_sp1': prodData.wholesaleMg,
       'category_id': prodData.categoryid,
       'product_bp': prodData.buyingPrice,
@@ -381,7 +388,7 @@ class InventoryCtrl extends GetxController {
     });
     try {
       var res =
-      await http.post(Uri.parse(addProductUrl), body: body, headers: {});
+          await http.post(Uri.parse(addProductUrl), body: body, headers: {});
       print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
@@ -403,10 +410,10 @@ class InventoryCtrl extends GetxController {
   editProduct(Product prodData) async {
     var body = {
       'branch_id': branchId,
-      'location_productcode': prodData.code,
+      'location_product_id':prodToEdit.value,
       'location_product_description': prodData.name,
       'location_product_sp': prodData.retailMg,
-      'location_product_quantity':0,
+      'location_product_quantity': "0",
       'location_product_sp1': prodData.wholesaleMg,
       'category_id': prodData.categoryid,
       'product_bp': prodData.buyingPrice,
@@ -414,22 +421,26 @@ class InventoryCtrl extends GetxController {
       'active': prodData.active,
       'uom_code': prodData.uomId
     };
+    print(prodToEdit.value);
 
     try {
-      var res = await http.patch(Uri.parse(updateProdUrl),
-        body: body, headers: {
+      var res = await http.patch(
+        Uri.parse(updateProdUrl),
+        body: body,
+        headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-        },);
-      debugPrint("Got response ${res.statusCode}");
+        },
+      );
+      debugPrint("Got response ${res.body}");
       // debugPrint(res.body);
       if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded,
-            title: "Unit of Measurement Updated!",
+            title: "Product Updated!",
             subtitle: "");
         await Future.delayed(const Duration(seconds: 2));
-        getUoMs();
-        Get.off(() => const UoMsPage());
+        getProducts();
+        Get.off(() => const ProductsPage());
         return;
       }
       return;
@@ -437,7 +448,7 @@ class InventoryCtrl extends GetxController {
       debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
-          title: "Failed to update Unit of Measurement!",
+          title: "Failed to update product!",
           subtitle: "Please check your internet connection or try again later");
     }
   }

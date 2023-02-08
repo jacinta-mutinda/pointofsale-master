@@ -180,7 +180,7 @@ class _OnBoardState extends State<OnBoard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Image.asset('assets/images/nawiri-logo.png',
                               width: 40, height: 40)),
                       const Text(

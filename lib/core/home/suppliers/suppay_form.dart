@@ -71,16 +71,6 @@ class _SuppPayFormState extends State<SuppPayForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          formDropDownField(
-                              label: 'Transaction Type',
-                              dropdownValue: supplierCtrl.transtyeDrop.value,
-                              dropItems: supplierCtrl.transtypes,
-                              bgcolor: kGrey,
-                              function: (String? newValue) {
-                                setState(() {
-                                  supplierCtrl.transtyeDrop.value = newValue!;
-                                });
-                              }),
                           dateFormField(
                               label: 'Date of Payment',
                               controller: datectrl,
@@ -93,8 +83,8 @@ class _SuppPayFormState extends State<SuppPayForm> {
 
                                 if (pickedDate != null) {
                                   String formattedDate =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(pickedDate);
+                                  DateFormat('yyyy-MM-dd')
+                                      .format(pickedDate);
 
                                   setState(() {
                                     datectrl.text = formattedDate;
@@ -107,6 +97,17 @@ class _SuppPayFormState extends State<SuppPayForm> {
                                 }
                                 return null;
                               }),
+                          formDropDownField(
+                              label: 'Transaction Type',
+                              dropdownValue: supplierCtrl.transtyeDrop.value,
+                              dropItems: supplierCtrl.transtypes,
+                              bgcolor: kGrey,
+                              function: (String? newValue) {
+                                setState(() {
+                                  supplierCtrl.transtyeDrop.value = newValue!;
+                                });
+                              }),
+
                           formField(
                               label: 'Referenec Code',
                               require: true,
@@ -118,17 +119,17 @@ class _SuppPayFormState extends State<SuppPayForm> {
                                 }
                                 return null;
                               }),
-                          formField(
-                              label: 'Discount (in Kes)',
-                              require: true,
-                              controller: discountctrl,
-                              type: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the discount given';
-                                }
-                                return null;
-                              }),
+                          // formField(
+                          //     label: 'Discount (in Kes)',
+                          //     require: true,
+                          //     controller: discountctrl,
+                          //     type: TextInputType.number,
+                          //     validator: (value) {
+                          //       if (value == null || value.isEmpty) {
+                          //         return 'Please enter the discount given';
+                          //       }
+                          //       return null;
+                          //     }),
                           formField(
                               label: 'Amount (in Kes)',
                               require: true,
@@ -159,7 +160,7 @@ class _SuppPayFormState extends State<SuppPayForm> {
                         supPayData.supId=supplierCtrl.supToShow.id;
                         supPayData.comment = commentctrl.text;
                         supPayData.amount = amountctrl.text;
-                        supPayData.discount = discountctrl.text.toString();
+                        supPayData.discount = '0';
 
                         supplierCtrl.addSupPay(supPayData);
                       }

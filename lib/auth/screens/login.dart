@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/auth/auth_ctrl.dart';
+import 'package:nawiri/auth/screens/verify.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'company_det.dart';
 
@@ -186,13 +188,12 @@ class _OtpScreenState extends State<OtpScreen> {
                   alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: () {
-                      var branch =
-                          pinOneController.text + pinTwoController.text;
-                      var pin = pinThreeController.text +
+
+                      var pin = pinOneController.text + pinTwoController.text+pinThreeController.text +
                           pinFourController.text +
                           pinFiveController.text +
                           pinSixController.text;
-                      auth.login(branch, pin);
+                      auth.login(pin);
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 70),
@@ -224,6 +225,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 childLabel: 'Register',
                 function: () {
                   Get.to(const CompanyDetails());
+                  // Get.to(const VerifyAccount());
                 })
           ],
         ),
@@ -244,6 +246,7 @@ class _OtpScreenState extends State<OtpScreen> {
       pinIndex--;
     }
   }
+
 
   pinIndexSetup(String text) {
     if (pinIndex == 0)

@@ -19,7 +19,7 @@ const updateCatUrl = '$rootUrl/updateCategory';
 
 const getProductsUrl = '$rootUrl/products_all';
 const addProductUrl = '$rootUrl/add_product';
-const updateProdUrl = '$rootUrl/updateCategory';
+const updateProdUrl = '$rootUrl/update_product';
 
 // UoMs Urls --------------------------------------
 
@@ -52,7 +52,7 @@ const getSupPayUrl = '$rootUrl/getTransactionsBySupplierID';
 
 // PoS Urls --------------------------------------
 
-const addCheckoutUrl = '$rootUrl/checkout';
+const addCheckoutUrl = '$rootUrl/checkout1';
 
 // Auth Urls --------------------------------------
 const addCompanyUrl = '$rootUrl/addCompany';
@@ -61,9 +61,19 @@ const loginUrl = '$rootUrl/login';
 
 // Drawer Urls
 const getShiftSalesUrl = '$rootUrl/getSalesByShifts';
-const getShiftFloat = '$rootUrl/getFloatsByShifts';
+const getShiftFloatUrl = '$rootUrl/getFloatsByShifts';
+const getShiftExpensesUrl = '$rootUrl/getShiftsExpenses';
 
 // Shift Urls --------------------------------------
 
 const createShiftUrl = '$rootUrl/createShift';
 const closeShiftUrl = '$rootUrl/closeShift';
+
+
+// Report Urls --------------------------------------
+
+const getSupplierTransactionReportUrl = '$rootUrl/getSupplierTransReport';
+const getShiftSaleReportUrl = '$rootUrl/getShiftSalesReport';
+
+//sms
+const sendSmsUrl = 'https://bulksms.musren.co.ke/api/sms/v1/sendsms';

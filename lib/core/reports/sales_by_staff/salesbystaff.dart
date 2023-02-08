@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:nawiri/core/reports/report_ctrl.dart';
+import 'package:nawiri/core/reports/reports.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
-final reportCtrl = Get.put(ReportCtrl());
-
-class SingleReport extends StatefulWidget {
-  static const routeName = "/singlereport";
-  const SingleReport({Key? key}) : super(key: key);
+class SalesByStaffReport extends StatefulWidget {
+  const SalesByStaffReport({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _SingleReportState createState() => _SingleReportState();
+  _SalesByStaffReportState createState() => _SalesByStaffReportState();
 }
 
-class _SingleReportState extends State<SingleReport> {
+class _SalesByStaffReportState extends State<SalesByStaffReport> {
   bool _isLoading = false;
   TextEditingController startDateCtrl = TextEditingController();
   TextEditingController endDateCtrl = TextEditingController();
@@ -38,7 +34,6 @@ class _SingleReportState extends State<SingleReport> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: mainAppBar(pageTitle: 'Reports'),
-        drawer: mainDrawer(),
         body: SingleChildScrollView(
             padding: const EdgeInsets.all(15),
             child:
@@ -120,7 +115,7 @@ class _SingleReportState extends State<SingleReport> {
                   )),
               Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Text(reportCtrl.reportTitle.value, style: kTitle)),
+                  child: Text('Sales By Staff', style: kTitle)),
               SizedBox(
                 width: 600,
                 child: DataTable(
@@ -135,8 +130,24 @@ class _SingleReportState extends State<SingleReport> {
                           states.contains(MaterialState.selected)
                               ? Colors.green
                               : Colors.white),
-                  columns: reportCtrl.cols,
-                  rows: reportCtrl.rows,
+                  columns: const [
+                     DataColumn(label: Text('Staff')),
+        DataColumn(label: Text('Total')),
+        DataColumn(label: Text('Cash')),
+        DataColumn(label: Text('Mpesa')),
+        DataColumn(label: Text('Card')),
+        DataColumn(label: Text('Uncleared')),
+                  ],
+                  rows: const [
+                    DataRow(cells: [
+                      DataCell(Text('Staff 01')),
+                      DataCell(Text('1000')),
+                      DataCell(Text('200')),
+                      DataCell(Text('200')),
+                      DataCell(Text('20')),
+                      DataCell(Text('100'))
+                    ]),
+                  ],
                 ),
               ),
               Padding(

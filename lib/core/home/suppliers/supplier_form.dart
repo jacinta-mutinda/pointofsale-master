@@ -177,6 +177,7 @@ class _SupplierFormState extends State<SupplierForm> {
                         _isLoading = true;
                       });
                       if (_formKey.currentState!.validate()) {
+                        supData.id=supplierCtrl.supToShow.id;
                         supData.name = namectrl.text;
                         supData.address = addressctrl.text;
                         supData.bankacc = bankaccctrl.text;

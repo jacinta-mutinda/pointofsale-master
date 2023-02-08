@@ -85,7 +85,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                         }),
                     formField(
                         label: 'P.O BOX / Email Address',
-                        require: true,
+                        require: false,
                         controller: addressctrl,
                         type: TextInputType.name,
                         validator: (value) {
@@ -121,13 +121,13 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                         }),
                     formField(
                         label: 'Till Number',
-                        require: true,
+                        require: false,
                         controller: tillnoctrl,
                         type: TextInputType.number,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a valid till Number';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter a valid till Number';
+                          // }
                           return null;
                         }),
                     formField(

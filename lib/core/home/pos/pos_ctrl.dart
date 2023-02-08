@@ -18,6 +18,8 @@ final checkoutCtrl = Get.put(CheckoutCtrl());
 
 class PoSCtrl extends GetxController {
   String? branchId;
+  RxString shiftId = ''.obs;
+  RxBool shiftStarted = false.obs;
   RxString selectedCat = ''.obs;
   RxList<Product> catProds = RxList<Product>();
   RxList<String> selectedProdIds = RxList<String>();
@@ -71,9 +73,22 @@ class PoSCtrl extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    checkShiftStarted();
     setBranchId();
     getCategories();
-    getProducts();
+  }
+
+  checkShiftStarted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var shift = prefs.getString('shiftId');
+    if (shift != null) {
+      shiftId.value = shift;
+      shiftStarted.value = true;
+    } else {
+      shiftId.value = 'null';
+      shiftStarted.value = false;
+    }
+    update();
   }
 
   setBranchId() async {
@@ -82,6 +97,7 @@ class PoSCtrl extends GetxController {
   }
 
   getCategories() async {
+    clearLists();
     try {
       final response = await http.get(Uri.parse('$getCategoriesUrl/$branchId'),
           headers: apiHeaders);
@@ -99,7 +115,6 @@ class PoSCtrl extends GetxController {
           }
         }
       }
-      getProducts();
       if (posCats.isEmpty) {
         showCatsLoading.value = false;
         showCatsData.value = false;
@@ -117,41 +132,9 @@ class PoSCtrl extends GetxController {
     }
   }
 
-  getProducts() async {
-    try {
-      final response = await http.get(Uri.parse('$getProductsUrl/$branchId'),
-          headers: apiHeaders);
-      if (response.statusCode == 200) {
-        var resData = json.decode(response.body);
-        for (var item in resData) {
-          Product product = Product(
-              cartQuantity: '1',
-              id: item['location_product_id'],
-              name: item['location_product_description'],
-              desc: item['location_product_description'],
-              code: item['location_productcode'],
-              retailMg: item['location_product_sp'],
-              wholesaleMg: item['location_product_sp1'],
-              buyingPrice: item['location_product_sp'],
-              categoryid: item['category_id'],
-              uomId: item['uom_code'],
-              blockingneg: item['blockneg'],
-              active: item['active']);
-          posProds.add(product);
-        }
-      }
-      return;
-    } catch (error) {
-      showSnackbar(
-          path: Icons.close_rounded,
-          title: "Failed to load products",
-          subtitle: "Please check your internet connection or try again later");
-    }
-  }
-
   setNextTab() {
     catProds.clear();
-    for (var prod in posProds) {
+    for (var prod in invtCtrl.products) {
       if (prod.categoryid == selectedCat.value) {
         catProds.add(prod);
       }
@@ -161,16 +144,17 @@ class PoSCtrl extends GetxController {
     } else {
       catHasProds.value = true;
     }
+    update();
   }
 
   addToCart(String prodId) {
     if (selectedProdIds.contains(prodId)) {
-      selectedProds
-          .remove(posProds.where((element) => element.id == (prodId)).first);
+      selectedProds.remove(
+          invtCtrl.products.where((element) => element.id == (prodId)).first);
       selectedProdIds.remove(prodId);
     } else {
-      selectedProds
-          .add(posProds.where((element) => element.id == (prodId)).first);
+      selectedProds.add(
+          invtCtrl.products.where((element) => element.id == (prodId)).first);
       selectedProdIds.add(prodId);
     }
     cartLength.value = selectedProds.length;

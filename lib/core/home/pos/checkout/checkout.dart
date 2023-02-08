@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout_ctrl.dart';
 import 'package:nawiri/theme/constants.dart';
@@ -21,7 +20,7 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  TextEditingController paymthdctrl = TextEditingController();
+  RxInt paidTotal = 0.obs;
   TextEditingController cashAmtCtrl = TextEditingController();
   TextEditingController bankAmtCtrl = TextEditingController();
   TextEditingController onAccAmtCtrl = TextEditingController();
@@ -34,19 +33,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    checkoutCtrl.selectedMthds.add('Cash');
-    checkoutCtrl.paymethods
-        .where((element) => element.name == 'Cash')
-        .first
-        .selected
-        .value = true;
-    checkoutCtrl.setCheckoutForm();
+    bankingCtrl.getBanks();
+    mobileAmtCtrl.text = '0';
+    onAccAmtCtrl.text = '0';
+    bankAmtCtrl.text = '0';
+    cashAmtCtrl.text = '0';
+    refcodectrl.text = '';
+    bankAccctrl.text = '';
+    balancectrl.text = '';
+    bankrefcodectrl.text = '';
   }
 
   @override
   void dispose() {
     balancectrl.dispose();
-    paymthdctrl.dispose();
     cashAmtCtrl.dispose();
     bankAmtCtrl.dispose();
     mobileAmtCtrl.dispose();
@@ -62,39 +62,36 @@ class _CheckoutPageState extends State<CheckoutPage> {
     var onAcc = 0;
     var mobile = 0;
     var cash = 0;
-    if (cashAmtCtrl.text.isEmpty) {
+    if (cashAmtCtrl.text == '') {
       cash = 0;
     } else {
       cash = int.parse(cashAmtCtrl.text);
     }
-    if (bankAmtCtrl.text.isEmpty) {
+    if (bankAmtCtrl.text == '') {
       bank = 0;
     } else {
       bank = int.parse(bankAmtCtrl.text);
     }
-    if (mobileAmtCtrl.text.isEmpty) {
+    if (mobileAmtCtrl.text == '') {
       mobile = 0;
     } else {
       mobile = int.parse(mobileAmtCtrl.text);
     }
-    if (onAccAmtCtrl.text.isEmpty) {
+    if (onAccAmtCtrl.text == '') {
       onAcc = 0;
     } else {
       onAcc = int.parse(onAccAmtCtrl.text);
     }
-    var paidTotal = cash + bank + onAcc + mobile;
-    var bal = (paidTotal - posCtrl.cartSale.total.value) * -1;
+    paidTotal.value = cash + bank + onAcc + mobile;
+    var bal = (paidTotal.value - posCtrl.cartSale.total.value);
     if (bal < 0) {
-      setState(() {
-        balancectrl.text = 'Kes.$bal';
-      });
+      balancectrl.text = 'Kes.$bal';
     } else {
-      setState(() {
-        balancectrl.text = 'Kes.$bal';
-      });
+      balancectrl.text = 'Kes.$bal';
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -102,6 +99,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       body: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 25, left: 30, right: 30),
           child: Form(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _formKey,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,163 +122,140 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: Divider(
                           color: kDarkGreen,
                         )),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Text('Enter Checkout details',
-                                  style: kSubTitle)),
-                          smallPriBtn(
-                              label: 'Edit Pay Method',
-                              txtColour: Colors.white,
-                              bgColour: kDarkGreen,
-                              isLoading: _isLoading,
-                              function: () {
-                                checkoutCtrl.reset();
-                                Get.dialog(const SelectPayMethod());
-                              })
-                        ]),
+                    const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child:
+                            Text('Enter Checkout details', style: kSubTitle)),
                     Column(children: [
-                      Obx(() => checkoutCtrl.isBankPay.value
-                          ? Column(children: [
-                              formDropDownField(
-                                  label: 'Bank Account',
-                                  dropdownValue:
-                                      checkoutCtrl.bankAccDropdown.value,
-                                  dropItems: bankingCtrl.bankAccStrs,
-                                  bgcolor: kGrey,
-                                  function: (String? newValue) {
-                                    checkoutCtrl.setBankAcc();
-                                    setState(() {
-                                      checkoutCtrl.bankAccDropdown.value =
-                                          newValue!;
-                                    });
-                                  }),
-                              formField(
-                                  label: 'Transaction Reference Code',
-                                  require: true,
-                                  controller: bankrefcodectrl,
-                                  type: TextInputType.name,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the reference code';
-                                    }
-                                    return null;
-                                  }),
-                              formField(
-                                  label: 'Amount Paid via bank (in Kes)',
-                                  require: true,
-                                  controller: bankAmtCtrl,
-                                  type: TextInputType.number,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the amount paid';
-                                    }
+                      Column(children: [
+                        formDropDownField(
+                            label: 'Bank Account',
+                            dropdownValue: checkoutCtrl.bankAccDropdown.value,
+                            dropItems: bankingCtrl.bankAccStrs,
+                            bgcolor: kGrey,
+                            function: (String? newValue) {
+                              checkoutCtrl.setBankAcc();
+                              setState(() {
+                                checkoutCtrl.bankAccDropdown.value = newValue!;
+                              });
+                            }),
+                        formField(
+                            label: 'Transaction Reference Code',
+                            require: true,
+                            controller: bankrefcodectrl,
+                            type: TextInputType.name,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please enter the reference code';
+                              }
+                              return null;
+                            }),
+                        formField(
+                            label: 'Amount Paid via bank (in Kes)',
+                            require: true,
+                            controller: bankAmtCtrl,
+                            type: TextInputType.number,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please enter the amount paid';
+                              } else {
+                                setBalance();
+                              }
+                              return null;
+                            }),
+                        const Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Divider(
+                              color: kDarkGreen,
+                            )),
+                      ]),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            formField(
+                                label: 'Amount Paid via cash (in Kes)',
+                                require: true,
+                                controller: cashAmtCtrl,
+                                type: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please enter the amount paid';
+                                  } else {
                                     setBalance();
-                                    return null;
-                                  }),
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: Divider(
-                                    color: kDarkGreen,
-                                  )),
-                            ])
-                          : const SizedBox()),
-                      Obx(() => checkoutCtrl.isCashPay.value
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                  formField(
-                                      label: 'Amount Paid via cash (in Kes)',
-                                      require: true,
-                                      controller: cashAmtCtrl,
-                                      type: TextInputType.number,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please enter the amount paid';
-                                        }
-                                        setBalance();
-                                        return null;
-                                      }),
-                                  const Padding(
-                                      padding: EdgeInsets.only(bottom: 10),
-                                      child: Divider(
-                                        color: kDarkGreen,
-                                      ))
-                                ])
-                          : const SizedBox()),
-                      Obx(() => checkoutCtrl.isMpesaPay.value
-                          ? Column(children: [
-                              formField(
-                                  label: 'Mobile Money Reference Code',
-                                  require: true,
-                                  controller: refcodectrl,
-                                  type: TextInputType.name,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the reference code';
-                                    }
-                                    return null;
-                                  }),
-                              formField(
-                                  label:
-                                      'Amount Paid via mobile money (in Kes)',
-                                  require: true,
-                                  controller: mobileAmtCtrl,
-                                  type: TextInputType.number,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the amount paid';
-                                    }
-                                    setBalance();
-                                    return null;
-                                  }),
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: Divider(
-                                    color: kDarkGreen,
-                                  )),
-                            ])
-                          : const SizedBox()),
-                      Obx(() => checkoutCtrl.isOnAccPay.value
-                          ? Column(children: [
-                              formField(
-                                  label: 'Customer Name',
-                                  require: false,
-                                  controller: checkoutCtrl.customerctrl,
-                                  type: TextInputType.name,
-                                  readonly: true,
-                                  validator: (value) {
-                                    setState(() {
-                                      checkoutCtrl.customerctrl.text =
-                                          checkoutCtrl.selectedCustAcc.value;
-                                    });
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please select a customer Account';
-                                    }
-                                    return null;
-                                  }),
-                              formField(
-                                  label:
-                                      'Amount Paid on customer account (in Kes)',
-                                  require: true,
-                                  controller: onAccAmtCtrl,
-                                  type: TextInputType.number,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter the amount paid';
-                                    }
-                                    setBalance();
-                                    return null;
-                                  }),
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: Divider(
-                                    color: kDarkGreen,
-                                  ))
-                            ])
-                          : const SizedBox()),
+                                  }
+                                  return null;
+                                }),
+                            const Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Divider(
+                                  color: kDarkGreen,
+                                ))
+                          ]),
+                      Column(children: [
+                        formField(
+                            label: 'Mobile Money Reference Code',
+                            require: true,
+                            controller: refcodectrl,
+                            type: TextInputType.name,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please enter the reference code';
+                              }
+                              return null;
+                            }),
+                        formField(
+                            label: 'Amount Paid via mobile money (in Kes)',
+                            require: true,
+                            controller: mobileAmtCtrl,
+                            type: TextInputType.number,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please enter the amount paid';
+                              } else {
+                                setBalance();
+                              }
+                              return null;
+                            }),
+                        const Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Divider(
+                              color: kDarkGreen,
+                            )),
+                      ]),
+                      Column(children: [
+                        formField(
+                            label: 'Customer Name',
+                            require: false,
+                            controller: checkoutCtrl.customerctrl,
+                            type: TextInputType.name,
+                            readonly: true,
+                            validator: (value) {
+                              checkoutCtrl.customerctrl.text =
+                                  checkoutCtrl.selectedCustAcc.value;
+                              if (value == null) {
+                                return 'Please select a customer Account';
+                              }
+                              return null;
+                            }),
+                        formField(
+                            label: 'Amount Paid on customer account (in Kes)',
+                            require: true,
+                            controller: onAccAmtCtrl,
+                            type: TextInputType.number,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please enter the amount paid';
+                              } else {
+                                setBalance();
+                              }
+                              return null;
+                            }),
+                        const Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Divider(
+                              color: kDarkGreen,
+                            ))
+                      ]),
                       formField(
                           label: 'Balance (in Kes)',
                           require: false,
@@ -301,101 +276,37 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           _isLoading = true;
                         });
                         if (_formKey.currentState!.validate()) {
-                          checkoutCtrl.checkDetData.payMthd = paymthdctrl.text;
-                          if (checkoutCtrl.isCashPay.value) {
-                            checkoutCtrl.checkDetData.bankPaid =
-                                bankAmtCtrl.text;
-                            checkoutCtrl.checkDetData.cashPaid =
-                                cashAmtCtrl.text;
-                            checkoutCtrl.checkDetData.onAccPaid =
-                                onAccAmtCtrl.text;
-                            checkoutCtrl.checkDetData.mobilePaid =
-                                mobileAmtCtrl.text;
-                          } else if (checkoutCtrl.isBankPay.value) {
-                            checkoutCtrl.checkDetData.bankAccId =
-                                checkoutCtrl.selectedBankId.value.toString();
-                            checkoutCtrl.checkDetData.bankRefCode =
-                                bankrefcodectrl.text;
-                          } else if (checkoutCtrl.isMpesaPay.value) {
-                            checkoutCtrl.checkDetData.mpesaRefCode =
-                                refcodectrl.text;
-                          } else {
-                            checkoutCtrl.checkDetData.custAccId =
-                                checkoutCtrl.selectedCustAccId.value;
-                          }
+                          checkoutCtrl.checkDetData.bankPaid = bankAmtCtrl.text;
+                          checkoutCtrl.checkDetData.cashPaid = cashAmtCtrl.text;
+                          checkoutCtrl.checkDetData.onAccPaid =
+                              onAccAmtCtrl.text;
+                          checkoutCtrl.checkDetData.mobilePaid =
+                              mobileAmtCtrl.text;
+
+                          checkoutCtrl.checkDetData.bankAccId =
+                              checkoutCtrl.selectedBankId.value.toString();
+                          checkoutCtrl.checkDetData.bankRefCode =
+                              bankrefcodectrl.text;
+
+                          checkoutCtrl.checkDetData.mpesaRefCode =
+                              refcodectrl.text;
+
+                          checkoutCtrl.checkDetData.custAccId =
+                              checkoutCtrl.selectedCustAccId.value;
+                          checkoutCtrl.checkDetData.totalPaid =
+                              paidTotal.value.toString();
+                          checkoutCtrl.checkDetData.balance = balancectrl.text;
+
                           checkoutCtrl.completeSale();
                         }
                         await Future.delayed(const Duration(seconds: 2));
                         setState(() {
                           _isLoading = false;
                         });
-                        Get.off(NavigatorHandler(0));
                       },
                     )
                   ]))),
     );
-  }
-}
-
-class SelectPayMethod extends StatefulWidget {
-  static const routeName = "/_SelectPayMethod";
-
-  const SelectPayMethod({Key? key}) : super(key: key);
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _SelectPayMethodState createState() => _SelectPayMethodState();
-}
-
-class _SelectPayMethodState extends State<SelectPayMethod> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return popupScaffold(children: [
-      popupHeader(label: 'Select payment methods'),
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                var payMthds = checkoutCtrl.paymethods;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: CheckboxListTile(
-                    title: Text(payMthds[index].name,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Nunito',
-                            fontWeight: FontWeight.w500,
-                            color: kDarkGreen)),
-                    checkColor: kDarkGreen,
-                    activeColor: kLightGreen,
-                    value: payMthds[index].selected.value,
-                    onChanged: (value) {
-                      setState(() {
-                        if (checkoutCtrl.selectedMthds
-                            .contains(payMthds[index].name)) {
-                          checkoutCtrl.selectedMthds
-                              .remove(payMthds[index].name);
-                        } else {
-                          checkoutCtrl.selectedMthds.add(payMthds[index].name);
-                        }
-                        checkoutCtrl.setCheckoutForm();
-                        payMthds[index].selected.value = value!;
-                      });
-                    },
-                  ),
-                );
-              },
-              itemCount: checkoutCtrl.paymethods.length),
-        )
-      ])
-    ]);
   }
 }
 

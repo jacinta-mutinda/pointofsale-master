@@ -179,7 +179,7 @@ class CustomerCtrl extends GetxController {
       "transaction_comment": recData.comment,
       "discount": recData.discount,
       "created_by": "",
-      "bank_id": '1d4c4e57-aac3-497b-bbb3-f3cae6912577',
+      "bank_id": '488d25f9-4fce-4959-810f-93ba3d549309',
       "trans_by": "",
       "trans_type": 10,
       "transtype": recData.transtype
@@ -210,7 +210,7 @@ class CustomerCtrl extends GetxController {
   // ---------- Edit Functions -----------------
 
   editCustomer(Customer custData) async {
-    var body = jsonEncode({
+    var body = {
       "customer_id": custToShow.id,
       "branch_id": branchId,
       "customer_name": custData.name,
@@ -222,12 +222,16 @@ class CustomerCtrl extends GetxController {
       "customer_credit_limit": custData.creditlimit,
       "customer_total_credit": custData.totalCredit,
       "pin_number": custData.krapin,
-    });
+    };
     try {
-      var res = await http.patch(Uri.parse(updateCustomerUrl),
-          body: body, headers: headers);
-      debugPrint("Got response ${res.statusCode}");
-      // debugPrint(res.body);
+      var res = await http.patch(
+        Uri.parse(updateCustomerUrl),
+        body: body,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      );
+      debugPrint("Got response ${res.body}");
       if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded,

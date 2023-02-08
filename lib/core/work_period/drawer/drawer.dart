@@ -44,50 +44,47 @@ class _DrawerPageState extends State<DrawerPage> {
                     controller: _scrollctrl,
                     child: Padding(
                         padding: const EdgeInsets.only(bottom: 15),
-                        child: DataTable(
-                          headingRowColor:
-                              MaterialStateColor.resolveWith((states) => kGrey),
-                          dividerThickness: 3,
-                          columns: const [
-                            DataColumn(label: Text('Income')),
-                            DataColumn(label: Text('Cash')),
-                            DataColumn(label: Text('M-pesa')),
-                            DataColumn(label: Text('Card')),
-                            DataColumn(label: Text('On Acc.')),
-                          ],
-                          rows: [
-                            const DataRow(cells: [
-                              DataCell(Text('Sales')),
-                              // DataCell(Text(drawerCtrl.saleRow.cashAmt)),
-                              // DataCell(Text(drawerCtrl.saleRow.mpesaAmt)),
-                              // DataCell(Text(drawerCtrl.saleRow.cardAmt)),
-                              // DataCell(Text(drawerCtrl.saleRow.total.value))
-                              DataCell(Text('240')),
-                              DataCell(Text('20')),
-                              DataCell(Text('20')),
-                              DataCell(Text('200'))
-                            ]),
-                             DataRow(cells: [
-                              DataCell(Text('Float')),
-                                DataCell(Text(drawerCtrl.floatRow. cashAmount?? '')),
-                              DataCell(Text(drawerCtrl.floatRow.mobileAmount?? '')),
-                              DataCell(Text(drawerCtrl.floatRow.payAmount ?? '')),
-                              DataCell(Text('20')),
-                              
-                             
-                            ]),
-                            DataRow(
-                                color: MaterialStateColor.resolveWith(
-                                    (states) => kLightGreen),
-                                cells: const [
-                                  DataCell(Text('Total')),
-                                  DataCell(Text('240')),
-                                  DataCell(Text('20')),
-                                  DataCell(Text('20')),
-                                  DataCell(Text('200')),
+                        child: Obx(() => DataTable(
+                              headingRowColor: MaterialStateColor.resolveWith(
+                                  (states) => kGrey),
+                              dividerThickness: 3,
+                              columns: const [
+                                DataColumn(label: Text('Income')),
+                                DataColumn(label: Text('Cash')),
+                                DataColumn(label: Text('M-pesa')),
+                                DataColumn(label: Text('Bank')),
+                                DataColumn(label: Text('On Acc.')),
+                              ],
+                              rows: [
+                                DataRow(cells: [
+                                  const DataCell(Text('Sales')),
+                                  DataCell(Text(drawerCtrl.saleRow.cashAmt)),
+                                  DataCell(Text(drawerCtrl.saleRow.mpesaAmt)),
+                                  DataCell(Text(drawerCtrl.saleRow.cardAmt)),
+                                  DataCell(Text(drawerCtrl.saleRow.total.value))
                                 ]),
-                          ],
-                        )))),
+                                DataRow(cells: [
+                                  const DataCell(Text('Float')),
+                                  DataCell(Text(
+                                      drawerCtrl.floatRow.cashAmount )),
+                                  DataCell(Text(
+                                      drawerCtrl.floatRow.mobileAmount )),
+                                  DataCell(Text(
+                                      drawerCtrl.floatRow.payAmount  )),
+                                  DataCell(Text(drawerCtrl.floatRow.mobileAmount)),
+                                ]),
+                                DataRow(
+                                    color: MaterialStateColor.resolveWith(
+                                        (states) => kLightGreen),
+                                    cells: const [
+                                      DataCell(Text('Total')),
+                                      DataCell(Text('240')),
+                                      DataCell(Text('20')),
+                                      DataCell(Text('20')),
+                                      DataCell(Text('200')),
+                                    ]),
+                              ],
+                            ))))),
             const SizedBox(
               height: 10,
             ),
@@ -114,38 +111,40 @@ class _DrawerPageState extends State<DrawerPage> {
                 child: Text('Expenses', style: kTitle)),
             SizedBox(
               width: 550,
-              child: DataTable(
-                sortColumnIndex: 0,
-                sortAscending: true,
-                showCheckboxColumn: true,
-                headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromARGB(179, 223, 212, 212)),
-                dividerThickness: 3,
-                dataRowColor: MaterialStateColor.resolveWith(
-                    (Set<MaterialState> states) =>
-                        states.contains(MaterialState.selected)
-                            ? Colors.green
-                            : Colors.white),
-                columns: const [
-                  DataColumn(label: Text('Expenses')),
-                  DataColumn(label: Text('Cash')),
-                  DataColumn(label: Text('M-Pesa')),
-                  DataColumn(label: Text('Card')),
-                ],
-                rows: const [
-                  DataRow(cells: [
-                    DataCell(Text('Stationary')),
-                    DataCell(Text('0')),
-                    DataCell(Text('0')),
-                    DataCell(Text('0')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('Total')),
-                    DataCell(Text('0')),
-                    DataCell(Text('0')),
-                    DataCell(Text('0')),
-                  ]),
-                ],
+              child: Obx(() => DataTable(
+                  sortColumnIndex: 0,
+                  sortAscending: true,
+                  showCheckboxColumn: true,
+                  headingRowColor: MaterialStateColor.resolveWith(
+                      (states) => const Color.fromARGB(179, 223, 212, 212)),
+                  dividerThickness: 3,
+                  dataRowColor: MaterialStateColor.resolveWith(
+                      (Set<MaterialState> states) =>
+                          states.contains(MaterialState.selected)
+                              ? Colors.green
+                              : Colors.white),
+                  columns: const [
+                    DataColumn(label: Text('Expenses')),
+                    DataColumn(label: Text('Cash')),
+                    DataColumn(label: Text('M-Pesa')),
+                    DataColumn(label: Text('Card')),
+                  ],
+                  rows:  [
+                    DataRow(cells: [
+                      DataCell(Text(drawerCtrl.expenseRow.payTo)),
+                      DataCell(Text(drawerCtrl.expenseRow.cashAmount )),
+                      DataCell(Text(drawerCtrl.expenseRow.mobileAmount )),
+                      DataCell(Text(drawerCtrl.expenseRow.payAmount  )),
+                    ]),
+                    // ignore: prefer_const_literals_to_create_immutables
+                    const DataRow(cells:  [
+                      DataCell(Text('Total')),
+                      DataCell(Text('0')),
+                      DataCell(Text('0')),
+                      DataCell(Text('0')),
+                    ]),
+                  ],
+                ),
               ),
             ),
             const SizedBox(

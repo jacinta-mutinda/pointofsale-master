@@ -55,6 +55,9 @@ class _BankTransPageState extends State<BankTransPage> {
                       mainLabel: 'Bank Name',
                       childLabel: bankingCtrl.accToShow.bankName),
                   labelSpan(
+                      mainLabel: 'Running Balance',
+                      childLabel: bankingCtrl.accToShow.running_bal),
+                  labelSpan(
                       mainLabel: 'Branch Name',
                       childLabel: bankingCtrl.accToShow.branchName),
                   labelSpan(
@@ -63,6 +66,7 @@ class _BankTransPageState extends State<BankTransPage> {
                   labelSpan(
                       mainLabel: 'Contact Person Phone',
                       childLabel: bankingCtrl.accToShow.cpperson)
+
                 ]),
                 Padding(
                     padding: const EdgeInsets.only(top: 20),

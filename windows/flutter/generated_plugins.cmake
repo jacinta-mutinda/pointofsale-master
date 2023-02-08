@@ -3,7 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  charset_converter
   local_auth_windows
+  printing
   sqlite3_flutter_libs
 )
 

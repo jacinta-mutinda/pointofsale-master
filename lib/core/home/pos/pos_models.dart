@@ -49,6 +49,7 @@ class CheckOutDet {
   String onAccPaid;
   String custAccId;
   String bankAccId;
+  String totalPaid;
   String balance;
 
   CheckOutDet(
@@ -61,6 +62,7 @@ class CheckOutDet {
       required this.mobilePaid,
       required this.custAccId,
       required this.bankAccId,
+      required this.totalPaid,
       required this.balance});
 }
 

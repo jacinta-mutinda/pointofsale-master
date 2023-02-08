@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/reports/report_ctrl.dart';
+import 'package:nawiri/core/reports/sales_by_staff/salesbystaff.dart';
+import 'package:nawiri/core/reports/shift_sales/shift_sales.dart';
+import 'package:nawiri/core/reports/stock_sales/stock_sales.dart';
+import 'package:nawiri/core/reports/supplier_transaction/supplier_transaction.dart';
 import 'package:nawiri/theme/constants.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 
@@ -27,40 +31,29 @@ class _ReportPageState extends State<ReportPage> {
         appBar: mainAppBar(pageTitle: 'Reports'),
         drawer: mainDrawer(),
         body: SingleChildScrollView(
-            padding: const EdgeInsets.all(15),
-            child: SizedBox(
-                height: double.maxFinite,
-                child: navMenu(navItems: [
-                  navItemFunc(
-                      iconPath: Icons.shopping_basket, label: 'Stock Sales'),
-                  navItemFunc(iconPath: Icons.people, label: 'Sales by Staff'),
-                  navItemFunc(iconPath: Icons.lock_clock, label: 'Shift Sales'),
-                  navItemFunc(
-                      iconPath: Icons.local_shipping,
-                      label: 'Supplier Transactions'),
-                ]))));
-  }
-}
 
-Widget navItemFunc({required iconPath, required label}) {
-  return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: ListTile(
-          leading: Icon(iconPath, color: Colors.white, size: 22),
-          trailing: const Icon(
-            Icons.keyboard_arrow_right,
-            color: Colors.white,
-            size: 22,
-          ),
-          title: Text(label,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Nunito')),
-          tileColor: kDarkGreen,
-          textColor: Colors.white,
-          selectedTileColor: kNeonGreen,
-          onTap: () {
-            reportCtrl.setReport(label);
-          }));
+
+padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+child: SizedBox(
+height: double.maxFinite,
+child: navMenu(navItems: [
+navItem(
+iconPath: Icons.shopping_basket,
+label: 'Stock Sales',
+goTo: const StockSalesReport()),
+navItem(
+iconPath: Icons.people,
+label: 'Sales by Staff',
+goTo: const SalesByStaffReport()),
+navItem(
+iconPath: Icons.lock_clock,
+label: 'Shift Sales',
+goTo: const ShiftSalesReport()),
+navItem(
+iconPath: Icons.local_shipping,
+label: 'Supplier Transaction',
+goTo: const SupplierTransactionReport()),
+])),
+));
+}
 }

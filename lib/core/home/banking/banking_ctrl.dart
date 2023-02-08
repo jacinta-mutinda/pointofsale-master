@@ -20,7 +20,7 @@ class BankingCtrl extends GetxController {
   RxBool fieldsRequired = false.obs;
   RxBool isBankEdit = false.obs;
   BankAccount accToShow = BankAccount(
-      id: '', bankName: '', accno: '', branchName: '', cpperson: '');
+      id: '', bankName: '', accno: '', branchName: '', cpperson: '',running_bal: '');
   BankTransaction singleTrans = BankTransaction(
       id: '',
       refCode: '',
@@ -64,7 +64,8 @@ class BankingCtrl extends GetxController {
               bankName: item['bank_name'],
               accno: item['bank_acc_no'],
               branchName: item['account_details'],
-              cpperson: item['account_manager']);
+              cpperson: item['account_manager'],
+              running_bal: item['bank_running_bal'],);
           bankAccounts.add(bankAcc);
           bankAccStrs.add(item['bank_name']);
           if (!bankAccStrs.contains(item['bank_name'])) {
@@ -200,22 +201,27 @@ class BankingCtrl extends GetxController {
   // ---------- Edit Functions -----------------
 
   editBankAcc(BankAccount bankAccData) async {
-    var body = jsonEncode({
+    var body = {
       'bank_id': accToShow.id,
       'bank_name': bankAccData.bankName,
       'bank_acc_no': bankAccData.accno,
       'account_details': bankAccData.branchName,
       'account_manager': bankAccData.cpperson,
       'branch_id': branchId
-    });
+    };
     try {
-      var res = await http.patch(Uri.parse(updateBankUrl),
-          body: body, headers: headers);
-      debugPrint("Got response ${res.statusCode}");
+      var res = await http.patch(
+        Uri.parse(updateBankUrl),
+        body: body,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      );
+      debugPrint("Got response ${res.body}");
       if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded,
-            title: "Bank Account Updated!",
+            title: "Bank Updated!",
             subtitle: "");
         await Future.delayed(const Duration(seconds: 2));
         getBanks();
@@ -227,7 +233,7 @@ class BankingCtrl extends GetxController {
       debugPrint("$error");
       showSnackbar(
           path: Icons.close_rounded,
-          title: "Failed to update bank account!",
+          title: "Failed to update bank!",
           subtitle: "Please check your internet connection or try again later");
     }
   }
@@ -280,6 +286,7 @@ class BankingCtrl extends GetxController {
   clearLists() {
     rangeAccList.clear();
     bankAccounts.clear();
+    bankAccStrs.clear();
   }
 
   clearAccTransLists() {

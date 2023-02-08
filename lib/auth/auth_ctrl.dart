@@ -14,45 +14,45 @@ import 'package:nawiri/utils/urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthCtrl extends GetxController {
-  User profile = User(
-      id: 1,
-      busname: 'Asis Tea Sales',
-      busaddress: 'P.O BOX 234 5788',
-      location: 'KImathi House',
-      phone: 0712345678,
-      till: 564534,
-      recFooter: 'Thank you for coming',
-      username: 'Admin_one',
-      address: 'admin@gmail.com',
-      phoneno: 0712345678,
-      pin: 1234);
-  RxList<User> user = RxList<User>();
+
+
+
+
+  RxList<User> userList = RxList<User>();
+  String companyPhone = '';
+  @override
 
   get headers {
     return {"Content-Type": "application/json"};
   }
 
+
   // ----------------------------- SIGN IN -------------------------------------
 
-  login(String branchId, String pin) async {
-    debugPrint('login called');
-    var body = jsonEncode({'branch_id': branchId, 'password': pin});
+  login(String loginpin) async {
+    var prefs = await SharedPreferences.getInstance();
+    var branchId = '669892';
+    await storeBranchId(branchId);
+    // var branchId = prefs.getString('branchId');
+
+    print(branchId);
+    var body = jsonEncode({'branch_id': branchId, 'password': loginpin});
     try {
       var res =
-          await http.post(Uri.parse(loginUrl), body: body, headers: headers);
+      await http.post(Uri.parse(loginUrl), body: body, headers: headers);
 
       if (res.statusCode == 201) {
         var resData = json.decode(res.body);
-        storeBranchId(branchId);
+        storeDataInSharedPreferences(resData);
         showSnackbar(
             path: Icons.check_rounded,
             title: "Successful Login!",
             subtitle: "Welcome Back");
         await Future.delayed(const Duration(seconds: 2));
         Get.off(() => NavigatorHandler(0));
-        var prefs = await SharedPreferences.getInstance();
-        var hasBranchKey = prefs.containsKey('branchId');
-        print(hasBranchKey);
+        // Get.off(() => WelcomePrompt());
+        // Get.off(() => VerifyAccount());
+
         return;
       } else if (res.statusCode == 200) {
         showSnackbar(
@@ -71,6 +71,40 @@ class AuthCtrl extends GetxController {
     await prefs.setString("branchId", branchId);
   }
 
+  Future<void> storeFooter(String footer) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("footer", footer);
+  }
+
+  Future<void> storeTill(String till) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("till", till);
+  }
+
+  Future<void> storeCompanyId(String companyId) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("companyId", companyId);
+  }
+
+  Future<void> storeCompanyName(String companyName) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("companyName", companyName);
+  }
+
+  Future<void> storeCompanyPhone(String companyPhone) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("companyPhone", companyPhone);
+  }
+  Future<void> storeCompanyEmail(String companyEmail) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString("companyEmail", companyEmail);
+  }
+  Future<void> storeDataInSharedPreferences(Map<String, dynamic> data) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final dataJson = jsonEncode(data);
+    await sharedPreferences.setString('user', dataJson);
+  }
+
 // ----------------------------- SIGN UP -------------------------------------
 
   createCompany(List userdata) async {
@@ -82,16 +116,24 @@ class AuthCtrl extends GetxController {
       'payment_details': userdata[4],
       'logo': userdata[5]
     });
+
+    storeCompanyName(userdata[0]);
+    storeCompanyPhone(userdata[3]);
+    storeCompanyEmail(userdata[1]);
+
     try {
       var res = await http.post(Uri.parse(addCompanyUrl),
           body: body, headers: headers);
+      print(res.body);
       if (res.statusCode == 201) {
         Map<String, dynamic> resBody = json.decode(res.body);
         await storeBranchId(resBody['branch_id'].toString());
+        await storeFooter(userdata[5].toString());
+        await storeTill(userdata[4].toString());
         showSnackbar(
             path: Icons.check_rounded,
-            title: "Company Created!",
-            subtitle: "Let's create your personal account in the next step");
+            title: "Routing to user details",
+            subtitle: "");
         await Future.delayed(const Duration(seconds: 2));
         Get.off(() => const PersonalDetails());
         return;
@@ -108,21 +150,31 @@ class AuthCtrl extends GetxController {
   signUp(List userdata) async {
     var prefs = await SharedPreferences.getInstance();
     var branchId = prefs.getString('branchId');
+    var till = prefs.getString('till');
+    var footer = prefs.getString('footer');
+    companyPhone = prefs.getString('companyPhone').toString();
+
+
     var body = jsonEncode({
       'user_name': userdata[0],
-      'staff_id': userdata[1],
+      'staff_id': userdata[3],
       'user_lif': userdata[2],
       'user_pin': userdata[3],
-      'branch_id': int.parse(branchId!)
+      'referal_code':userdata[4],
+      'branch_id': int.parse(branchId!),
+      'till': till,
+      'footer': footer
     });
     try {
       var res =
-          await http.post(Uri.parse(signUpUrl), body: body, headers: headers);
+      await http.post(Uri.parse(signUpUrl), body: body, headers: headers);
+      print(res.body);
       if (res.statusCode == 201) {
         showSnackbar(
             path: Icons.check_rounded,
             title: "Nawiri Account Created!",
-            subtitle: "Kindly verify your account in the next step");
+            subtitle: "Kindly verify your account in the next step " +
+                branchId);
         await Future.delayed(const Duration(seconds: 2));
         Get.offAll(() => const VerifyAccount());
         return;
@@ -171,18 +223,32 @@ class AuthCtrl extends GetxController {
   // ----------------------------- VERIFY ACCOUNT -------------------------------------
 
   verifyAccount(int otp) async {
+    var prefs = await SharedPreferences.getInstance();
+    var correctotp = prefs.getString('otp');
+    print(correctotp);
     var body = json.encode({"verify_code": otp});
+    if(otp==int.parse(correctotp!)){
+      showSnackbar(
+          path: Icons.check_rounded,
+          title: "Account Verified",
+          subtitle: "Karibu Nawiri!");
+      await Future.delayed(const Duration(seconds: 2));
+      // Get.off(() => NavigatorHandler(0));
+      Get.offAll(const Login());
+      Get.dialog(const WelcomePrompt());
+
+    }
+    else{
+      showSnackbar(
+          path: Icons.check_rounded,
+          title: "Verification failed",
+          subtitle: "The code is incorrect!");
+    }
     // try {
     //   var res = await http.post(Uri.parse(resetPassUrl),
     //       body: body, headers: authHeaders);
     //   if (res.statusCode == 200) {
-    showSnackbar(
-        path: Icons.check_rounded,
-        title: "Account Verified",
-        subtitle: "Karibu Nawiri!");
-    await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => NavigatorHandler(0));
-    Get.dialog(const WelcomePrompt());
+
     //   } else {
     //     showSnackbar(
     //         path: Icons.close_rounded,
@@ -210,4 +276,52 @@ class AuthCtrl extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     return prefs.clear();
   }
+
+  getCompanyPhone() async {
+    var prefs = await SharedPreferences.getInstance();
+    var companyPhone = prefs.getString('companyPhone').toString();
+    String modifiedNumber = "254" + companyPhone.substring(1);
+    print(modifiedNumber);
+    return modifiedNumber;
+
+  }
+  getCompanyName() async {
+    var prefs = await SharedPreferences.getInstance();
+    var companyName = prefs.getString('companyName');
+
+    return companyName;
+
+  }
+  getCompanyEmail() async {
+    var prefs = await SharedPreferences.getInstance();
+    var companyEmail = prefs.getString('companyEmail');
+    return companyEmail;
+
+  }
+
+  userDetails() async {
+    var prefs = await SharedPreferences.getInstance();
+    var user = prefs.getString('user');
+    var userData = json.decode(user!);
+    var u=userData['user'];
+    var till=userData['till'];
+    var company=userData['company'];
+    User profile = User(
+        id: 2,
+        busname: company[0]['company_name'],
+        busaddress: company[0]['company_address'],
+        location: company[0]['company_town'],
+        phone: int.parse(company[0]['company_tel']),
+        till: int.parse(till[0]['till_no']),
+        recFooter: till[0]['till_receipt_msg1'],
+        username: u['user_name'],
+        address: u['user_name'],
+        phoneno: 0,
+        pin: int.parse(u['user_pin']));
+
+    userList.add(profile);
+    return ;
+
+  }
+
 }

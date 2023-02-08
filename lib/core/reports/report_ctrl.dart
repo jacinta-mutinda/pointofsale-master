@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nawiri/core/reports/single_report.dart';
 import 'package:nawiri/theme/global_widgets.dart';
+
+import '../../utils/functions.dart';
 
 class ReportCtrl extends GetxController {
   RxString reportTitle = ''.obs;
@@ -23,7 +27,7 @@ class ReportCtrl extends GetxController {
     pageBools.add(isSupTrans.value);
   }
 
-  setReport(String reportType) {
+  setReport(String reportType) async {
     if (reportType == 'Stock Sales') {
       isStockSale.value = true;
       isByStaff.value = false;
@@ -35,6 +39,8 @@ class ReportCtrl extends GetxController {
         DataColumn(label: Text('Price')),
         DataColumn(label: Text('Amount')),
       ];
+
+
       rows.value = const [
         DataRow(cells: [
           DataCell(Text('Product 01')),

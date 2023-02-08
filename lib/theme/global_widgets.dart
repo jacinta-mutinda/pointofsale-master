@@ -251,12 +251,12 @@ Widget mainDrawer() {
                       fontSize: 48),
                 )),
             Text(
-              'Growing with you',
+              'BORESHA.KUZA.ENDELEZA',
               style: TextStyle(
                   color: kNeonGreen,
                   fontFamily: 'Nunito',
                   fontWeight: FontWeight.w500,
-                  fontSize: 18),
+                  fontSize: 12),
             ),
           ],
         ))),
@@ -277,7 +277,20 @@ Widget mainDrawer() {
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: ListTile(
                     leading:
-                        const Icon(Icons.logout, color: kDarkGreen, size: 26),
+                        const Icon(Icons.share, color: kDarkGreen, size: 26),
+                    title: const Text('Share', style: kDrawerTxt),
+                    selectedTileColor: kDarkGreen,
+                    selectedColor: Colors.white,
+                    tileColor: kGrey,
+                    textColor: kDarkGreen,
+                    onTap: () {
+
+                    })),
+            Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: ListTile(
+                    leading:
+                    const Icon(Icons.logout, color: kDarkGreen, size: 26),
                     title: const Text('Sign Out', style: kDrawerTxt),
                     selectedTileColor: kDarkGreen,
                     selectedColor: Colors.white,
@@ -511,6 +524,7 @@ Widget formField(
 Widget dateFormField(
     {required label,
     required controller,
+    readonly = false,
     required void Function()? showDate,
     required final String? Function(String?) validator}) {
   return Padding(
@@ -542,7 +556,7 @@ Widget dateFormField(
             cursorColor: kDarkGreen,
             controller: controller,
             validator: validator,
-            readOnly: true,
+            readOnly: readonly,
             onTap: showDate,
             style: const TextStyle(
                 fontSize: 16,

@@ -9,6 +9,7 @@ import 'package:nawiri/core/home/suppliers/suppliers_ctrl.dart';
 import 'package:nawiri/core/home/transactions/transactions_ctrl.dart';
 import 'package:nawiri/core/market/market.dart';
 import 'package:nawiri/core/reports/reports.dart';
+import 'package:nawiri/core/work_period/drawer/drawer_ctrl.dart';
 import 'package:nawiri/core/work_period/work_period.dart';
 import 'package:nawiri/theme/constants.dart';
 
@@ -45,6 +46,7 @@ class _NavigatorHandlerState extends State<NavigatorHandler> {
     Get.put(BankingCtrl());
     Get.put(TransactionCtrl());
     Get.put(PoSCtrl());
+    Get.put(DrawerCtrl());
   }
 
   @override

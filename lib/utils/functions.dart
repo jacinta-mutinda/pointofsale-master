@@ -59,6 +59,12 @@ get headers {
   return {"Content-Type": "application/json"};
 }
 
+get formHeaders {
+  return {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+}
+
 String formatAmount(String amount) {
   String amountInText = "";
   int counter = 0;

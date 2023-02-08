@@ -20,7 +20,7 @@ class BankAccForm extends StatefulWidget {
 class _BankAccFormState extends State<BankAccForm> {
   String pageTitle = '';
   BankAccount bankAccData = BankAccount(
-      id: '', bankName: '', accno: '', branchName: '', cpperson: '');
+      id: '', bankName: '', accno: '', branchName: '', cpperson: '',running_bal:'');
   final bankingCtrl = Get.put(BankingCtrl());
   TextEditingController namectrl = TextEditingController();
   TextEditingController accnoctrl = TextEditingController();

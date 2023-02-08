@@ -68,16 +68,6 @@ class _CustomerReceiptState extends State<CustomerReceipt> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          formDropDownField(
-                              label: 'Transaction Type',
-                              dropdownValue: custCtrl.transtyeDrop.value,
-                              dropItems: custCtrl.transtypes,
-                              bgcolor: kGrey,
-                              function: (String? newValue) {
-                                setState(() {
-                                  custCtrl.transtyeDrop.value = newValue!;
-                                });
-                              }),
                           dateFormField(
                               label: 'Date of Payment',
                               controller: datectrl,
@@ -90,8 +80,8 @@ class _CustomerReceiptState extends State<CustomerReceipt> {
 
                                 if (pickedDate != null) {
                                   String formattedDate =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(pickedDate);
+                                  DateFormat('yyyy-MM-dd')
+                                      .format(pickedDate);
 
                                   setState(() {
                                     datectrl.text = formattedDate;
@@ -104,6 +94,17 @@ class _CustomerReceiptState extends State<CustomerReceipt> {
                                 }
                                 return null;
                               }),
+                          formDropDownField(
+                              label: 'Transaction Type',
+                              dropdownValue: custCtrl.transtyeDrop.value,
+                              dropItems: custCtrl.transtypes,
+                              bgcolor: kGrey,
+                              function: (String? newValue) {
+                                setState(() {
+                                  custCtrl.transtyeDrop.value = newValue!;
+                                });
+                              }),
+
                           formField(
                               label: 'Referenec Code',
                               require: true,
@@ -115,17 +116,7 @@ class _CustomerReceiptState extends State<CustomerReceipt> {
                                 }
                                 return null;
                               }),
-                          formField(
-                              label: 'Discount (in Kes)',
-                              require: true,
-                              controller: discountctrl,
-                              type: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the discount given';
-                                }
-                                return null;
-                              }),
+
                           formField(
                               label: 'Amount (in Kes)',
                               require: true,
@@ -157,7 +148,7 @@ class _CustomerReceiptState extends State<CustomerReceipt> {
                         recData.ref = refctrl.text;
                         recData.comment = commentctrl.text;
                         recData.amount = amountctrl.text;
-                        recData.discount = discountctrl.text.toString();
+                        recData.discount = '0';
 
                         custCtrl.addCustReceipt(recData);
                       }

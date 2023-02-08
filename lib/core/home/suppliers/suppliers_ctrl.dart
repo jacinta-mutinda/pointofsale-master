@@ -167,7 +167,7 @@ class SupplierCtrl extends GetxController {
     var body = jsonEncode({
       "branch_id": branchId,
       "supplier": supPayData.supId,
-      "bank_id": "1d4c4e57-aac3-497b-bbb3-f3cae6912577",
+      "bank_id": "488d25f9-4fce-4959-810f-93ba3d549309",
       "transaction_ref": supPayData.ref,
       "transaction_amount": int.parse(supPayData.amount),
       "transaction_comment": supPayData.comment,
@@ -201,20 +201,26 @@ class SupplierCtrl extends GetxController {
   // ---------- Edit Functions -----------------
 
   editSupplier(Supplier supData) async {
-    var body = jsonEncode({
-      'Supplier_id': supData.id,
+    var body = {
+      'supplier_id': supData.id,
       'supplier_name': supData.name,
       'supplier_item': supData.item,
       'supplier_bank_acc': supData.bankacc,
       'supplier_pin': supData.krapin,
       'supplier_address': supData.address,
-      'supplier_phone_no': supData.cpperson,
-    });
+      'supplier_phone_no': supData.phoneno,
+    };
     try {
-      var res = await http.patch(Uri.parse(updateSupUrl),
-          body: body, headers: headers);
+      var res = await http.patch(
+        Uri.parse(updateSupUrl),
+        body: body,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      );
       debugPrint("Got response ${res.statusCode}");
-      // debugPrint(res.body);
+      debugPrint("Got response ${res.body}");
+
       if (res.statusCode == 200) {
         showSnackbar(
             path: Icons.check_rounded,

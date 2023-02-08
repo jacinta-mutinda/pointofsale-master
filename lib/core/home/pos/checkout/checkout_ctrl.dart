@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:nawiri/bottomnav.dart';
 import 'package:nawiri/core/home/banking/banking_ctrl.dart';
 import 'package:nawiri/core/home/customers/customers_ctrl.dart';
 import 'package:nawiri/core/home/home_models.dart';
@@ -10,11 +11,13 @@ import 'package:nawiri/core/home/inventory/inventory_ctrl.dart';
 import 'package:nawiri/core/home/inventory/inventory_models.dart';
 import 'package:nawiri/core/home/pos/checkout/checkout.dart';
 import 'package:nawiri/core/home/pos/checkout/pdf_invoice_api.dart';
+import 'package:nawiri/core/home/pos/pos.dart';
 import 'package:nawiri/core/home/pos/pos_ctrl.dart';
 import 'package:nawiri/core/home/pos/pos_models.dart';
 import 'package:nawiri/theme/global_widgets.dart';
 import 'package:nawiri/utils/functions.dart';
 import 'package:nawiri/utils/urls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../utils/file_handle_api.dart';
 
@@ -33,6 +36,7 @@ class CheckoutCtrl extends GetxController {
   RxInt selectedBankId = 1.obs;
   TextEditingController customerctrl = TextEditingController();
   CheckOutDet checkDetData = CheckOutDet(
+      totalPaid: '',
       payMthd: '',
       mpesaRefCode: '',
       bankRefCode: '',
@@ -45,39 +49,6 @@ class CheckoutCtrl extends GetxController {
       bankAccId: '');
 
   RxList<Customer> custList = RxList<Customer>();
-  List<PayMethod> paymethods = [
-    PayMethod(name: 'Bank Account', selected: false.obs),
-    PayMethod(name: 'Cash', selected: false.obs),
-    PayMethod(name: 'Mobile Money', selected: false.obs),
-    PayMethod(name: 'Customer Account', selected: false.obs)
-  ];
-  List<String> selectedMthds = [];
-
-  setCheckoutForm() {
-    if (selectedMthds.contains('Mobile Money')) {
-      isMpesaPay.value = true;
-    } else if (selectedMthds.contains('Cash')) {
-      isCashPay.value = true;
-    } else if (selectedMthds.contains('Bank Account')) {
-      isBankPay.value = true;
-    } else if (selectedMthds.contains('Customer Account')) {
-      isOnAccPay.value = true;
-      custList.clear();
-      for (var cust in customersCtrl.customers) {
-        custList.add(cust);
-      }
-      Get.dialog(const CustomerList());
-    } else if (!selectedMthds.contains('Mobile Money')) {
-      isMpesaPay.value = false;
-    } else if (!selectedMthds.contains('Cash')) {
-      isCashPay.value = false;
-    } else if (!selectedMthds.contains('Bank Account')) {
-      isBankPay.value = false;
-    } else if (!selectedMthds.contains('Customer Account')) {
-      isOnAccPay.value = false;
-    }
-    update();
-  }
 
   setBankAcc() {
     for (BankAccount acc in BankingCtrl().bankAccounts) {
@@ -100,6 +71,9 @@ class CheckoutCtrl extends GetxController {
   completeSale() async {
     var sale = posCtrl.cartSale;
     var cart = posCtrl.cartSale.cart;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var shift = prefs.getString('shiftId');
+
     // creating receipt item jsons
     var rd = [];
     for (var item in cart) {
@@ -164,19 +138,19 @@ class CheckoutCtrl extends GetxController {
         "location": "",
         "staff": "",
         "till": "",
-        "shift": "",
+        "shift": shift,
         "customer": selectedCustAccId.value
       },
       "RD": rd,
       "RP": {
         "payment_date": sale.date,
         "staff_id": "",
-        "shift_id": "",
+        "shift_id": shift,
         "till_id": "",
         "cancelled": "Y",
         "cancelled_by": "45",
         "cancelled_on": "2020-09-11",
-        "payment_amount": (sale.total.value).toString(),
+        "payment_amount": (checkDetData.totalPaid),
         "receipt_id": ''
       }
     });
@@ -184,6 +158,7 @@ class CheckoutCtrl extends GetxController {
       var res = await http.post(Uri.parse(addCheckoutUrl),
           body: body, headers: apiHeaders);
       if (res.statusCode == 201) {
+        print(res.body);
         showSnackbar(
             path: Icons.check_rounded,
             title: "Checkout Successful!",
@@ -201,10 +176,6 @@ class CheckoutCtrl extends GetxController {
   }
 
   reset() {
-    selectedMthds.clear();
-    for (var item in paymethods) {
-      item.selected.value = false;
-    }
     isMpesaPay.value = false;
     isBankPay.value = false;
     isCashPay.value = false;
@@ -213,15 +184,28 @@ class CheckoutCtrl extends GetxController {
     selectedCustAcc = ''.obs;
     selectedCustAccId = ''.obs;
     selectedBankId = 1.obs;
+    checkDetData = CheckOutDet(
+        totalPaid: '',
+        payMthd: '',
+        mpesaRefCode: '',
+        bankRefCode: '',
+        cashPaid: '',
+        bankPaid: '',
+        onAccPaid: '',
+        mobilePaid: '',
+        balance: '',
+        custAccId: '',
+        bankAccId: '');
     update();
   }
 
-  fetchReceipt() async {
-      // generate pdf file
-      final pdfFile = await PdfInvoiceApi.generate();
+  final pdfCtrl = Get.put(PdfInvoiceApi());
 
-      // opening the pdf file
-      FileHandleApi.openFile(pdfFile);
-      posCtrl.clearSale();
+  fetchReceipt() async {
+    final pdfFile =
+        await pdfCtrl.generate(checkDetData.balance, checkDetData.totalPaid);
+    FileHandleApi.openFile(pdfFile);
+    posCtrl.clearSale();
+    Get.offAll(const PoSPage());
   }
 }

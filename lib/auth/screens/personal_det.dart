@@ -108,10 +108,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                               }),
                           formField(
                               label: 'Refered by',
-                              require: true,
+                              require: false,
                               controller: refctrl,
                               type: TextInputType.number,
                               validator: (value) {
+
                                 return null;
                               }),
                           passwordField(
@@ -162,6 +163,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                           emailctrl.text,
                           phonectrl.text,
                           passctrl.text,
+                          phonectrl.text,
                         ];
                         auth.signUp(persData);
                       }
